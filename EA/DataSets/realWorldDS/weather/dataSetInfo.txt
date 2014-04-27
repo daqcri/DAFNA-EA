@@ -1,0 +1,12 @@
+Nb of sources :16
+NB of Claims: 365890
+Nb of Objects: 6375
+Nb of DataItems: 30317
+Gold Standard Values Count: 22570
+Data Items Coverage: 0.7543003925190487
+Avg Nb. of Claims Per Source: 22868.125
+Avg Nb. of Values Per DataItem: 4.54659102153907
+Avg Redundency on dataItem: 0.5638668074017877
+Avg Redundency on objects: 0.7010980392156863
+Precision Of Dominant Value: 0.5366858661940629
+dataSet Reading Time: 10128 m.s. (0.1688mins. )
