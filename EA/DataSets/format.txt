@@ -1,9 +1,0 @@
-claimId|	EntityId|	ObjectId|	ropertyName|	PropertyValue|	SourceName|	timeStamp|	
-
-claimId: uniquely identify each calim in the dataset.
-Entity ID: uniquely Identify each Entity in the dataset: currently not used. 
-ObjectId: uniquely Identify each object in the dataset.
-Property Name: The name of the property this claim is giving a value.
-PropertyValue: The values given for the property.
-SourceName: The name of the source providing this claim.
-TimeStamp: The timestamp for providing this claim (if known).
