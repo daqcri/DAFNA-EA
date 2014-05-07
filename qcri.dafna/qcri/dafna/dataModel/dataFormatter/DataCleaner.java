@@ -3,7 +3,9 @@ package qcri.dafna.dataModel.dataFormatter;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -149,41 +151,59 @@ public class DataCleaner {
 		return clean(stringValue, ValueType.STRING);
 	}
 
-	private static Object cleanDate(String stringValue) {
+	public static Object cleanDate(String stringValue) {
 		SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy");
 		try {
 			Date date = f.parse(stringValue);
 			return date;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			f = new SimpleDateFormat("dd MMMM yyyy");
+			try {
+				Date date = f.parse(stringValue);
+				return date;
+			} catch (ParseException e2) {
+				f = new SimpleDateFormat("yyyy");
+				try {
+					Date date = f.parse(stringValue);
+					return date;
+				} catch (ParseException e3) {
+					f = new SimpleDateFormat("MMMM yyyy");
+					try {
+						Date date = f.parse(stringValue);
+						return date;
+					} catch (ParseException e4) {
+						return stringValue;
+					}
+				}
+			}
 		}
-		return stringValue;
 	}
 	//	private static Object cleanDate(String stringValue) {
 	////		try {
 	////			DateTime dt = new DateTime(stringValue);
 	////			return dt.toDate();
 	////		} catch (Exception e) {
-	//			List<SimpleDateFormat> formatList = new ArrayList<SimpleDateFormat>();
+//				List<SimpleDateFormat> formatList = new ArrayList<SimpleDateFormat>();
 	//
 	//										//
 	//			//
-	//			formatList.add(new SimpleDateFormat("kk:mm aa  EEE dd-MMM-yyyy"));//02:29 PM  Sun 18-Dec-2011
-	//			formatList.add(new SimpleDateFormat("kk:mm aaMMM yy"));//9:31 AMJan 04
-	//			formatList.add(new SimpleDateFormat("EEE, MMM dd kk:mm aa"));//Tue, Jan 3 8:47 AM
-	//			formatList.add(new SimpleDateFormat("kk:mmaMMM dd"));
-	//			formatList.add(new SimpleDateFormat("MMM dd - kk:mmaa"));//Dec 18 - 6:30pm
-	//			formatList.add(new SimpleDateFormat("EEE, MMM dd"));//Tue, Jan 3
-	//			formatList.add(new SimpleDateFormat("kk:mma MM-dd-yy"));//5:39P 12-18-11
-	//			formatList.add(new SimpleDateFormat("kk:mm aa, MMM dd"));
-	//			formatList.add(new SimpleDateFormat("MM/dd/yy kk:mm aa"));// 1/3/12 1:29 PM 
-	//			formatList.add(new SimpleDateFormat("MM/dd/yy kk:mmaa z"));// 1/3/2012 7:39PM EST
-	//			formatList.add(new SimpleDateFormat("EEE., MMM.dd, yyyy kk:mm a.a."));// Tue., Jan.03, 2012 3:55 p.m.
-	//			formatList.add(new SimpleDateFormat("yyyy-MM-dd kk:mmaa z"));//2012-01-03 06:30AM EST
-	//			formatList.add(new SimpleDateFormat("yyyy-MM-dd kk:mm aa"));//2012-01-03 06:42 PM
-	//			formatList.add(new SimpleDateFormat("MM-dd-yyyy kk:mmaa z"));//12/18/2011 4:08PM MST
-	//			formatList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm"));//2011-12-18 22:21 
-	//			formatList.add(new SimpleDateFormat("kk:mm aa"));//
+//				formatList.add(new SimpleDateFormat("MM/dd/yyyy"));
+//				formatList.add(new SimpleDateFormat("kk:mm aa  EEE dd-MMM-yyyy"));//02:29 PM  Sun 18-Dec-2011
+//				formatList.add(new SimpleDateFormat("kk:mm aaMMM yy"));//9:31 AMJan 04
+//				formatList.add(new SimpleDateFormat("EEE, MMM dd kk:mm aa"));//Tue, Jan 3 8:47 AM
+//				formatList.add(new SimpleDateFormat("kk:mmaMMM dd"));
+//				formatList.add(new SimpleDateFormat("MMM dd - kk:mmaa"));//Dec 18 - 6:30pm
+//				formatList.add(new SimpleDateFormat("EEE, MMM dd"));//Tue, Jan 3
+//				formatList.add(new SimpleDateFormat("kk:mma MM-dd-yy"));//5:39P 12-18-11
+//				formatList.add(new SimpleDateFormat("kk:mm aa, MMM dd"));
+//				formatList.add(new SimpleDateFormat("MM/dd/yy kk:mm aa"));// 1/3/12 1:29 PM 
+//				formatList.add(new SimpleDateFormat("MM/dd/yy kk:mmaa z"));// 1/3/2012 7:39PM EST
+//				formatList.add(new SimpleDateFormat("EEE., MMM.dd, yyyy kk:mm a.a."));// Tue., Jan.03, 2012 3:55 p.m.
+//				formatList.add(new SimpleDateFormat("yyyy-MM-dd kk:mmaa z"));//2012-01-03 06:30AM EST
+//				formatList.add(new SimpleDateFormat("yyyy-MM-dd kk:mm aa"));//2012-01-03 06:42 PM
+//				formatList.add(new SimpleDateFormat("MM-dd-yyyy kk:mmaa z"));//12/18/2011 4:08PM MST
+//				formatList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm"));//2011-12-18 22:21 
+//				formatList.add(new SimpleDateFormat("kk:mm aa"));//
 	////			formatList.add(new SimpleDateFormat(""));//
 	////			formatList.add(new SimpleDateFormat(""));//
 	////			formatList.add(new SimpleDateFormat(""));//
@@ -241,5 +261,5 @@ public class DataCleaner {
 	//			}
 	////		}
 	//		return stringValue;
-	//	}
+//		}
 }

@@ -154,7 +154,7 @@ public class Globals {
 	public static double starting_Confidence = 5.0;
 	public static double starting_trustworthiness = 0.9;
 	public static double tolerance_Factor = 0.01;
-	public static final int lastClaimID = 13847310;// after the IMDB 13847311 
+	public static final int lastClaimID = 13847311;// after the IMDB 13847311 // after IMDB secnd time 14953653=>LAST
 	// after freebase => 11634624
 	//  After reading the flight files ( on December 2nd 3012) => 2871621
 	//  After reading the books files => 2904879

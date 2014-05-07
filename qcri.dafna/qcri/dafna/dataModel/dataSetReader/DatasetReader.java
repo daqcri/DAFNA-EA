@@ -87,6 +87,10 @@ public class DatasetReader {
 				scanner.close();
 				return;
 			}
+			if (objectId == null || objectId.trim().equalsIgnoreCase("null")) {
+				scanner.close();
+				return;
+			}
 			if (cleanObjectId) {
 				try {
 					String cleanedObjId = (String)DataCleaner.clean((String)objectId, objectIdValueType);
@@ -95,6 +99,7 @@ public class DatasetReader {
 				} catch (Exception e) {}
 
 			} else {
+//				System.out.println(fileLine);
 				dataSet.addClaim(claimId, /*entityID,*/ objectId, "", propertyName, 
 						stringValue, weight, timeStamp, sourceId);
 			}

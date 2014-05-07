@@ -67,7 +67,7 @@ public class DataQualityLogger {
 			line = line + measures.getTimings().getVoterDuration()  + " & ";
 			line = line + measures.getMaxMemoryConsumption()  + " & \n";
 			
-			System.out.print(line);
+//			System.out.print(line);
 		}
 		try {
 			writer.write(line);

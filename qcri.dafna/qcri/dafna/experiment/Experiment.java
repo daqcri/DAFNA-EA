@@ -65,35 +65,71 @@ public abstract class Experiment {
 		double normalizationWeight = 0.5;// used for the 2-estimates and 3-estimates normalization
 
 		/* ---------------------------------- Voter ---------------------------------- */
-//		dataSet.resetDataSet(startingTrust, 1, 0);
-//		Voting voting = new Voting(dataSet);
-//		NormalVoterQualityMeasures votingQualityMeasure = (NormalVoterQualityMeasures)voting.launchVoter(convergence100, profileMEmory);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterVoting, votingQualityMeasure, false);
-//
-//		/* ---------------------------------- TruthFinder  ---------------------------------- */
-//		dataSet.resetDataSet(startingTrust, Globals.starting_Confidence, 0);
-//		TruthFinder truthFinder = new TruthFinder(dataSet, similarityConstant, 
-//				base_sim, dampingFactor, cosineSimDiffStoppingCriteria);
-//		NormalVoterQualityMeasures truthFinderQualityMeasure = (NormalVoterQualityMeasures)truthFinder.launchVoter(convergence100, profileMEmory);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterTruthFinder, truthFinderQualityMeasure, false);
-//
-//
-//	/* ---------------------------------- Cosine  ---------------------------------- */
+		long time = 0;
+		for (int i = 0; i <10; i ++) {
+
+		dataSet.resetDataSet(startingTrust, 1, 0);
+		Voting voting = new Voting(dataSet);
+		NormalVoterQualityMeasures votingQualityMeasure = (NormalVoterQualityMeasures)voting.launchVoter(convergence100, profileMEmory);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterVoting, votingQualityMeasure, false);
+		
+		time += votingQualityMeasure.getTimings().getVoterDuration();
+		}
+		System.out.println("Voting: " + time/10);
+ 
+		/* ---------------------------------- TruthFinder  ---------------------------------- */
+		time = 0;
+		for (int i = 0; i <10; i ++) {
+			
+		dataSet.resetDataSet(startingTrust, Globals.starting_Confidence, 0);
+		TruthFinder truthFinder = new TruthFinder(dataSet, similarityConstant, 
+				base_sim, dampingFactor, cosineSimDiffStoppingCriteria);
+		NormalVoterQualityMeasures truthFinderQualityMeasure = (NormalVoterQualityMeasures)truthFinder.launchVoter(convergence100, profileMEmory);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterTruthFinder, truthFinderQualityMeasure, false);
+		
+		time += truthFinderQualityMeasure.getTimings().getVoterDuration();
+		}
+		System.out.println("TruthFinder: " + time/10);
+
+
+	/* ---------------------------------- Cosine  ---------------------------------- */
+//		time = 0;
+//		for (int i = 0; i <10; i ++) {
+//			
 //		dataSet.resetDataSet(startingTrust, 1.0, 0);
 //		Cosine cosine = new Cosine(dataSet);
 //		NormalVoterQualityMeasures cosineQualityMeasure = (NormalVoterQualityMeasures)cosine.launchVoter(convergence100, profileMEmory);
 //		log(dataSet, writer, precisionWriter, logger, Globals.voterCosine, cosineQualityMeasure, false);
+//		
+//		time += cosineQualityMeasure.getTimings().getVoterDuration();
+//		}
+//		System.out.println("Cosine: " + time/10);
 //
 //		/* ---------------------------------- 2-Estimates  ---------------------------------- */
+//		time = 0;
+//		for (int i = 0; i <10; i ++) {
+//			
 //		dataSet.resetDataSet(startingTrust,0,0);
 //		TwoEstimates twoEstimates = new TwoEstimates(dataSet, normalizationWeight);
 //		NormalVoterQualityMeasures twoEstimatesQualityMeasure = (NormalVoterQualityMeasures)twoEstimates.launchVoter(convergence100, profileMEmory);
 //		log(dataSet, writer, precisionWriter, logger, Globals.voter2Estimates, twoEstimatesQualityMeasure, false);
 //
+//		time += twoEstimatesQualityMeasure.getTimings().getVoterDuration();
+//		}
+//		System.out.println("2-Estimats: " + time/10);
+//
 //		/* ---------------------------------- 3-Estimates  ---------------------------------- */
+//		time = 0;
+//		for (int i = 0; i <10; i ++) {
+//			
 //		
 //		NormalVoterQualityMeasures threeEstimatesQualityMeasure = runThreeEstimates(convergence100, dataSet, startingTrust, startingErrorFactor, normalizationWeight);
 //		log(dataSet, writer, precisionWriter, logger, Globals.voter3Estimates, threeEstimatesQualityMeasure, false);
+//		
+//		time += threeEstimatesQualityMeasure.getTimings().getVoterDuration();
+//		}
+//		System.out.println("3-Estimats: " + time/10);
+
 //
 //		/* ---------------------------------- Simple LCA  ---------------------------------- */
 //		
@@ -102,23 +138,23 @@ public abstract class Experiment {
 //		SimpleLCA simpleLCA = new SimpleLCA(dataSet, pymB, startingTrust);
 //		NormalVoterQualityMeasures simpleLCAQualityMeasure = (NormalVoterQualityMeasures)simpleLCA.launchVoter(convergence100, profileMEmory);
 //		log(dataSet, writer, precisionWriter, logger, Globals.voterSimpleLCA, simpleLCAQualityMeasure, false);
-
-		/* ---------------------------------- Guess LCA  ---------------------------------- */
-		dataSet.resetDataSet(startingTrust,1,0);
-		GuessLCA guessLCA = new GuessLCA(dataSet, pymB, startingTrust);
-		NormalVoterQualityMeasures guessLCAQualityMeasure = (NormalVoterQualityMeasures)guessLCA.launchVoter(convergence100, profileMEmory);
-		log(dataSet, writer, precisionWriter, logger, Globals.voterGuessLCA, guessLCAQualityMeasure, false);
+//
+//		/* ---------------------------------- Guess LCA  ---------------------------------- */
+//		dataSet.resetDataSet(startingTrust,1,0);
+//		GuessLCA guessLCA = new GuessLCA(dataSet, pymB, startingTrust);
+//		NormalVoterQualityMeasures guessLCAQualityMeasure = (NormalVoterQualityMeasures)guessLCA.launchVoter(convergence100, profileMEmory);
+//		log(dataSet, writer, precisionWriter, logger, Globals.voterGuessLCA, guessLCAQualityMeasure, false);
 
 		/* ---------------------------------- AccuCopy T T  AccuSim---------------------------------- */
 
-//		double alfa = 0.2;
-//		double c = 0.8;
-//		int n = 100;
-//		boolean orderSrcByDependence = false;
-//
-//		boolean considerSimilarity = true; 
-//		boolean considerSourcesAccuracy = true;
-//		boolean considerDependencies = true;
+		double alfa = 0.2;
+		double c = 0.8;
+		int n = 100;
+		boolean orderSrcByDependence = false;
+
+		boolean considerSimilarity = true; 
+		boolean considerSourcesAccuracy = true;
+		boolean considerDependencies = true;
 //
 //		considerSimilarity = true; 
 //		considerSourcesAccuracy = true;
@@ -142,7 +178,10 @@ public abstract class Experiment {
 //		log(dataSet, writer, precisionWriter, logger, Globals.voterDepen, accuModelBaseQualityMeasureFF, false);
 //
 //			/* ---------------------------------- AccuNoDep  ---------------------------------- */
-//	
+//		time = 0;
+//		for (int i = 0; i <10; i ++) {
+//			
+//			
 //		considerSimilarity = false;
 //		considerSourcesAccuracy = true;
 //		considerDependencies = false;
@@ -151,6 +190,10 @@ public abstract class Experiment {
 //				similarityConstant, base_sim, startingTrust, alfa, c, n, orderSrcByDependence, considerSimilarity, considerSourcesAccuracy, considerDependencies);
 //		log(dataSet, writer, precisionWriter, logger, Globals.voterAccuNoDep, accuModelBaseQualityMeasureAccuNoDep, false);
 //
+//		time += accuModelBaseQualityMeasureAccuNoDep.getTimings().getVoterDuration();
+//		}
+//		System.out.println("AccuNodep: " + time/10);
+
 //				/* ---------------------------------- AccuCopy F T Accu ---------------------------------- */
 //
 //		considerSimilarity = false;
@@ -371,7 +414,7 @@ public abstract class Experiment {
 		if (logExperimentName) {
 			Date d = new Date();
 //			System.out.println("Finished:\t" + VoterName + "\t:\t" + voterQualityMeasure.getNumberOfIterations() + "\t\t" + d.toString());
-			System.out.println(VoterName);
+//			System.out.println(VoterName);
 		}
 		logger.logVoterQualityLine(writer, voterQualityMeasure, header, VoterName, precisionWriter);
 		resultsMap.put(VoterName, voterQualityMeasure);
