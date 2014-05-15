@@ -441,35 +441,35 @@ public class WeatherReadOldWriteNew {
 		if (temp != null && !temp.trim().equals("")) {
 			temp = temp.trim();
 			lineWriten = ClaimWriter.writeClaim(writer, claimId, objectId, Globals.weatherDataSet_Tempreture, 
-					temp, timeStamp, sourceID, Globals.delimiterText);
+					temp, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 			if (lineWriten) {claimId ++;numberOfClaims ++;}
 		}
 
 		if (realFeel != null && !realFeel.trim().equals("")) {
 			realFeel = realFeel.trim();
 			lineWriten = ClaimWriter.writeClaim(writer, claimId, objectId, Globals.weatherDataSet_ReafFeel, 
-					realFeel, timeStamp, sourceID, Globals.delimiterText);
+					realFeel, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 			if (lineWriten) {claimId ++;numberOfClaims ++;}
 		}
 
 		if (humidity != null && !humidity.trim().equals("")) {
 			humidity = humidity.trim();
 			lineWriten = ClaimWriter.writeClaim(writer, claimId, objectId, Globals.weatherDataSet_Humidity, 
-					humidity, timeStamp, sourceID, Globals.delimiterText);
+					humidity, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 			if (lineWriten) {claimId ++;numberOfClaims ++;}
 		}
 
 		if (pressure != null && !pressure.trim().equals("")) {
 			pressure = pressure.trim();
 			lineWriten = ClaimWriter.writeClaim(writer, claimId, objectId, Globals.weatherDataSet_Pressure, 
-					pressure, timeStamp, sourceID, Globals.delimiterText);
+					pressure, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 			if (lineWriten) {claimId ++;numberOfClaims ++;}
 		}
 
 		if (visibility != null && !visibility.trim().equals("")) {
 			visibility = visibility.trim();
 			lineWriten = ClaimWriter.writeClaim(writer, claimId, objectId, Globals.weatherDataSet_Visibility, 
-					visibility, timeStamp, sourceID, Globals.delimiterText);
+					visibility, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 			if (lineWriten) {claimId ++;numberOfClaims ++;}
 		}
 	}

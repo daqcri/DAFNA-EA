@@ -11,7 +11,6 @@ import java.util.HashMap;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
-import qcri.dafna.voter.ExperimentDataSetConstructor;
 
 public class RunDataSetExperiment extends Experiment {
 	private static String truthDirectory;
@@ -71,9 +70,9 @@ public class RunDataSetExperiment extends Experiment {
 	}
 
 	private static HashMap<String, VoterQualityMeasures> launchSyntheticExperiment(String dataSetDir, String truthDir, String experimentName) {
-		DataSet dataSet = ExperimentDataSetConstructor.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
 				dataSetDir, 0, false, null, 
-				qcri.dafna.voter.ExperimentDataSetConstructor.Experiment.Synthetic, truthDir, false);
+				qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment.Synthetic, truthDir, false);
 		DataSet dataSetSinglePropertyValue = null;
 
 		boolean convergence100 = false;

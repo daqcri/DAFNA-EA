@@ -13,6 +13,7 @@ import qcri.dafna.dataModel.data.SourceClaim;
 import qcri.dafna.dataModel.data.ValueBucket;
 import qcri.dafna.dataModel.quality.voterResults.NormalVoterQualityMeasures;
 import qcri.dafna.voter.Voter;
+import qcri.dafna.voter.VoterParameters;
 /**
  * The Claim Observation (boolean) represented in the SourceClaim.trueClaimByVoter variable.
  * The fact truth label (boolean) represented in the ValueBucket.LTMTruthLabel variable.
@@ -32,9 +33,9 @@ public class LatentTruthModel extends Voter {
 
 	public LatentTruthModel
 	(double b1, double b0,double a00,double a01,double a10,double a11, DataSet dataSet,
-			int iterationCount,	int burnIn,	int sampleGap) {
+			int iterationCount,	int burnIn,	int sampleGap, VoterParameters params) {
 
-		super(dataSet);
+		super(dataSet, params);
 
 		this.b1 = b1;
 		this.b0 = b0;
@@ -198,14 +199,14 @@ public class LatentTruthModel extends Voter {
 	 */
 	private void initialize() {
 		dataSet.initializeTheDisagreeingSources();
-		RandomGenerator rg = new JDKRandomGenerator();
-		rg.setSeed(17399225432l);//rg.setSeed(1);
-		UniformRandomGenerator randomGenerator = new UniformRandomGenerator(rg);
-		double random;
+//		RandomGenerator rg = new JDKRandomGenerator();
+//		rg.setSeed(17399225432l);//rg.setSeed(1);
+//		UniformRandomGenerator randomGenerator = new UniformRandomGenerator(rg);
+//		double random;
 		boolean tf = false;
 		for (List<ValueBucket> bucketList : dataSet.getDataItemsBuckets().values()) {
 			for (ValueBucket b : bucketList) {
-				random = randomGenerator.nextNormalizedDouble();
+//				random = randomGenerator.nextNormalizedDouble();
 				if (!tf) {//if (random < 0) {
 					for (SourceClaim claim : b.getClaims()) {
 						claim.setTrueClaimByVoter(false);

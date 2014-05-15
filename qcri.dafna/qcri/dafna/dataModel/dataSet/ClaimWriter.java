@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import qcri.dafna.dataModel.data.Globals;
 
 public class ClaimWriter {
@@ -24,6 +25,11 @@ public class ClaimWriter {
 				sourceId + dlim + 
 				timeStamp + dlim + "\n";
 		claimId ++;
+		
+//        CSVWriter csvWriter = new CSVWriter(writer,dlim);
+//        String [] lineComponents = new String[]{String.valueOf(claimId), "", objectIdentifier, propertyName, propertyValueString, sourceId, timeStamp};
+//		csvWriter.writeNext(lineComponents);
+		
 		try {
 			writer.write(line);
 		} catch (IOException e) {
@@ -38,9 +44,14 @@ public class ClaimWriter {
 		return true;
 	}
 
-	public static boolean writeTrueValue(BufferedWriter writer, String objectIdentifier, String propertyName, String propertyValueString) {
+	public static boolean writeTrueValue(BufferedWriter writer, String objectIdentifier, String propertyName, 
+			String propertyValueString, String delim) {
 		boolean result = true;
 		String line = objectIdentifier + "\t" + propertyName + "\t" + propertyValueString + "\n";
+		
+//		CSVWriter csvWriter = new CSVWriter(writer,delim);
+//		String [] lineComponents = new String[]{objectIdentifier, propertyName, propertyValueString};
+//		csvWriter.writeNext(lineComponents);
 		try {
 			writer.write(line);
 		} catch (IOException e) {

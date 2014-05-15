@@ -17,8 +17,8 @@ public class ThreeEstimateSecond extends Voter {
 	private final double normalizationWeight = 0.1;
 
 	int max;
-	public ThreeEstimateSecond(DataSet dataSet, int maxIterationCount) {
-		super(dataSet);
+	public ThreeEstimateSecond(DataSet dataSet, int maxIterationCount, VoterParameters params) {
+		super(dataSet, params);
 		max = maxIterationCount;
 	}
 	/**

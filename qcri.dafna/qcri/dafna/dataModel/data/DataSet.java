@@ -47,13 +47,13 @@ public class DataSet {
 
 	private DataQualityMeasurments dataQualityMeasurments;
 
-	public DataSet(double startingConfidence, double startingTrustworthiness) {
+	public DataSet() {
 		this.SourcesHash = new HashMap<String, Source>();
 		this.dataItemsBuckets = new HashMap<String, List<ValueBucket>>();
 		this.dataItemClaims = new HashMap<String, List<SourceClaim>>();
 		this.objectToClaimHash = new HashMap<String, List<SourceClaim>>();
-		this.startingConfidence = startingConfidence;
-		this.startingTrustworthiness = startingTrustworthiness;
+		this.startingConfidence = 0;
+		this.startingTrustworthiness = 0;
 	}
 
 	public Charset getENCODING() {

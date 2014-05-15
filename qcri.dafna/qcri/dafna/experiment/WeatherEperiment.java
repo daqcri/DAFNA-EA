@@ -7,7 +7,6 @@ import java.util.List;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.quality.dataQuality.logger.DataQualityLogger;
-import qcri.dafna.voter.ExperimentDataSetConstructor;
 
 public class WeatherEperiment extends Experiment {
 	public static void main(String[] args) {
@@ -41,9 +40,9 @@ public class WeatherEperiment extends Experiment {
 
 	static private void launchDataSet_BiographyExperiment() {
 		double tolerence = Globals.tolerance_Factor;
-		DataSet dataSet = ExperimentDataSetConstructor.readDataSet(Globals.starting_Confidence,Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence,Globals.starting_trustworthiness, 
 				Globals.directory_formattedDAFNADataset_WeatherClaims, 
-				tolerence, false, null ,qcri.dafna.voter.ExperimentDataSetConstructor.Experiment.Weather, null, false); 
+				tolerence, false, null ,qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment.Weather, null, false); 
 
 		boolean convergence100 = false;
 		DataQualityLogger logger = new DataQualityLogger();

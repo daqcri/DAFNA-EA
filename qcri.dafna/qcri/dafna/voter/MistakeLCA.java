@@ -19,9 +19,9 @@ public class MistakeLCA extends Voter {
 	double cosineSimilarityStoppingCondition = 0.001;
 	HashMap<String , Double> newD;
 	HashMap<String , Double> oldD;
-	public MistakeLCA(DataSet dataSet,  double probabilityOfTruthexistance) {
-		super(dataSet);
-		pym = probabilityOfTruthexistance;
+	public MistakeLCA(DataSet dataSet, VoterParameters params) {
+		super(dataSet, params);
+		pym = -1;
 		newD = new HashMap<String, Double>();
 		oldD = new HashMap<String, Double>();
 	}

@@ -3,8 +3,7 @@ package qcri.dafna.experiment;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher.ValueType;
-import qcri.dafna.voter.ExperimentDataSetConstructor;
-import qcri.dafna.voter.ExperimentDataSetConstructor.Experiment;
+import qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment;
 
 public class BooksExperiment extends qcri.dafna.experiment.Experiment {
 
@@ -18,7 +17,7 @@ public class BooksExperiment extends qcri.dafna.experiment.Experiment {
 	}
 
 	private static void launchBookExperiment() {
-		DataSet dataSet = ExperimentDataSetConstructor.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
 				Globals.directory_formattedDAFNADataset_Books_Claims_Folder, 0, true, ValueType.ISBN, Experiment.Books, null, false);
 
 		DataSet dataSetSinglePropertyValue = null;

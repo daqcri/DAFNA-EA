@@ -15,7 +15,7 @@ public abstract class TruthReader {
 	public TruthReader(HashMap<String, DataItemMeasures> dataItemMeasures) {
 		this.dataItemMeasures = dataItemMeasures;
 	}
-	void addTrueValue(String entityId, String onjectId, String propertyName, String propertyValue) {
+	public void addTrueValue(String entityId, String onjectId, String propertyName, String propertyValue) {
 
 		String dataItemKey = SourceClaim.dataItemKey(/*entityId,*/ onjectId, propertyName);
 		ValueType valueType = DataTypeMatcher.getPropertyDataType(propertyName);
@@ -37,5 +37,12 @@ public abstract class TruthReader {
 		}
 		dim.setTrueValue(trueValue);
 		trueValueCount ++;
+	}
+	
+	public void setTrueValueCount(int trueValueCount) {
+		this.trueValueCount = trueValueCount;
+	}
+	public int getTrueValueCount() {
+		return trueValueCount;
 	}
 }

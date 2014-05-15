@@ -22,7 +22,15 @@ import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher.ValueType;
 public class DataQualityMeasurments {
 	DataSet dataSet;
 
-	private int goldStandardTrueValueCount;
+	private int maxNumOfClaimsPerSources = -1;
+	public int getMaxNumOfClaimsPerSources() {
+		return maxNumOfClaimsPerSources;
+	}
+	public void setMaxNumOfClaimsPerSources(int maxNumOfClaimsPerSources) {
+		this.maxNumOfClaimsPerSources = maxNumOfClaimsPerSources;
+	}
+
+	private int goldStandardTrueValueCount = -1;
 	public void setGoldStandardTrueValueCount(int trueValueCount) {
 		this.goldStandardTrueValueCount = trueValueCount;
 	}
@@ -36,11 +44,11 @@ public class DataQualityMeasurments {
 	public HashMap<String, Double> getRedundancyOnObjects() {
 		return redundancyOnObjects;
 	}
-	private double averageRedundencyOnObject;
+	private double averageRedundencyOnObject = -1;
 	public double getAverageRedundencyOnObject() {
 		return averageRedundencyOnObject;
 	}
-	private double averageRedundencyOnDataItem;
+	private double averageRedundencyOnDataItem = -1;
 	public double getAverageRedundencyOnDataItem() {
 		return averageRedundencyOnDataItem;
 	}
@@ -51,7 +59,7 @@ public class DataQualityMeasurments {
 		return dataItemMeasures;
 	}
 
-	private double precisionOfDominantValue;
+	private double precisionOfDominantValue = -1;
 	public double getPrecisionOfDominantValue() {
 		return precisionOfDominantValue;
 	}
@@ -69,17 +77,17 @@ public class DataQualityMeasurments {
 		this.timingMeasures = timingMeasures;
 	}
 
-	private double averageNumOfClaimsPerSource;
+	private double averageNumOfClaimsPerSource = -1;
 	public double getAverageNumOfClaimsPerSource() {
 		return averageNumOfClaimsPerSource;
 	}
 
-	private int totalNumOfClaims;
+	private int totalNumOfClaims = -1;
 	public int getTotalNumOfClaims() {
 		return totalNumOfClaims;
 	}
 
-	private double averageNumOfValuesPerDataItem;
+	private double averageNumOfValuesPerDataItem = -1;
 	public double getAverageNumOfValuesPerDataItem() {
 		return averageNumOfValuesPerDataItem;
 	}
@@ -425,6 +433,7 @@ public class DataQualityMeasurments {
 	 * The source accuracy is the percentage of provided values that are consistent with the given gold standard. 
 	 */
 	private void computeSourcesAccuracies_avgNumOfClaimsPerSource() {
+		maxNumOfClaimsPerSources = 0;
 		sourcesAccuracies = new HashMap<String, Double>();
 		totalNumOfClaims = 0;
 		int numOfClaims = 0;
@@ -436,6 +445,9 @@ public class DataQualityMeasurments {
 			numOfClaims = 0;
 			numOfTrueClaims = 0;
 			totalNumOfClaims += source.getClaims().size();
+			if (source.getClaims().size() > maxNumOfClaimsPerSources) {
+				maxNumOfClaimsPerSources = source.getClaims().size();
+			}
 			for (SourceClaim claim : source.getClaims()) {
 				dataItemKey = claim.dataItemKey();
 				DataItemMeasures dim = dataItemMeasures.get(dataItemKey);

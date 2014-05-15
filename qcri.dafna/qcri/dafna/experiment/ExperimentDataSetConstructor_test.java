@@ -1,11 +1,8 @@
-package qcri.dafna.voter;
-
-import java.util.List;
+package qcri.dafna.experiment;
 
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.SourceClaim;
-import qcri.dafna.dataModel.data.ValueBucket;
 import qcri.dafna.dataModel.dataFormatter.DataCleaner;
 import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher;
 import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher.ValueType;
@@ -20,7 +17,7 @@ import qcri.dafna.dataModel.quality.dataQuality.DataItemMeasures;
 import qcri.dafna.dataModel.quality.dataQuality.DataQualityMeasurments;
 import qcri.dafna.dataModel.quality.dataQuality.DataSetTimingMeasures;
 
-public class ExperimentDataSetConstructor {
+public class ExperimentDataSetConstructor_test {
 	public static enum Experiment {
 		Flight, Books, Biography, BooleanSynthetic, Population, PopulationBiography,
 		BooleanSyntheticTF, Synthetic, Weather;
@@ -45,7 +42,7 @@ public class ExperimentDataSetConstructor {
 			boolean cleanObjectId, ValueType objectIdValueType, Experiment experiment, String syntheticDirectory, boolean MLE) {
 		Globals.tolerance_Factor = toleranceFactor;
 		DataSetTimingMeasures timings = new DataSetTimingMeasures();
-		DatasetReader reader = new DatasetReader(startingConfidence,statingTrustworthiness);
+		DatasetReader reader = new DatasetReader();
 		/**
 		 *  Construct the dataSet without bucketing.
 		 */
@@ -108,27 +105,5 @@ public class ExperimentDataSetConstructor {
 		dqm.computeDataQaulityMeasures(Globals.tolerance_Factor);
 
 		return dataSet;
-	}
-
-
-	private static boolean addTrueValue(String objectId, String propertyName, String propertyValue, DataItemMeasures dim) {
-		String dataItemKey = SourceClaim.dataItemKey(/*entityId,*/ objectId, propertyName);
-		ValueType valueType = DataTypeMatcher.getPropertyDataType(propertyName);
-		if (dim == null) {
-			System.out.println("Cannot find the claim for the dataItem: " + dataItemKey);
-			return false;
-		}
-		Object trueValue = DataCleaner.clean(propertyValue, valueType);
-		if (trueValue instanceof String && 
-				!(DataTypeMatcher.savedAsString(valueType))) {
-			dim.setTrueValueCleaned(false);
-		} else {
-			dim.setTrueValueCleaned(true);
-		}
-		if (dim.getTrueValue() != null) {// TODO 
-			return false;
-		}
-		dim.setTrueValue(trueValue);
-		return true;
 	}
 }

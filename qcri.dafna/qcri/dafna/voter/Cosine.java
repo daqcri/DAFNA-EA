@@ -13,15 +13,20 @@ import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 
 public class Cosine extends Voter {
 
-	private final double dampingFactor = 0.2;
+	private double dampingFactor = 0.2;
 
 	@Override
 	protected void initParameters() {
 		singlePropertyValue = false; 
 		onlyMaxValueIsTrue = true;
 	}
-	public Cosine(DataSet dataSet) {
-		super(dataSet);
+	public Cosine(DataSet dataSet, VoterParameters params, double dampeningFactorCosine) {
+		super(dataSet, params);
+		if (dampeningFactorCosine > 0) {
+			this.dampingFactor = dampeningFactorCosine;
+		} else {
+			this.dampingFactor = 0.2;
+		}
 	}
 
 

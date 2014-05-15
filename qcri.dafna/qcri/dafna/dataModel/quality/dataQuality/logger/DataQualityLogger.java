@@ -1,6 +1,7 @@
 package qcri.dafna.dataModel.quality.dataQuality.logger;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,17 +16,27 @@ import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 public class DataQualityLogger {
 	public void LogDataSetData(String fileName, DataQualityMeasurments dqm, DataSet dataSet) {
 		try {
-			BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName), Globals.FILE_ENCODING,
-					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			BufferedWriter writer; 
+			try {
+				writer = Files.newBufferedWriter(Paths.get(fileName), Globals.FILE_ENCODING,
+						StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			} catch (IOException e1) {
+				final File claimsFolder = new File(new File(fileName).getParent());
+				claimsFolder.mkdirs();
+				writer = Files.newBufferedWriter(Paths.get(fileName), Globals.FILE_ENCODING,
+						StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			}
+					
 
-			writer.write("Nb of sources :" + dataSet.getSourcesHash().keySet().size()+ "\n");
-			writer.write("NB of Claims: " + dqm.getTotalNumOfClaims() + "\n");
-			writer.write("Nb of Objects: " + dqm.getRedundancyOnObjects().keySet().size()+ "\n");
-			writer.write("Nb of DataItems: " + dataSet.getDataItemClaims().keySet().size()+ "\n");
+			writer.write("Nb. of sources :" + dataSet.getSourcesHash().keySet().size()+ "\n");
+			writer.write("Nb. of Claims: " + dqm.getTotalNumOfClaims() + "\n");
+			writer.write("Nb. of Objects: " + dqm.getRedundancyOnObjects().keySet().size()+ "\n");
+			writer.write("Nb. of DataItems: " + dataSet.getDataItemClaims().keySet().size()+ "\n");
 			writer.write("Gold Standard Values Count: " + dqm.getGoldStandardTrueValueCount()+ "\n");
 			writer.write("Data Items Coverage: " + dqm.getAverageNumOfClaimsPerSource()/dataSet.getDataItemClaims().keySet().size() + "\n");
 			
 			writer.write("Avg Nb. of Claims Per Source: " + dqm.getAverageNumOfClaimsPerSource()+ "\n");
+			writer.write("Max Nb. of Claims Per Source: " + dqm.getMaxNumOfClaimsPerSources()+ "\n");
 			writer.write("Avg Nb. of Values Per DataItem: " +  dqm.getAverageNumOfValuesPerDataItem()+ "\n");
 			writer.write("Avg Redundency on dataItem: " + dqm.getAverageRedundencyOnDataItem() + "\n");
 			writer.write("Avg Redundency on objects: " + dqm.getAverageRedundencyOnObject()+ "\n");

@@ -26,9 +26,6 @@ public class ConvergenceTester {
 			sumAB = sumAB + (a*b);
 			sumA2 = sumA2 + (a*a);
 			sumB2 = sumB2 + (b*b);
-			if (Double.isInfinite(sumAB)) {
-				System.out.println();
-			}
 		}
 		sumA2 = Math.pow(sumA2, 0.5);
 		sumB2 = Math.pow(sumB2, 0.5);

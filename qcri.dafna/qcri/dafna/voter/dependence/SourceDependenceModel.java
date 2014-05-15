@@ -14,6 +14,7 @@ import qcri.dafna.dataModel.data.ValueBucket;
 import qcri.dafna.dataModel.dataFormatter.DataComparator;
 import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 import qcri.dafna.voter.Voter;
+import qcri.dafna.voter.VoterParameters;
 
 public class SourceDependenceModel extends Voter {
 
@@ -21,7 +22,7 @@ public class SourceDependenceModel extends Voter {
 	protected final double c;
 //	final double ita;
 	final int n;
-	final double base_sim;
+	final double base_sim = 0.5;
 	final double similarityConstant;
 	/*------ Luna Impl----------*/
 //	private double aprioriSameValueProbability;
@@ -36,7 +37,6 @@ public class SourceDependenceModel extends Voter {
 //	private double aprioriIndependenceProbabilityPrime = 1/aprioriIndependenceProbability-1;
 	/*------ Luna Impl----------*/
 
-	private final double cosineSimilarityStoppingCondition;
 
 	private final boolean considerSimilarity;
 	private final boolean considerSourcesAccuracy;
@@ -48,26 +48,22 @@ public class SourceDependenceModel extends Voter {
 	private HashMap<String, HashMap<String, Dependence>> sourcesDependencies;
 
 	private final boolean orderSourcesByDependence;
-
-	public SourceDependenceModel(DataSet dataSet, double alfa, double c, int n, double cosineSimStoppingCondition, 
-			double base_sim, double similarityConstant, boolean considerSimilarity, 
-			boolean considerSourcesAccuracy, boolean computeNormalDependency, boolean orderSrcByDependence) {
-		super(dataSet);
+	
+	public SourceDependenceModel(DataSet dataSet, VoterParameters params,
+			double alfa, double c, int n,
+			double similarityConstant, boolean considerSimilarity, 
+			boolean considerSourcesAccuracy, boolean considerDependency, boolean orderSrcByDependence) {
+		super(dataSet, params);
 		this.considerSimilarity = considerSimilarity;
 		this.considerSourcesAccuracy = considerSourcesAccuracy;
-		this.base_sim = base_sim;
+//		this.base_sim = base_sim;
 		this.similarityConstant = similarityConstant;
-		this.cosineSimilarityStoppingCondition = cosineSimStoppingCondition;
 		this.alfa = alfa;
 		this.c = c;
 		this.n = n;
-//		this.aprioriSameValueProbability = Math.pow(ita, 3)/(double)n + Math.pow(1-ita, 3);//Math.pow(overallErrorRate, 3)/numOfWrongValues + Math.pow(1-overallErrorRate, 3);
-//		this.sameValueProbability = (1-c)/aprioriSameValueProbability + c;//(1-changePercentage)/aprioriSameValueProbability + changePercentage;
-//		this.sameCorrectValueProbability = (1-c*ita)/(1-ita);//(1-changePercentage*overallErrorRate)/(1-overallErrorRate);
-//		this.sameIncorrectValueProbability = ((double)n-c*(double)n)/ita+c;//(numOfWrongValues-changePercentage*numOfWrongValues)/overallErrorRate+changePercentage;
 		this.orderSourcesByDependence = orderSrcByDependence;
 
-		this.computeNormalDependency = computeNormalDependency;
+		this.computeNormalDependency = considerDependency;
 	}
 
 	private void initDependency(DataSet dataSet, boolean computeNormalDependency) {
@@ -174,7 +170,7 @@ public class SourceDependenceModel extends Voter {
 			//			System.out.print(numOfIteration + ": \t" + newTrustCosinSim + ". \t\t");
 			
 			computeMeasuresPerIteration(true, Math.abs(newTrustCosinSim - oldTrustCosinSim), Math.abs(newConfCosinSim - oldConfCosinSim));
-//			recomputTrueValues(); // the same implementation is done in the computePrecisionPerIteration
+			recomputTrueValues(); // the same implementation is done in the computePrecisionPerIteration
 			if (computeNormalDependency) {
 				computeDependencies(false);
 			}
@@ -183,7 +179,7 @@ public class SourceDependenceModel extends Voter {
 				if (numOfIteration > Globals.iterationCount) {
 					continueComputation = false;
 				}
-			} else if (Math.abs(newTrustCosinSim - oldTrustCosinSim) < cosineSimilarityStoppingCondition) {
+			} else if (Math.abs(newTrustCosinSim - oldTrustCosinSim) < ConvergenceTester.convergenceThreshold) {
 				continueComputation = false;
 			}
 			oldTrustCosinSim = newTrustCosinSim;
@@ -272,8 +268,6 @@ public class SourceDependenceModel extends Voter {
 					} else {
 						voteCount = 1;
 					}
-					double t = conf;
-					double t2 = conf+SrcTrustScore;
 					conf = conf + (SrcTrustScore * voteCount);
 					
 					if (Double.isNaN(conf)) {
@@ -302,7 +296,6 @@ public class SourceDependenceModel extends Voter {
 				depen = sourcesDependencies.get(s2.getSourceIdentifier()).get(src1.getSourceIdentifier());
 			}
 			copyingProbability = depen.getDependence();
-			double temp = vote;
 			vote = vote * (1 - (c * copyingProbability));
 			if (vote < 0) {
 				System.out.println("-");
@@ -365,7 +358,6 @@ public class SourceDependenceModel extends Voter {
 		if (Double.isNaN(result)) {
 			return 1;
 		}
-		// TODO : revise for the non-string values  
 		return (double)result;
 	}
 	private List<Source> orderListByName(Set<Source> sList) {

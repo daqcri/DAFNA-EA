@@ -14,10 +14,11 @@ import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 public class TwoEstimates extends Voter {
 	private final double normalizationWeight; // The lower value the better results (equal result for 0.2 and less)
 
-	public TwoEstimates(DataSet dataSet, double normalizationWeight) {
-		super(dataSet);
+	public TwoEstimates(DataSet dataSet, VoterParameters params, double normalizationWeight) {
+		super(dataSet, params);
 		this.normalizationWeight = normalizationWeight;
 	}
+
 	@Override
 	protected void initParameters() {
 		singlePropertyValue = false; 

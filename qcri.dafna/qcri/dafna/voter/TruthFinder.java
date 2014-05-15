@@ -15,7 +15,6 @@ public class TruthFinder extends Voter {
 	private double similarityConstant = 0.5; // as set in the paper
 	private double base_sim = 0.5;// as set in the paper
 	private double dampingFactor = 0.1; // as set in the paper
-	private double stoppingCondition = 0.001;
 
 	@Override
 	protected void initParameters() {
@@ -23,13 +22,11 @@ public class TruthFinder extends Voter {
 		onlyMaxValueIsTrue = true;
 	}
 
-	public TruthFinder(DataSet dataSet, double similarityConstant, double base_sim, 
-			double dampingFactor, double stoppingCondition) {
-		super(dataSet);
-		this.similarityConstant = similarityConstant;
-		this.base_sim = base_sim;
-		this.dampingFactor = dampingFactor;
-		this.stoppingCondition = stoppingCondition;
+	public TruthFinder(DataSet dataSet, VoterParameters params, double similarityConstantTF, double dampeningFactorTF) {
+		super(dataSet, params);
+		this.similarityConstant = similarityConstantTF;
+//		this.base_sim = base_sim;
+		this.dampingFactor = dampeningFactorTF;
 	}
 
 	/**
@@ -58,10 +55,6 @@ public class TruthFinder extends Voter {
 			//Compute Sources Trustworthiness
 			computeTrustworthiness();
 
-			/**
-			 * Compute the precision for every iteration.
-			 */
-			//			voterQuality.computePrecisionAndRecall();
 
 			//Compute Trustworthiness cosine similarity.
 			newCosineSimilarity = ConvergenceTester.computeTrustworthinessCosineSimilarity(dataSet);
@@ -74,7 +67,7 @@ public class TruthFinder extends Voter {
 				if (i > Globals.iterationCount) {
 					continueComputation = false;
 				}
-			} else if (cosineSimilarityDifference <= stoppingCondition) {
+			} else if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {
 				continueComputation = false;
 			} 
 			trustworthinessCosineSimilarity = newCosineSimilarity;

@@ -13,10 +13,6 @@ import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.quality.dataQuality.DataItemMeasures;
 
 public class WeatherTruthReader extends TruthReader {
-/*
- * File format
- * object Id \t propertyNAme \t value
- */
 	public WeatherTruthReader(HashMap<String, DataItemMeasures> dataItemMeasures) {
 		super(dataItemMeasures);
 	}

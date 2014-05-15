@@ -82,7 +82,8 @@ public class PopulationDatasetReadOldWriteNew {
 							date = fromToDate.substring(1,fromToDate.indexOf(" ")).substring(fromToDate.indexOf("/")).substring(fromToDate.indexOf("/"));
 							propertyName = Globals.populationDataSet_Population + date.trim();
 
-							if (ClaimWriter.writeClaim(writer, claimId, location, propertyName, value, "null", sourceID, newFileDelimiter)) {
+							if (ClaimWriter.writeClaim(writer, claimId, location, propertyName, value, "null", 
+									sourceID, newFileDelimiter)) {
 								claimId ++;
 								numberOfClaims ++; 
 								fileEntriesCount ++;

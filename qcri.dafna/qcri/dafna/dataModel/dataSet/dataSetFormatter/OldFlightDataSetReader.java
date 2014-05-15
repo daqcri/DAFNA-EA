@@ -74,14 +74,14 @@ public class OldFlightDataSetReader {
 							flight_objectId = flight_objectId + timeStamp;
 
 							lineWriten = ClaimWriter.writeClaim(writer, claimId, flight_objectId, /*timeStamp,*/ Globals.flightDataSet_ExpectedDepartureTime, 
-									expectedDepartureTime, timeStamp, sourceID, Globals.delimiterText);
+									expectedDepartureTime, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 							if (lineWriten) {
 								claimId ++;
 								numberOfClaims ++; 
 								fileEntriesCount ++;
 							}
 							lineWriten = ClaimWriter.writeClaim(writer, claimId, flight_objectId, /*timeStamp,*/ Globals.flightDataSet_ActualDepartureTime, 
-									actualDeparture, timeStamp, sourceID, Globals.delimiterText);
+									actualDeparture, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 							if (lineWriten) {
 								claimId ++;
 								numberOfClaims ++;
@@ -89,7 +89,7 @@ public class OldFlightDataSetReader {
 							}
 
 							lineWriten = ClaimWriter.writeClaim(writer, claimId, flight_objectId, /*timeStamp,*/ Globals.flightDataSet_DepartureGate, 
-									departGate, timeStamp, sourceID, Globals.delimiterText);
+									departGate, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 							if (lineWriten) {
 								claimId ++;
 								numberOfClaims ++;
@@ -97,7 +97,7 @@ public class OldFlightDataSetReader {
 							}
 
 							lineWriten = ClaimWriter.writeClaim(writer, claimId, flight_objectId, /*timeStamp,*/ Globals.flightDataSet_ExpectedArrivalTime, 
-									expectedArrivalTime, timeStamp, sourceID, Globals.delimiterText);
+									expectedArrivalTime, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 							if (lineWriten) {
 								claimId ++;
 								numberOfClaims ++;
@@ -105,7 +105,7 @@ public class OldFlightDataSetReader {
 							}
 
 							lineWriten = ClaimWriter.writeClaim(writer, claimId, flight_objectId, /*timeStamp,*/ Globals.flightDataSet_ActualArrivalTime, 
-									actualArrival, timeStamp, sourceID, Globals.delimiterText);
+									actualArrival, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 							if (lineWriten) {
 								claimId ++;
 								numberOfClaims ++;
@@ -113,7 +113,7 @@ public class OldFlightDataSetReader {
 							}
 
 							lineWriten = ClaimWriter.writeClaim(writer, claimId, flight_objectId, /*timeStamp,*/ Globals.flightDataSet_ArrivalGate, 
-									arrivalGate, timeStamp, sourceID, Globals.delimiterText);
+									arrivalGate, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 							if (lineWriten) {
 								claimId ++;
 								numberOfClaims ++;

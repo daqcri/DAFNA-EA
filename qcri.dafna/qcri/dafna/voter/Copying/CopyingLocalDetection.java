@@ -7,6 +7,7 @@ import java.util.List;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Source;
 import qcri.dafna.dataModel.data.ValueBucket;
+import qcri.dafna.voter.VoterParameters;
 import qcri.dafna.voter.dependence.SourceDependenceModel;
 
 public class CopyingLocalDetection extends SourceDependenceModel {
@@ -27,8 +28,8 @@ public class CopyingLocalDetection extends SourceDependenceModel {
 	private HashMap<String, HashMap<String, Double>> sourcesDependenciesValues;
 
 	public CopyingLocalDetection(DataSet dataSet, double alfa, double c, double ita, int n, double cosineSimStoppingCondition, 
-			double base_sim, double similarityConstant, boolean considerSimilarity, boolean considerSourcesAccuracy) {
-		super(dataSet, alfa, c, n, cosineSimStoppingCondition, base_sim, similarityConstant, considerSimilarity, considerSourcesAccuracy, false, true);
+			double base_sim, double similarityConstant, boolean considerSimilarity, boolean considerSourcesAccuracy, VoterParameters params) {
+		super(dataSet, params, alfa, c, n, similarityConstant, considerSimilarity, considerSourcesAccuracy, false, true);
 		dataSetProfile = new Profiling(dataSet);
 		sourcesProfiling = new HashMap<String, SourceProfiling>();
 		sourcesDependencies = new HashMap<String, HashMap<String,dependenciesProfiling>>();

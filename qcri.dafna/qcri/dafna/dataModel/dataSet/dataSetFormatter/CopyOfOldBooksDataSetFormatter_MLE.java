@@ -70,7 +70,7 @@ public class CopyOfOldBooksDataSetFormatter_MLE {
 								if ( ! singleClaimValue) {
 
 									lineWriten = ClaimWriter.writeClaim(writer,claimId, isbn, Globals.bookDataSet_AuthorsNamesList, 
-											authorsList, timeStamp, sourceID, Globals.delimiterText);
+											authorsList, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 									if (lineWriten) {
 										claimId ++;
 										numberOfClaims ++; 
@@ -82,7 +82,7 @@ public class CopyOfOldBooksDataSetFormatter_MLE {
 									names = Arrays.asList(authorsList.split(Globals.cleanedListDelimiter));
 									for (String name : names) {
 										lineWriten = ClaimWriter.writeClaim(writer,claimId, isbn, Globals.bookDataSet_AuthorsNamesList, 
-												name, timeStamp, sourceID, Globals.delimiterText);
+												name, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 										if (lineWriten) {
 											claimId ++;
 											numberOfClaims ++; 

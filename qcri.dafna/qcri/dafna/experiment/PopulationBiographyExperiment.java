@@ -4,7 +4,6 @@ package qcri.dafna.experiment;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.quality.dataQuality.logger.DataQualityLogger;
-import qcri.dafna.voter.ExperimentDataSetConstructor;
 
 public class PopulationBiographyExperiment extends Experiment{
 
@@ -15,9 +14,9 @@ public class PopulationBiographyExperiment extends Experiment{
 //	}
 	static private void launchDataSet_BiographyExperiment() {
 
-		DataSet dataSet = ExperimentDataSetConstructor.readDataSet(Globals.starting_Confidence,Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence,Globals.starting_trustworthiness, 
 				Globals.directory_formattedDAFNADataset_PopulationBiographyClaimsFolder, 
-				Globals.tolerance_Factor, false, null ,qcri.dafna.voter.ExperimentDataSetConstructor.Experiment.PopulationBiography, null, false); 
+				Globals.tolerance_Factor, false, null ,qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment.PopulationBiography, null, false); 
 		String dir = Globals.directory_FormattedPopulationBiographyFolder;
 
 		boolean convergence100 = false;

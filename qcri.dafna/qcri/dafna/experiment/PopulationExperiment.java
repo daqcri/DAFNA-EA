@@ -2,8 +2,7 @@ package qcri.dafna.experiment;
 
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
-import qcri.dafna.voter.ExperimentDataSetConstructor;
-import qcri.dafna.voter.ExperimentDataSetConstructor.Experiment;
+import qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment;
 
 public class PopulationExperiment extends qcri.dafna.experiment.Experiment{
 
@@ -25,7 +24,7 @@ public class PopulationExperiment extends qcri.dafna.experiment.Experiment{
 
 	static private void launchDataSet_PopulationExperiment() {
 //		Date d = new Date();System.out.println(d.toString());
-		DataSet dataSet = ExperimentDataSetConstructor.readDataSet(Globals.starting_Confidence,Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence,Globals.starting_trustworthiness, 
 				Globals.directory_formattedDAFNADataset_PopulationClaimsFolder, Globals.tolerance_Factor, false, null ,Experiment.Population, null, false);
 
 		

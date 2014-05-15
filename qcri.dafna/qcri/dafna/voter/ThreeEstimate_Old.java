@@ -21,9 +21,9 @@ public class ThreeEstimate_Old extends Voter {
 	private final double normalizationWeight;
 
 	private int max;
-	public ThreeEstimate_Old(DataSet dataSet, int iterationCount, double normalizationWeight) {
-		super(dataSet);
-		this.normalizationWeight = normalizationWeight;
+	public ThreeEstimate_Old(DataSet dataSet, int iterationCount, VoterParameters params) {
+		super(dataSet, params);
+		this.normalizationWeight = -1;
 		max = iterationCount;
 	}
 

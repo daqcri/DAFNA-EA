@@ -13,9 +13,9 @@ import qcri.dafna.dataModel.quality.dataQuality.DataItemMeasures;
 public class MainClass {
 	
 	public static void main(String[] args) {
-//		readOldBookFilesWriteNewFilesMLE();
+		readOldBookFilesWriteNewFilesMLE();
 
-		readOldWeatherFilesWriteNewFiles();
+//		readOldWeatherFilesWriteNewFiles();
 
 //		readOldPopulationAndBiographyFilesWriteNewFiles();
 
@@ -26,7 +26,7 @@ public class MainClass {
 //		readOldBiographyFilesWriteNewFiles();
 
 //		readOldFlightFilesWriteNewFiles();
-//		readOldBookFilesWriteNewFilesSingleClaimValue();
+		readOldBookFilesWriteNewFilesSingleClaimValue();
 //		readOldBookFilesWriteNewFiles();
 	}
 

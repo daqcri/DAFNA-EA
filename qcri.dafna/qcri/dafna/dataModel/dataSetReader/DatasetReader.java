@@ -16,8 +16,8 @@ import qcri.dafna.dataModel.quality.dataQuality.DataSetTimingMeasures;
 public class DatasetReader {
 
 	DataSet dataSet;
-	public DatasetReader(double startingConfidence, double startingTrustworthiness) {
-		dataSet = new DataSet(startingConfidence, startingTrustworthiness);
+	public DatasetReader()    {
+		dataSet = new DataSet();
 	}
 
 	/**
@@ -45,6 +45,9 @@ public class DatasetReader {
 			e.printStackTrace();
 		}
 		return dataSet;
+	}
+	public DataSet readDirectoryFiles(String directory, DataSetTimingMeasures timings) {
+		return readDirectoryFiles(directory, false, null, timings);
 	}
 	/**
 	 * 
@@ -80,7 +83,7 @@ public class DatasetReader {
 			String timeStamp = null;
 			try { timeStamp = scanner.next();} catch (NoSuchElementException e) {}
 			
-			double weight = 0.0; // TODO
+			double weight = 1.0; // TODO
 
 			// TODO when the dataset is clean this should be removed
 			if (stringValue.equals("Not Available") || stringValue.trim().isEmpty()) {

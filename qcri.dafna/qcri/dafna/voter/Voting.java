@@ -11,8 +11,8 @@ import qcri.dafna.experiment.profiling.Profiler;
 
 public class Voting extends Voter{
 
-	public Voting(DataSet dataSet) {
-		super(dataSet);
+	public Voting(DataSet dataSet, VoterParameters params) {
+		super(dataSet, params);
 	}
 	@Override
 	public int runVoter(boolean convergence100) {

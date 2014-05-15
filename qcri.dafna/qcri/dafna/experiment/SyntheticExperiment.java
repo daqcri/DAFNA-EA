@@ -13,7 +13,6 @@ import java.util.List;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
-import qcri.dafna.voter.ExperimentDataSetConstructor;
 
 public class SyntheticExperiment extends Experiment{
 	private static Connection connect = null;
@@ -131,12 +130,12 @@ public class SyntheticExperiment extends Experiment{
 		//		where = where + "num_of_different_values = " + numOfDistinctValues + " ";.
 		return selectQuery; 
 	}
-	
+
 
 	private static String getSyntheticExperimentSelectQuery(boolean runLTM){
-		int numOfSources = 50;
-		int numOfObjects = 200;
-		int numOfProperties = 5;
+		int numOfSources = 877;
+		int numOfObjects = 1263;
+		int numOfProperties = 1;
 
 		int numOfDistinctValues = -1;
 		List<Integer> numOfDistinctValues_List = new ArrayList<Integer>();
@@ -149,10 +148,10 @@ public class SyntheticExperiment extends Experiment{
 		List<Double> coverage_list = new ArrayList<Double>();
 //		coverage_list.add(0.25);
 		coverage_list.add(0.75);
-		int data_items_coverage_method_id = 2;// 2->expo
+		int data_items_coverage_method_id = 1;// 2->expo
 
 		int numOfDiferentValueGenerationMethod = 3;
-		int numDistinctValues = 30;
+		int numDistinctValues = 20;
 		int controlSrcTrueValMethod = 6; // 30 = fully optimistic
 		double percentageOfTruValPerSrc = 0.5;// only used for uniform method 
 		int controlNumOfSrcPerValMethod = -1;
@@ -167,14 +166,14 @@ public class SyntheticExperiment extends Experiment{
 //		}
 //		where = where + " coverage > " + (0.74) + " AND coverage < " + (0.76);
 //		where = where.trim().substring(0, where.length() - 4) + " ) AND ";
-				where = where + " AND dependency_id = " + dependencyID;
+//				where = where + " AND dependency_id = " + dependencyID;
 				where = where + " AND num_of_different_values = " + numDistinctValues;
 //				where = where + " num_of_independent_sources " + " IN " + " (10, 20, 30, 40, 50) AND " ;
 //				where = where + " percentage_of_copied_values > 0.99 ";
 //				where = where + " AND similarity_id = " + similarityID;// + " AND ";
 		//		where = where + "control_num_of_src_per_value_method_id = " + controlNumOfSrcPerValMethod + " AND ";
 //		where = where + " AND control_src_true_value_method_id = " + controlSrcTrueValMethod;// + " AND ";
-				where = where + " AND di_different_values_method_id = " + numOfDiferentValueGenerationMethod;
+//				where = where + " AND di_different_values_method_id = " + numOfDiferentValueGenerationMethod;
 				where = where + " AND data_items_coverage_method_id = " + data_items_coverage_method_id;
 		//		where = where + " AND num_of_sources_per_value = " + numOfSourcesPerValue + " AND ";
 //		where = where + " percentage_true_val_per_src > " + (percentageOfTruValPerSrc - 0.0001) + 
@@ -264,9 +263,9 @@ public class SyntheticExperiment extends Experiment{
 
 	private static HashMap<String, VoterQualityMeasures> launchSyntheticExperiment(String dataSetDir, String truthDir, String experimentName, boolean runLTM) {
 //		System.out.println("Start synthetic experiment...");
-		DataSet dataSet = ExperimentDataSetConstructor.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
 				dataSetDir, 0, false, null, 
-				qcri.dafna.voter.ExperimentDataSetConstructor.Experiment.Synthetic, truthDir, false);
+				qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment.Synthetic, truthDir, false);
 		DataSet dataSetSinglePropertyValue = null;
 		//		DataSet dataSetSinglePropertyValue = ExperimentDataSetConstructor.readDataSet(0, 0, 
 		//				Globals.directory_formattedDAFNADataset_BooksFolder_SingleClaimValue, 0, true, 

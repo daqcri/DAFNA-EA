@@ -2,8 +2,6 @@ package qcri.dafna.voter;
 
 import java.util.List;
 
-import org.apache.commons.math3.random.JDKRandomGenerator;
-import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.UniformRandomGenerator;
 
 import qcri.dafna.dataModel.data.DataSet;
@@ -21,19 +19,17 @@ import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 public class SimpleLCA extends Voter {
 
 	double pym;
-	private final double cosineSimilarityStoppingCondition = 0.001;
-	private double startingTrust = 0.8;
+	
 
-	public SimpleLCA(DataSet dataSet, double probabilityOfTruthexistance, double startingTrust) {
-		super (dataSet);
-		pym = probabilityOfTruthexistance;
-		this.startingTrust = startingTrust;
+	public SimpleLCA(DataSet dataSet, VoterParameters params, double beta1LCA) {
+		super(dataSet, params);
+		pym = beta1LCA;
 	}
 
 	@Override
 	protected void initParameters() {
 		singlePropertyValue = false;
-		onlyMaxValueIsTrue = true;// TODO check this
+		onlyMaxValueIsTrue = true;
 	}
 
 	@Override
@@ -50,8 +46,8 @@ public class SimpleLCA extends Voter {
 
 			newTrustCosinSim = ConvergenceTester.computeTrustworthinessCosineSimilarity(dataSet);
 			newconfCosineSim = ConvergenceTester.computeConfidenceCosineSimilarity(dataSet);
-			continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < cosineSimilarityStoppingCondition) &&
-					(Math.abs(newTrustCosinSim-oldTrustCosinSim) < cosineSimilarityStoppingCondition));
+			continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
+					(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
 			if (convergence100) {
 				if (numOfIteration > Globals.iterationCount) {
 					continueComputation = false;

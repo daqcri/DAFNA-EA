@@ -2,8 +2,6 @@ package qcri.dafna.voter;
 
 import java.util.List;
 
-import org.apache.commons.math3.random.JDKRandomGenerator;
-import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.UniformRandomGenerator;
 
 import qcri.dafna.dataModel.data.DataSet;
@@ -15,19 +13,18 @@ import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 
 /**
  * Guess LCA Voter
- * @author dalia
+ * @author dalia, Laure
  *
  */
 public class GuessLCA extends Voter {
 
 	private double pym;
-	double cosineSimilarityStoppingCondition = ConvergenceTester.convergenceThreshold;
-	private double startingTrust = 0.8;
-	public GuessLCA(DataSet dataSet,  double probabilityOfTruthexistance, double startingTrust) {
-		super(dataSet);
-		pym = probabilityOfTruthexistance;
-		this.startingTrust = startingTrust;
+
+	public GuessLCA(DataSet dataSet, VoterParameters params, double beta1LCA) {
+		super(dataSet, params);
+		pym = beta1LCA;
 	}
+
 	@Override
 	protected void initParameters() {
 		singlePropertyValue = false; 
@@ -53,8 +50,8 @@ public class GuessLCA extends Voter {
 					continueComputation = false;
 				}
 			} else {
-				continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < cosineSimilarityStoppingCondition) &&
-						(Math.abs(newTrustCosinSim-oldTrustCosinSim) < cosineSimilarityStoppingCondition));
+				continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
+						(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
 			}
 			numOfIteration ++;
 			computeMeasuresPerIteration(true, Math.abs(newTrustCosinSim-oldTrustCosinSim), Math.abs(newconfCosineSim-oldConfCosineSim));
@@ -74,9 +71,6 @@ public class GuessLCA extends Voter {
 			
 			confidenceSum = 0;
 			for (ValueBucket bucket : bucketsList) {
-//				if (bucket.getClaims().get(0).getObjectIdentifier().equals("9781558604032")) {
-//					System.out.println();
-//				}
 				pGuess = bucket.getErrorFactor(); // the guess probability of each claim bucket is saved in the error facto field
 				conf = pym;
 				for (Source s : bucket.getSources()) {
@@ -100,7 +94,6 @@ public class GuessLCA extends Voter {
 			}
 			/** Compute the expectation-step equation */
 			for (ValueBucket bucket : bucketsList) {
-				double temp3 = bucket.getConfidence();
 				bucket.setConfidence(bucket.getConfidence()/confidenceSum);
 				if (Double.isNaN(bucket.getConfidence())) {
 					System.out.println();
@@ -110,21 +103,13 @@ public class GuessLCA extends Voter {
 	}
 
 	private void computeTrustworthiness() {
-		double sumOfAllConf;
-		double sumOfAllConfPerBucketList;
 		double numerator, denom;
-		double tempNumerator;
 		double pGuess ;// the bucket.error factor contains the guess probability for each claim bucket
 
-		boolean listContainsSource;
 		for (Source s : dataSet.getSourcesHash().values()) {
-			sumOfAllConf = 0;
 			numerator = 0;
 			denom = 0;
 			for (SourceClaim claim : s.getClaims()) {
-//				if (claim.getObjectIdentifier().equals("9781558604032")) {
-//					System.out.println();
-//				}
 				numerator = numerator + claim.getBucket().getConfidence();
 				for (ValueBucket b : dataSet.getDataItemsBuckets().get(claim.dataItemKey())) {
 					pGuess = b.getErrorFactor();
@@ -156,38 +141,12 @@ public class GuessLCA extends Voter {
 				System.out.println();
 			}
 			s.setTrustworthiness(numerator/denom);
-//			for (List<ValueBucket> bucketsList : dataSet.getDataItemsBuckets().values()) {
-//				listContainsSource = false;
-//				tempNumerator = 0;
-//				sumOfAllConfPerBucketList = 0;
-//				for (ValueBucket bucket : bucketsList) {
-//					pGuess = bucket.getErrorFactor();
-//					if (bucket.getSourcesKeys().contains(s.getSourceIdentifier())) {
-//						listContainsSource = true;
-//						tempNumerator= tempNumerator + bucket.getConfidence();
-//					} else {
-////						if (pGuess == 1) {
-//							tempNumerator = tempNumerator + (bucket.getConfidence() * (pGuess));
-////						} else {
-////							tempNumerator = tempNumerator + (bucket.getConfidence() * (pGuess /(1-pGuess)));
-////						}
-//					}
-//					sumOfAllConfPerBucketList = sumOfAllConfPerBucketList + bucket.getConfidence();
-//				}
-//				if (listContainsSource) {
-//					sumOfAllConf = sumOfAllConf + sumOfAllConfPerBucketList;
-//					numerator = numerator + tempNumerator;
-//				}
-//			}
-//			s.setOldTrustworthiness(s.getTrustworthiness());
-//			s.setTrustworthiness(numerator/sumOfAllConf);
 		}
 	}
 	/**
 	 * TODO choose which implementation to take for the guess probability calculation
 	 */
 	private void init() {
-		//		dataSet.resetDataSet(0.5, 0, 0);
 //		RandomGenerator rgA = new JDKRandomGenerator();
 //		rgA.setSeed((int)(Math.random() * 100000000)); 
 //		UniformRandomGenerator randomGeneratorA = new UniformRandomGenerator(rgA);

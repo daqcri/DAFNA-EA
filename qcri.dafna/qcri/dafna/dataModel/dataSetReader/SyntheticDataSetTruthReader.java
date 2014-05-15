@@ -49,7 +49,7 @@ public class SyntheticDataSetTruthReader extends TruthReader {
 	}
 	public void processLine(String fileLine, String timeStamp) {
 		// line format:
-		// object Id \t propertyNAme \t value
+		// object Id \t propertyName \t value
 		Scanner scanner = new Scanner(fileLine);
 		scanner.useDelimiter("\t");
 		try {

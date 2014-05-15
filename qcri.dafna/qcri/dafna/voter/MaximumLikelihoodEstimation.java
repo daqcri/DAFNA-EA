@@ -37,15 +37,15 @@ public class MaximumLikelihoodEstimation extends Voter {
 	 * The final source reliability in the source,trustworthiness field
 	 * @param dataSet
 	 */
-	public MaximumLikelihoodEstimation(DataSet dataSet, double bita1, double r) {
-		super(dataSet);
+	public MaximumLikelihoodEstimation(DataSet dataSet, VoterParameters params, double beta1MLE, double rMLE) {
+		super(dataSet, params);
 
 		aOld = new HashMap<String, Double>();
 		bOld = new HashMap<String, Double>();
 		a = new HashMap<String, Double>();
 		b = new HashMap<String, Double>();
-		bita = bita1;
-		this.r = r;
+		bita = beta1MLE;
+		this.r = rMLE;
 	}
 
 	@Override
@@ -149,7 +149,6 @@ public class MaximumLikelihoodEstimation extends Voter {
 	private double bCosineSim = 0;
 	private double trustCosineSimDiff;
 	private double confCosineSimDiff;
-	private final double cosineSimilarityStoppingCondition = 0.00001;
 
 	private boolean continueComputation(boolean convergence100, int i) {
 		double acs = ConvergenceTester.computeValuesCosineSimilarity(aOld, a, dataSet.getSourcesHash().keySet());
@@ -166,7 +165,7 @@ public class MaximumLikelihoodEstimation extends Voter {
 			} else {
 				return false;
 			}
-		} else if (trustCosineSimDiff < cosineSimilarityStoppingCondition && confCosineSimDiff < cosineSimilarityStoppingCondition) {
+		} else if (trustCosineSimDiff < ConvergenceTester.convergenceThreshold && confCosineSimDiff < ConvergenceTester.convergenceThreshold) {
 			return false;
 		}
 		return true;

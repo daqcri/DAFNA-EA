@@ -64,7 +64,11 @@ public class OldBooksDataSetFormatter {
 						s2.useDelimiter( "\t");
 						try {
 							sourceID = s2.next();
-							isbn = s2.next();
+							isbn = s2.next(); 
+							
+							isbn = (String) DataCleaner.clean(isbn, ValueType.ISBN);
+							
+							
 							s2.next(); // bookName = s2.next();
 							authorsList = "";
 							try { authorsList = s2.next(); } catch (NoSuchElementException e) {}
@@ -73,7 +77,7 @@ public class OldBooksDataSetFormatter {
 								if ( ! singleClaimValue) {
 
 									lineWriten = ClaimWriter.writeClaim(writer,claimId, isbn, Globals.bookDataSet_AuthorsNamesList, 
-											authorsList, timeStamp, sourceID, Globals.delimiterText);
+											authorsList, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 									if (lineWriten) {
 										claimId ++;
 										numberOfClaims ++; 
@@ -85,7 +89,7 @@ public class OldBooksDataSetFormatter {
 									names = Arrays.asList(authorsList.split(Globals.cleanedListDelimiter));
 									for (String name : names) {
 										lineWriten = ClaimWriter.writeClaim(writer,claimId, isbn, Globals.bookDataSet_AuthorsNamesList+name, 
-												"True", timeStamp, sourceID, Globals.delimiterText);
+												"True", timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 										if (lineWriten) {
 											claimId ++;
 											numberOfClaims ++; 
@@ -97,7 +101,7 @@ public class OldBooksDataSetFormatter {
 									names = Arrays.asList(authorsList.split(Globals.cleanedListDelimiter));
 									for (String name : names) {
 										lineWriten = ClaimWriter.writeClaim(writer,claimId, isbn, Globals.bookDataSet_AuthorsNamesList, 
-												name, timeStamp, sourceID, Globals.delimiterText);
+												name, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 										if (lineWriten) {
 											claimId ++;
 											numberOfClaims ++; 

@@ -20,7 +20,7 @@ public class SourceClaim {
 	private Source source;
 	private String timeStamp = null;
 	private String timeStampFormat;
-	private double weight;
+	private double weight = 1.0;
 
 	private boolean trueClaimByVoter = false;
 

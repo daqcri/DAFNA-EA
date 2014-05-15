@@ -56,7 +56,7 @@ public class IllustartiveExample extends qcri.dafna.experiment.Experiment{
 		return dataSet;
 	}
 	private static DataSet composeDatasetValues(double startingConfidence, double statingTrustworthiness) {
-		DataSet dataset = new DataSet(startingConfidence, statingTrustworthiness);
+		DataSet dataset = new DataSet();
 		int claimId = 1;
 		String propertyName = "AffiliatedTo";
 		String timeStamp = null;
@@ -90,7 +90,7 @@ public class IllustartiveExample extends qcri.dafna.experiment.Experiment{
 		stringValue = "BEA";
 		dataset.addClaim(claimId, /*entityID,*/ objectId, objectId, propertyName, stringValue, weight , timeStamp, sourceId); claimId++;
 		objectId = "Halevy";
-		stringValue = "UW";
+		stringValue = "UWisc";
 		dataset.addClaim(claimId, /*entityID,*/ objectId, objectId, propertyName, stringValue, weight , timeStamp, sourceId); claimId++;
 
 		

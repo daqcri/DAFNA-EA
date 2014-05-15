@@ -17,8 +17,8 @@ import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 public class ThreeEstimates extends Voter {
 	private final double normalizationWeight; 
 
-	public ThreeEstimates(DataSet dataSet, double normalizationWeight) {
-		super(dataSet);
+	public ThreeEstimates(DataSet dataSet, VoterParameters params, double normalizationWeight) {
+		super(dataSet, params);
 		this.normalizationWeight = normalizationWeight;
 	}
 	@Override
@@ -76,11 +76,7 @@ public class ThreeEstimates extends Voter {
 				neg = 0;
 				errorFactor = b.getErrorFactor();
 				for (Source s : b.getSources()) {
-//					double t = pos;
 					pos = pos + 1 - (s.getTrustworthiness() * errorFactor);
-//					if (Double.isNaN(pos) || Double.isInfinite(pos)) {
-//						System.out.println();
-//					}
 					numSrc = numSrc +1;
 				}
 				for (ValueBucket b2 : bList) {
@@ -89,9 +85,6 @@ public class ThreeEstimates extends Voter {
 					}
 					for (Source s : b2.getSources()) {
 						neg = neg + (s.getTrustworthiness() * errorFactor);
-//						if (Double.isNaN(neg) || Double.isInfinite(neg)) {
-//							System.out.println(); // just for testing
-//						}
 						numSrc = numSrc +1;
 					}
 				}
@@ -99,11 +92,6 @@ public class ThreeEstimates extends Voter {
 				if (Double.isNaN(d)) {
 					System.out.println();// just for testing
 				}
-//				if (b.getClaims().get(0).getObjectIdentifier().equals("9780131426603")) {
-//					if(b.getSourcesKeys().contains("Collegebooksdirect.com")) {
-//						System.out.println("C=(" + pos + " + " + neg + "/" + numSrc + ")=" +d);
-//					}
-//				}
 				b.setConfidence((pos+neg)/numSrc);
 			}
 		}
@@ -121,9 +109,6 @@ public class ThreeEstimates extends Voter {
 					if (s.getTrustworthiness() != 0) {
 						pos = pos + ((1 - conf)/s.getTrustworthiness());
 					}
-//					if (Double.isNaN(pos)) {
-//						System.out.println();// just for testing
-//					}
 					numSrc = numSrc +1;
 				}
 				for (ValueBucket b2 : bList) {
@@ -132,25 +117,12 @@ public class ThreeEstimates extends Voter {
 					}
 					for (Source s : b2.getSources()) {
 						if (s.getTrustworthiness() != 0) {
-							double t = neg;
 							neg = neg + (conf/s.getTrustworthiness());
 						}
-//						if (Double.isNaN(neg)) {
-//							System.out.println();
-//						}
 						numSrc = numSrc + 1;
 					}
 					
 				}
-				double d = (pos+neg)/numSrc;
-				if (Double.isNaN(d)) {
-					System.out.println();// just for testing
-				}
-//				if (b.getClaims().get(0).getObjectIdentifier().equals("9780131426603")) {
-//					if(b.getSourcesKeys().contains("Collegebooksdirect.com")) {
-//						System.out.println("E=(" + pos + " + " + neg + "/" + numSrc + ")=" +d);
-//					}
-//				}
 				b.setErrorFactor((pos+neg)/numSrc);
 			}
 		}
@@ -167,9 +139,6 @@ public class ThreeEstimates extends Voter {
 				if (claim.getBucket().getErrorFactor() != 0) {
 					pos = pos + (1-(claim.getBucket().getConfidence()/claim.getBucket().getErrorFactor()));
 				}
-				//				if (Double.isNaN(pos)) {
-				//					System.out.println();// just for testing
-				//				}
 				claimsNum++;
 				for (ValueBucket b : dataSet.getDataItemsBuckets().get(claim.dataItemKey())) {
 					if (b.getId() == claim.getBucket().getId()) {
@@ -181,15 +150,7 @@ public class ThreeEstimates extends Voter {
 					claimsNum++;
 				}
 			}
-//			double d = (pos+neg)/claimsNum;
-//
-			//			if (Double.isNaN(d)) {
-			//				System.out.println();// just for testing
-			//			}
 			src.setOldTrustworthiness(src.getTrustworthiness());
-//			if (src.getSourceIdentifier().equals("Collegebooksdirect.com")) {
-//					System.out.println("T=(" + pos + " + " + neg + "/" + claimsNum + ")=" +(pos+neg)/claimsNum);
-//			}
 			src.setTrustworthiness((pos+neg)/claimsNum);
 		}
 	}

@@ -63,7 +63,7 @@ public class Globals {
 	public static final String weatherDataSet_Pressure = "Pressure";
 	public static final String weatherDataSet_Visibility = "Visibility";
 
-	private static final String name = "/home/dalia";
+	private static String name = "/home/dalia";
 	private static final String directory_Log = name + "/DAFNAData/experiments";
 	public static final String directory_datasetLog = directory_Log + "/datasetLog";
 	public static final String directory_voterLog = directory_Log + "/voterLog";
@@ -165,15 +165,16 @@ public class Globals {
 	public static final int MaxFileEntriesCount = 75000;
 
 
-
 	// The delimiter used in the data file
-	public static final String delimiterText = "|\t";
+	public static final String delimiterText =  "|\t";//",";//
 	// The regular expression used to detect the delimiter
-	public static final String delimiterRegularExpression = "\\|\\t";
+	public static final String delimiterRegularExpression ="\\|\\t";//",";//
 	public static final String cleanedListDelimiter = ";";
 	public static final Charset FILE_ENCODING = StandardCharsets.UTF_8;//.ISO_8859_1;
 
-	public static final int iterationCount = 500;//50
+//	public static char CSVDelimiter = ',';
+
+	public static final int iterationCount = 50;//50
 
 
 	/* -------------------- database ---------------------------*/

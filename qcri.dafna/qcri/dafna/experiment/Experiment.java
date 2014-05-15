@@ -27,6 +27,7 @@ import qcri.dafna.voter.SimpleLCA;
 import qcri.dafna.voter.ThreeEstimates;
 import qcri.dafna.voter.TruthFinder;
 import qcri.dafna.voter.TwoEstimates;
+import qcri.dafna.voter.VoterParameters;
 import qcri.dafna.voter.Voting;
 import qcri.dafna.voter.dependence.SourceDependenceModel;
 import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
@@ -58,92 +59,59 @@ public abstract class Experiment {
 		double similarityConstant = 0.5;//0.5 as set in the paper TruthFinder
 		double base_sim = 0.5;// as set in the paper TruthFinder
 		double dampingFactor = 0.1; // as set in the paper comparative study
+		double dampingFactorCosine = 0.2;
 		
 		double startingTrust = 0.8;//0.8;
+		double startingConfidence = 1.0;
 		double startingErrorFactor = 0.4;
 
 		double normalizationWeight = 0.5;// used for the 2-estimates and 3-estimates normalization
 
+		VoterParameters params = new VoterParameters(cosineSimDiffStoppingCriteria, startingTrust, startingConfidence, startingErrorFactor);
 		/* ---------------------------------- Voter ---------------------------------- */
-		long time = 0;
-		for (int i = 0; i <10; i ++) {
 
-		dataSet.resetDataSet(startingTrust, 1, 0);
-		Voting voting = new Voting(dataSet);
+		Voting voting = new Voting(dataSet, params);
 		NormalVoterQualityMeasures votingQualityMeasure = (NormalVoterQualityMeasures)voting.launchVoter(convergence100, profileMEmory);
 		log(dataSet, writer, precisionWriter, logger, Globals.voterVoting, votingQualityMeasure, false);
-		
-		time += votingQualityMeasure.getTimings().getVoterDuration();
-		}
-		System.out.println("Voting: " + time/10);
- 
-		/* ---------------------------------- TruthFinder  ---------------------------------- */
-		time = 0;
-		for (int i = 0; i <10; i ++) {
-			
-		dataSet.resetDataSet(startingTrust, Globals.starting_Confidence, 0);
-		TruthFinder truthFinder = new TruthFinder(dataSet, similarityConstant, 
-				base_sim, dampingFactor, cosineSimDiffStoppingCriteria);
+
+		//		/* ---------------------------------- TruthFinder  ---------------------------------- */
+
+		TruthFinder truthFinder = new TruthFinder(dataSet, params, similarityConstant, dampingFactor);
 		NormalVoterQualityMeasures truthFinderQualityMeasure = (NormalVoterQualityMeasures)truthFinder.launchVoter(convergence100, profileMEmory);
 		log(dataSet, writer, precisionWriter, logger, Globals.voterTruthFinder, truthFinderQualityMeasure, false);
-		
-		time += truthFinderQualityMeasure.getTimings().getVoterDuration();
-		}
-		System.out.println("TruthFinder: " + time/10);
-
 
 	/* ---------------------------------- Cosine  ---------------------------------- */
-//		time = 0;
-//		for (int i = 0; i <10; i ++) {
-//			
-//		dataSet.resetDataSet(startingTrust, 1.0, 0);
-//		Cosine cosine = new Cosine(dataSet);
-//		NormalVoterQualityMeasures cosineQualityMeasure = (NormalVoterQualityMeasures)cosine.launchVoter(convergence100, profileMEmory);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterCosine, cosineQualityMeasure, false);
-//		
-//		time += cosineQualityMeasure.getTimings().getVoterDuration();
-//		}
-//		System.out.println("Cosine: " + time/10);
-//
-//		/* ---------------------------------- 2-Estimates  ---------------------------------- */
-//		time = 0;
-//		for (int i = 0; i <10; i ++) {
-//			
-//		dataSet.resetDataSet(startingTrust,0,0);
-//		TwoEstimates twoEstimates = new TwoEstimates(dataSet, normalizationWeight);
-//		NormalVoterQualityMeasures twoEstimatesQualityMeasure = (NormalVoterQualityMeasures)twoEstimates.launchVoter(convergence100, profileMEmory);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voter2Estimates, twoEstimatesQualityMeasure, false);
-//
-//		time += twoEstimatesQualityMeasure.getTimings().getVoterDuration();
-//		}
-//		System.out.println("2-Estimats: " + time/10);
-//
-//		/* ---------------------------------- 3-Estimates  ---------------------------------- */
-//		time = 0;
-//		for (int i = 0; i <10; i ++) {
-//			
-//		
-//		NormalVoterQualityMeasures threeEstimatesQualityMeasure = runThreeEstimates(convergence100, dataSet, startingTrust, startingErrorFactor, normalizationWeight);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voter3Estimates, threeEstimatesQualityMeasure, false);
-//		
-//		time += threeEstimatesQualityMeasure.getTimings().getVoterDuration();
-//		}
-//		System.out.println("3-Estimats: " + time/10);
+			
+		Cosine cosine = new Cosine(dataSet, params, dampingFactorCosine);
+		NormalVoterQualityMeasures cosineQualityMeasure = (NormalVoterQualityMeasures)cosine.launchVoter(convergence100, profileMEmory);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterCosine, cosineQualityMeasure, false);
+		
 
-//
+//		/* ---------------------------------- 2-Estimates  ---------------------------------- */
+			
+		TwoEstimates twoEstimates = new TwoEstimates(dataSet, params, normalizationWeight);
+		NormalVoterQualityMeasures twoEstimatesQualityMeasure = (NormalVoterQualityMeasures)twoEstimates.launchVoter(convergence100, profileMEmory);
+		log(dataSet, writer, precisionWriter, logger, Globals.voter2Estimates, twoEstimatesQualityMeasure, false);
+
+
+//		/* ---------------------------------- 3-Estimates  ---------------------------------- */
+		
+		NormalVoterQualityMeasures threeEstimatesQualityMeasure = runThreeEstimates(convergence100, dataSet, normalizationWeight, params);
+		log(dataSet, writer, precisionWriter, logger, Globals.voter3Estimates, threeEstimatesQualityMeasure, false);
+		
+
+
 //		/* ---------------------------------- Simple LCA  ---------------------------------- */
 //		
 		double pymB = 0.5;//1.0;
-//		dataSet.resetDataSet(startingTrust,1,0);
-//		SimpleLCA simpleLCA = new SimpleLCA(dataSet, pymB, startingTrust);
-//		NormalVoterQualityMeasures simpleLCAQualityMeasure = (NormalVoterQualityMeasures)simpleLCA.launchVoter(convergence100, profileMEmory);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterSimpleLCA, simpleLCAQualityMeasure, false);
-//
+		SimpleLCA simpleLCA = new SimpleLCA(dataSet, params, pymB);
+		NormalVoterQualityMeasures simpleLCAQualityMeasure = (NormalVoterQualityMeasures)simpleLCA.launchVoter(convergence100, profileMEmory);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterSimpleLCA, simpleLCAQualityMeasure, false);
+
 //		/* ---------------------------------- Guess LCA  ---------------------------------- */
-//		dataSet.resetDataSet(startingTrust,1,0);
-//		GuessLCA guessLCA = new GuessLCA(dataSet, pymB, startingTrust);
-//		NormalVoterQualityMeasures guessLCAQualityMeasure = (NormalVoterQualityMeasures)guessLCA.launchVoter(convergence100, profileMEmory);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterGuessLCA, guessLCAQualityMeasure, false);
+		GuessLCA guessLCA = new GuessLCA(dataSet, params, pymB);
+		NormalVoterQualityMeasures guessLCAQualityMeasure = (NormalVoterQualityMeasures)guessLCA.launchVoter(convergence100, profileMEmory);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterGuessLCA, guessLCAQualityMeasure, false);
 
 		/* ---------------------------------- AccuCopy T T  AccuSim---------------------------------- */
 
@@ -155,60 +123,54 @@ public abstract class Experiment {
 		boolean considerSimilarity = true; 
 		boolean considerSourcesAccuracy = true;
 		boolean considerDependencies = true;
-//
-//		considerSimilarity = true; 
-//		considerSourcesAccuracy = true;
-//		considerDependencies = true;
-//
-//		NormalVoterQualityMeasures accuModelBaseQualityMeasure = runAccuModel(convergence100, dataSet, cosineSimDiffStoppingCriteria,
-//				similarityConstant, base_sim, startingTrust, alfa, c, n, orderSrcByDependence, considerSimilarity,
-//				considerSourcesAccuracy, considerDependencies);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterAccuSim, accuModelBaseQualityMeasure, false);
+
+		considerSimilarity = true; 
+		considerSourcesAccuracy = true;
+		considerDependencies = true;
+
+		NormalVoterQualityMeasures accuModelBaseQualityMeasure = runAccuModel(convergence100, dataSet, 
+				similarityConstant, alfa, c, n, orderSrcByDependence, considerSimilarity,
+				considerSourcesAccuracy, considerDependencies, params);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterAccuSim, accuModelBaseQualityMeasure, false);
 ////
 ////		/* ---------------------------------- AccuCopy F F Depen ---------------------------------- */
-//		considerSimilarity = false;
-//		considerSourcesAccuracy = false;
-//		considerDependencies = true;
-//
-//		NormalVoterQualityMeasures accuModelBaseQualityMeasureFF = runAccuModel(
-//				convergence100, dataSet, cosineSimDiffStoppingCriteria,
-//				similarityConstant, base_sim, startingTrust, alfa, c, n,
-//				orderSrcByDependence, considerSimilarity,
-//				considerSourcesAccuracy, considerDependencies);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterDepen, accuModelBaseQualityMeasureFF, false);
-//
-//			/* ---------------------------------- AccuNoDep  ---------------------------------- */
-//		time = 0;
-//		for (int i = 0; i <10; i ++) {
-//			
-//			
-//		considerSimilarity = false;
-//		considerSourcesAccuracy = true;
-//		considerDependencies = false;
-//
-//		NormalVoterQualityMeasures accuModelBaseQualityMeasureAccuNoDep = runAccuModel(convergence100, dataSet, cosineSimDiffStoppingCriteria,
-//				similarityConstant, base_sim, startingTrust, alfa, c, n, orderSrcByDependence, considerSimilarity, considerSourcesAccuracy, considerDependencies);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterAccuNoDep, accuModelBaseQualityMeasureAccuNoDep, false);
-//
-//		time += accuModelBaseQualityMeasureAccuNoDep.getTimings().getVoterDuration();
-//		}
-//		System.out.println("AccuNodep: " + time/10);
+		considerSimilarity = false;
+		considerSourcesAccuracy = false;
+		considerDependencies = true;
 
-//				/* ---------------------------------- AccuCopy F T Accu ---------------------------------- */
-//
-//		considerSimilarity = false;
-//		considerSourcesAccuracy = true;
-//		considerDependencies = true;
-//		NormalVoterQualityMeasures accuModelBaseQualityMeasureFT = runAccuModel(convergence100, dataSet, cosineSimDiffStoppingCriteria,
-//				similarityConstant, base_sim, startingTrust, alfa, c, n,orderSrcByDependence,considerSimilarity,considerSourcesAccuracy,considerDependencies);
-//		log(dataSet, writer, precisionWriter, logger, Globals.voterAccu, accuModelBaseQualityMeasureFT, false);
+		NormalVoterQualityMeasures accuModelBaseQualityMeasureFF = runAccuModel(convergence100, dataSet, 
+				similarityConstant, alfa, c, n, orderSrcByDependence, considerSimilarity,
+				considerSourcesAccuracy, considerDependencies, params);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterDepen, accuModelBaseQualityMeasureFF, false);
+
+//			/* ---------------------------------- AccuNoDep  ---------------------------------- */
+
+		considerSimilarity = false;
+		considerSourcesAccuracy = true;
+		considerDependencies = false;
+
+		NormalVoterQualityMeasures accuModelBaseQualityMeasureAccuNoDep = runAccuModel(convergence100, dataSet, 
+				similarityConstant, alfa, c, n, orderSrcByDependence, considerSimilarity,
+				considerSourcesAccuracy, considerDependencies, params);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterAccuNoDep, accuModelBaseQualityMeasureAccuNoDep, false);
+
+
+				/* ---------------------------------- AccuCopy F T Accu ---------------------------------- */
+
+		considerSimilarity = false;
+		considerSourcesAccuracy = true;
+		considerDependencies = true;
+		NormalVoterQualityMeasures accuModelBaseQualityMeasureFT = runAccuModel(convergence100, dataSet, 
+				similarityConstant, alfa, c, n, orderSrcByDependence, considerSimilarity,
+				considerSourcesAccuracy, considerDependencies, params);
+		log(dataSet, writer, precisionWriter, logger, Globals.voterAccu, accuModelBaseQualityMeasureFT, false);
 		/*------------------------------------------------------------------------------------*/
 		if (runLTM) {
-			runLTM(convergence100, datasetLTM, writer, precisionWriter, logger, resultsMap, contengencyTable);
+			runLTM(convergence100, datasetLTM, writer, precisionWriter, logger, resultsMap, contengencyTable, params);
 		}
 		if (runMLE) {
 //			/*for synthetic dataset*/runSyntheticBooleanMLE(convergence100, dataSetSinglePropertyValue, writer, precisionWriter, logger, resultsMap, contengencyTable);
-			/*for book dataset*/runSyntheticBooleanMLE(convergence100, dataSetMLE, writer, precisionWriter, logger, resultsMap, contengencyTable);
+			/*for book dataset*/runSyntheticBooleanMLE(convergence100, dataSetMLE, writer, precisionWriter, logger, resultsMap, contengencyTable, params);
 		}
 		/*--------------------------------*/
 		try {
@@ -220,8 +182,7 @@ public abstract class Experiment {
 		return resultsMap;
 	}
 
-	private static NormalVoterQualityMeasures runThreeEstimates(boolean convergence100, DataSet dataSet, double startingTrust,
-			double startingErrorFactor, double normalizationWeight) {
+	private static NormalVoterQualityMeasures runThreeEstimates(boolean convergence100, DataSet dataSet, double normalizationWeight, VoterParameters params) {
 		NormalVoterQualityMeasures threeEstimatesQualityMeasure = null;
 
 //		normalizationWeight = 0.5;// 0.1 0.3 0.5
@@ -231,8 +192,7 @@ public abstract class Experiment {
 //		convergence100 = false;
 //for (int i = 1; i <= 10; i ++) {
 //	startingErrorFactor = ((double)i)/10.0;
-		dataSet.resetDataSet(startingTrust, 0, startingErrorFactor); // already called in the implementation
-		ThreeEstimates threeEstimate = new ThreeEstimates(dataSet,normalizationWeight);
+		ThreeEstimates threeEstimate = new ThreeEstimates(dataSet, params, normalizationWeight);
 		threeEstimatesQualityMeasure = (NormalVoterQualityMeasures)threeEstimate.launchVoter(convergence100, profileMEmory);
 		
 //		tempLog(threeEstimatesQualityMeasure, "E ",String.valueOf(startingErrorFactor));
@@ -247,12 +207,11 @@ public abstract class Experiment {
 				+ " & " + format.format(tempvoterQuality.getRecall()) + " & " + format.format(tempvoterQuality.getSpecificity()) 
 				+ " & " + tempvoterQuality.getNumberOfIterations() + " & " + tempvoterQuality.getTimings().getVoterDuration());
 	}
-	private static NormalVoterQualityMeasures runAccuModel(boolean convergence100, DataSet dataSet, double cosineSimDiffStoppingCriteria, double similarityConstant,
-			double base_sim, double startingTrust, double alfa, double c, int n, boolean orderSrcByDependence, boolean considerSimilarity,
-			boolean considerSourcesAccuracy, boolean considerDependencies) {
+	private static NormalVoterQualityMeasures runAccuModel(boolean convergence100, DataSet dataSet, double similarityConstant,
+			double alfa, double c, int n, boolean orderSrcByDependence, boolean considerSimilarity,
+			boolean considerSourcesAccuracy, boolean considerDependencies, VoterParameters params) {
 
-		dataSet.resetDataSet(startingTrust, 0, 0);
-		SourceDependenceModel accuModel = new SourceDependenceModel(dataSet, alfa, c, n, cosineSimDiffStoppingCriteria,base_sim, similarityConstant, considerSimilarity, 
+		SourceDependenceModel accuModel = new SourceDependenceModel(dataSet, params, alfa, c, n, similarityConstant, considerSimilarity, 
 				considerSourcesAccuracy, considerDependencies, orderSrcByDependence);
 		NormalVoterQualityMeasures qualityMeasure = (NormalVoterQualityMeasures) accuModel.launchVoter(convergence100, profileMEmory);
 		return qualityMeasure;
@@ -260,7 +219,7 @@ public abstract class Experiment {
 
 	private static void runLTM(boolean convergence100, DataSet dataSetSinglePropertyValue, BufferedWriter writer, 
 			BufferedWriter precisionWriter, DataQualityLogger logger ,HashMap<String, VoterQualityMeasures> resultsMap, 
-			ContengencyTable contengencyTable) {
+			ContengencyTable contengencyTable, VoterParameters params) {
 		/* --------------------------------------- Latent truth model -  Special dataSet formulation ------------------------------------------ */
 		int iterationCount = 500;
 		int burnIn = 100;
@@ -277,7 +236,8 @@ public abstract class Experiment {
 
 		convergence100 = false;
 
-		LatentTruthModel latentTruthModel = new LatentTruthModel(b1, b0, a00, a01, a10, a11, dataSetSinglePropertyValue, iterationCount, burnIn, sampleGap);
+		LatentTruthModel latentTruthModel = new LatentTruthModel(b1, b0, a00, a01, a10, a11, 
+				dataSetSinglePropertyValue, iterationCount, burnIn, sampleGap, params);
 		NormalVoterQualityMeasures latentTruthModelQualityMeasure = (NormalVoterQualityMeasures)latentTruthModel.launchVoter(convergence100, profileMEmory);
 		log(dataSetSinglePropertyValue, writer, precisionWriter, logger, Globals.voterLTM, latentTruthModelQualityMeasure, false);
 	}
@@ -285,7 +245,7 @@ public abstract class Experiment {
 	private static void runLTMExperimetsss(double d,boolean convergence100,
 			DataSet dataSetSinglePropertyValue, BufferedWriter writer,
 			BufferedWriter precisionWriter, DataQualityLogger logger,
-			int iterationCount, int burnIn, int sampleGap, DecimalFormat format) {
+			int iterationCount, int burnIn, int sampleGap, DecimalFormat format, VoterParameters params) {
 		System.out.println("k=" + iterationCount+" B="+burnIn+" T= "+ sampleGap);
 		double b1;
 		double b0;
@@ -370,7 +330,8 @@ public abstract class Experiment {
 
 				System.out.print(" & a01 = " + a01 + " & a00=" + a00 + " & ");
 				for (int x = 0; x < 100; x++) {
-					LatentTruthModel latentTruthModel = new LatentTruthModel(b1, b0, a00, a01, a10, a11, dataSetSinglePropertyValue, iterationCount, burnIn, sampleGap);
+					LatentTruthModel latentTruthModel = new LatentTruthModel(b1, b0, a00, a01, a10, a11, 
+							dataSetSinglePropertyValue, iterationCount, burnIn, sampleGap, params);
 					NormalVoterQualityMeasures latentTruthModelQualityMeasure = (NormalVoterQualityMeasures)latentTruthModel.launchVoter(convergence100, profileMEmory);
 //					log(dataSetSinglePropertyValue, writer, precisionWriter, logger, Globals.voterLTM, latentTruthModelQualityMeasure, false);
 					presisionStats.addValue(latentTruthModelQualityMeasure.getPrecision());
@@ -394,10 +355,10 @@ public abstract class Experiment {
 
 	private static void runSyntheticBooleanMLE(boolean convergence100, DataSet dataSet, BufferedWriter writer, 
 			BufferedWriter precisionWriter, DataQualityLogger logger, HashMap<String, VoterQualityMeasures> resultsMap,
-			ContengencyTable contengencyTable) {
+			ContengencyTable contengencyTable, VoterParameters params) {
 		double priorFalseGroundTruth = 0.5;//0.4;
 		double r = 0.5;
-		MaximumLikelihoodEstimation em = new MaximumLikelihoodEstimation(dataSet, priorFalseGroundTruth, r);
+		MaximumLikelihoodEstimation em = new MaximumLikelihoodEstimation(dataSet, params, priorFalseGroundTruth, r);
 		/** 
 		 * this approach compute finally the sources trustworthiness (reliability) and
 		 * can be used for further comparison between methods
@@ -414,22 +375,22 @@ public abstract class Experiment {
 		if (logExperimentName) {
 			Date d = new Date();
 //			System.out.println("Finished:\t" + VoterName + "\t:\t" + voterQualityMeasure.getNumberOfIterations() + "\t\t" + d.toString());
-//			System.out.println(VoterName);
+			System.out.println(VoterName);
 		}
 		logger.logVoterQualityLine(writer, voterQualityMeasure, header, VoterName, precisionWriter);
 		resultsMap.put(VoterName, voterQualityMeasure);
 		contengencyTable.readTrueValues(dataSet, VoterName);
 		
-//		System.out.print("\t");
-//		for (Source s : dataSet.getSourcesHash().values()) {
-//			System.out.print("Ts(" + s.getSourceIdentifier() + ") = " + s.getTrustworthiness() + "\t");
-//		} System.out.println();
-//		for (List<ValueBucket> bList : dataSet.getDataItemsBuckets().values()) {System.out.print("\t");
-//			System.out.print(bList.get(0).getClaims().get(0).getObjectIdentifier());System.out.print("\t");
-//			for (ValueBucket b : bList) {
-//				System.out.print("Cv("+b.getClaims().get(0).getPropertyValueString()+") = " + b.getConfidence() + "\t");
-//			}System.out.println();
-//		}
+		System.out.print("\t");
+		for (Source s : dataSet.getSourcesHash().values()) {
+			System.out.print("Ts(" + s.getSourceIdentifier() + ") = " + s.getTrustworthiness() + "\t");
+		} System.out.println();
+		for (List<ValueBucket> bList : dataSet.getDataItemsBuckets().values()) {System.out.print("\t");
+			System.out.print(bList.get(0).getClaims().get(0).getObjectIdentifier());System.out.print("\t");
+			for (ValueBucket b : bList) {
+				System.out.print("Cv("+b.getClaims().get(0).getPropertyValueString()+") = " + b.getConfidence() + "\t");
+			}System.out.println();
+		}
 		
 //		sclog.saveSourcesTrueClaims(dataSet, "FlightExperiment", "AccuModelBase");
 	}

@@ -1,6 +1,5 @@
 package qcri.dafna.dataModel.dataSet.synthetic;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,9 +119,9 @@ public class BooleanDataSetCreator extends AbstractSyntheticDataSetCreator {
 							if (groundTruth.containsKey(objects.get(o) + ":" + properties.get(p))) {
 								// write a claim with True
 								if (ClaimWriter.writeClaim(datasetWriter, ++claimId, objects.get(o), properties.get(p), "True", "null", 
-										sources.get(s), Globals.delimiterText)) {
+										sources.get(s), Globals.delimiterText /*Globals.delimiterText*/)) {
 									//									ClaimWriter.writeClaim(datasetWriterTrueAndFalse, ++claimId, objects.get(o), properties.get(p), "True", "null", 
-									//											sources.get(s), Globals.delimiterText);
+									//											sources.get(s), Globals.CSVDelimiter /*Globals.delimiterText*/);
 									numberOfClaims ++;
 									fileEntriesCount ++;
 								}
@@ -141,14 +140,14 @@ public class BooleanDataSetCreator extends AbstractSyntheticDataSetCreator {
 								// skip for the dataset with only true values
 								// insert a false claim with the dataset with true and false values
 								//								if (ClaimWriter.writeClaim(datasetWriterTrueAndFalse, ++claimId, objects.get(o), properties.get(p), "False", "null", 
-								////										sources.get(s), Globals.delimiterText)) {
+								////										sources.get(s), Globals.CSVDelimiter /*Globals.delimiterText*/)) {
 								//									numberOfClaims ++;
 								//									fileEntriesCount ++;
 								//								}
 							} else {
 								// write true claim 
 								if (ClaimWriter.writeClaim(datasetWriter, ++claimId, objects.get(o), properties.get(p), "True", "null", 
-										sources.get(s), Globals.delimiterText)) {
+										sources.get(s), Globals.delimiterText /*Globals.delimiterText*/)) {
 									//									ClaimWriter.writeClaim(datasetWriterTrueAndFalse, ++claimId, objects.get(o), properties.get(p), "True", "null", 
 									////											sources.get(s), Globals.delimiterText);
 									numberOfClaims ++;

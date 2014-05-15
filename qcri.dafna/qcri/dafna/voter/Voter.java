@@ -1,17 +1,14 @@
 package qcri.dafna.voter;
 
-import java.util.List;
-
 import qcri.dafna.dataModel.data.DataSet;
-import qcri.dafna.dataModel.data.Source;
-import qcri.dafna.dataModel.data.ValueBucket;
+import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 import qcri.dafna.dataModel.quality.voterResults.NormalVoterQualityMeasures;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.profiling.Profiler;
 
 /**
  * Super class for all Voters
- * @author dalia
+ * @author dalia, Laure
  *
  */
 public abstract class Voter {
@@ -21,8 +18,15 @@ public abstract class Voter {
 	protected boolean singlePropertyValue; 
 	protected boolean onlyMaxValueIsTrue;
 	
-	public Voter(DataSet dataSet) {
+	protected double startingTrust = 0.8;
+	
+	public Voter(DataSet dataSet, VoterParameters params) {
 		this.dataSet = dataSet;
+		this.dataSet.resetDataSet(params.getStartingTrust(), params.getStartingConfidence(), params.getStartingErrorFactor());
+
+		this.startingTrust = params.getStartingTrust();
+		ConvergenceTester.convergenceThreshold = params.getCosineSimDiffStoppingCriteria();
+		
 		initParameters();
 	}
 	protected abstract void initParameters();
@@ -76,24 +80,11 @@ public abstract class Voter {
 
 		voterQuality.getTrustCosineSimilarityPerIteration().add(trustCosineSimDiff);
 		voterQuality.getConfCosineSimilarityPerIteration().add(confCosineSimDiff);
-//		computeMemoryConsumption();
 		
 	}
-//	private static void computeMemoryConsumption() {
-//		// Get the Java runtime
-//	    Runtime runtime = Runtime.getRuntime();
-//	    // Run the garbage collector
-////	    runtime.gc();
-//	    // Calculate the used memory
-//	    long memory = runtime.totalMemory() - runtime.freeMemory();
-//	    System.out.println("Used memory is bytes: " + memory);
-//	    System.out.println("Used memory is megabytes: "
-//	        + bytesToMegabytes(memory));
-//	}
-//	private static final long MEGABYTE = 1024L * 1024L;
-//
-//	  public static long bytesToMegabytes(long bytes) {
-//	    return bytes / MEGABYTE;
-//	  }
 	protected abstract int runVoter(boolean convergence100);
+
+	public DataSet getDataSet() {
+		return dataSet;
+	}
 }
