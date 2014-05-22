@@ -3,7 +3,7 @@ package qcri.dafna.experiment;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.dataSet.CSVDatasetReader.CSVDatasetReader;
-import qcri.dafna.dataModel.dataSetReader.SyntheticDataSetTruthReader;
+import qcri.dafna.dataModel.dataSet.CSVDatasetReader.CSVTruthReader;
 import qcri.dafna.dataModel.quality.dataQuality.DataQualityMeasurments;
 import qcri.dafna.dataModel.quality.dataQuality.DataSetTimingMeasures;
 import qcri.dafna.dataModel.quality.dataQuality.logger.DataQualityLogger;
@@ -19,7 +19,7 @@ public class ExperimentDataSetConstructor {
 	 * @param toleranceFactor
 	 * @return The built dataSet
 	 */
-	public static DataSet readDataSet(String dataSetDirectory, double toleranceFactor, String groundTruthDir, String outputPath,char delim) {
+	public static DataSet readDataSet(String dataSetDirectory, double toleranceFactor, String groundTruthDir, String outputPath, String delim) {
 		Globals.tolerance_Factor = toleranceFactor;
 		DataSetTimingMeasures timings = new DataSetTimingMeasures();
 		CSVDatasetReader reader = new CSVDatasetReader();
@@ -47,11 +47,12 @@ public class ExperimentDataSetConstructor {
 		/**
 		 * If the ground truth exist, read it
 		 */
-		if (groundTruthDir != null && ! groundTruthDir.isEmpty()) {
+		if (groundTruthDir != null && ! groundTruthDir.trim().isEmpty()) {
 
 			timings.startTruthReadingTime();
-			SyntheticDataSetTruthReader truthReader = new SyntheticDataSetTruthReader(dqm.getDataItemMeasures());
-			trueValueCount = truthReader.readDirectoryFiles(groundTruthDir);
+			
+			CSVTruthReader truthReader = new CSVTruthReader(dqm.getDataItemMeasures());
+			trueValueCount = truthReader.readDirectoryFiles(groundTruthDir, delim.charAt(0));
 
 		}
 		dqm.setGoldStandardTrueValueCount(trueValueCount);

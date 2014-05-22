@@ -2,3 +2,6 @@ bin
 .classpath
 .settings
 .project
+.DS_Store
+libraries/
+data/Books_CSV/output/

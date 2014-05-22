@@ -166,9 +166,11 @@ public class Globals {
 
 
 	// The delimiter used in the data file
-	public static final String delimiterText =  "|\t";//",";//
+	//public static final String delimiterText =  "|\t";
+	public static final String delimiterText = ",";
 	// The regular expression used to detect the delimiter
-	public static final String delimiterRegularExpression ="\\|\\t";//",";//
+	//public static final String delimiterRegularExpression = "\\|\\t";
+	public static final String delimiterRegularExpression = ",";
 	public static final String cleanedListDelimiter = ";";
 	public static final Charset FILE_ENCODING = StandardCharsets.UTF_8;//.ISO_8859_1;
 
