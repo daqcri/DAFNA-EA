@@ -5,3 +5,5 @@ bin
 .DS_Store
 libraries/
 data/Books_CSV/output/
+*.sublime-project
+*.sublime-workspace

@@ -1,4 +1,31 @@
+var algorithms = [
+  {name: "Algorithm1", params: [
+    {name: 'param1', value: 0.2, dataType: 'int'},
+    {name: 'param2', value: 0.4, dataType: 'int'},
+  ]},
+  {name: "Algorithm2", params: [
+    {name: 'paramA', value: 2, dataType: 'int'},
+    {name: 'paramB', value: 4, dataType: 'int'},
+  ]},
+  {name: "My Algorithm3", params: [
+    {name: 'param XX', value: 2, dataType: 'int'},
+  ]}
+]
+
 $(function() {
+  // create accordion algorithm panes
+  var container = $("#general_config_pane")
+  var html = ""
+  $.each(algorithms, function(index, algorithm) {
+    var params = ""
+    $.each(algorithm.params, function(pindex, param){
+      params += "<p>" + param.name + " (" + param.value + ") " + "</p>"
+    })
+    html += "<h3>"+algorithm.name+"</h3><div>"+params+"</div>"
+  });
+  container.after(html)
+
+  // create the accordion
     $( "#accordion" ).accordion({
       collapsible: true,
       active:false,
