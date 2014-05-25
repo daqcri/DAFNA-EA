@@ -39,3 +39,34 @@ $(function () {
   .jstree();
 		
   });
+
+
+$(function(){
+   $('body').layout({
+    applyDefaultStyles: true,
+    west__size: "27%",
+    west__minSize: "10%",
+    west__maxSize: "50%",
+    west__onresize: function() {
+      datatable.columns.adjust()
+    },
+    west__onclose: function() {
+      datatable.columns.adjust()
+    }, 
+    });
+   
+});
+
+
+
+$(function(){
+$('.inner').layout({
+     applyDefaultStyles: true,
+     south__size: "50%",
+    south__minSize: "25%",
+    south__maxSize: "75%",
+    center__onresize: function() {
+      setup_datatable()
+    },
+});
+});
