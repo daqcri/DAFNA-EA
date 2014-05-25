@@ -1,1 +1,206 @@
-besmellah
+<!DOCTYPE html>
+<html>
+ <head>
+<title> </title>
+  
+    <script src="jquery-1.8.3.js"></script>
+  <script src="jquery-ui.min.js"></script>
+  <script src="jquery.dataTables.js"></script>
+  <script src="dataTables.tableTools.min.js"></script>
+  <script src="jquery.layout.min-1.3.0-rc.js"></script>
+  <script src="jstree/jstree.min.js"></script>
+  <script src="index.js" type="text/javascript"></script>
+  <script src="jquery.layout.min-1.3.0-rc.js"></script>
+  <script src="jquery.dataTables.js"></script>
+   <script src="dataTables.tableTools.min.js"></script>
+
+
+
+ <link rel="stylesheet" href="jquery-ui.css" />
+ <link rel="stylesheet" href="style.css" />
+ <link href="jquery-ui.min.css" media="all" rel="stylesheet" /> 
+ <link href="jquery.dataTables.css" media="all" rel="stylesheet" />
+ <link href="dataTables.tableTools.css" media="all" rel="stylesheet" />
+ <link rel="stylesheet" href="jstree/themes/default/style.min.css" />
+  <link href="jquery.dataTables.css" media="all" rel="stylesheet" />
+    <link href="dataTables.tableTools.css" media="all" rel="stylesheet" />
+
+  <script>
+
+$(function() {
+    $( "#accordion" ).accordion({
+      collapsible: true,
+      active:false,
+      
+    });
+ }); 
+
+var tree= $('#jstree');
+var tree1= $('#jstree_1');
+$(function () {
+    // 6 create an instance when the DOM is ready
+    $('#jstree')
+  // listen for event
+  .on('changed.jstree', function (e, data) {
+    var i, j, r = [];
+    for(i = 0, j = data.selected.length; i < j; i++) {
+      r.push(data.instance.get_node(data.selected[i]).text);
+    }
+    $('#event_result').html('Selected: ' + r.join(', '));
+  })
+  // create the instance
+ 
+  .jstree(); 
+		
+  });
+
+$(function () {
+    // 6 create an instance when the DOM is ready
+    $('#jstree_1')
+  // listen for event
+  .on('changed.jstree_1', function (e, data) {
+    var i, j, r = [];
+    for(i = 0, j = data.selected.length; i < j; i++) {
+      r.push(data.instance.get_node(data.selected[i]).text);
+    }
+    $('#event_result').html('Selected: ' + r.join(', '));
+  })
+  // create the instance
+  .jstree();
+		
+  });
+
+</script>
+
+
+
+ <script>
+ var algorithms = [
+  {name: "Algorithm1"},
+  {params: [
+    {name: 'param1', value: 0.2, dataType: 'int'},
+  ]}
+ ]
+ $(function(){
+   $('body').layout({
+    applyDefaultStyles: true,
+    west__size: "27%",
+    west__minSize: "10%",
+    west__maxSize: "50%",
+    west__onresize: function() {
+      datatable.columns.adjust()
+    },
+    west__onclose: function() {
+      datatable.columns.adjust()
+    }, 
+    });
+   
+});
+ 
+ </script>
+
+<script>
+$(function(){
+$('.inner').layout({
+     applyDefaultStyles: true,
+     south__size: "50%",
+    south__minSize: "25%",
+    south__maxSize: "75%",
+    center__onresize: function() {
+      setup_datatable()
+    },
+});
+});
+</script>
+
+<meta charset= "utf-8">
+</head>
+   <body>
+      <div class="ui-layout-west">
+        <div id = "accordion" >
+          <h3>Input Claims</h3>
+          <div> 
+          <button type="button">Upload</button> 
+	  <div id="jstree">
+	    <ul> 
+ 	      <li> tree 1 
+                <ul>
+     		  <li>Child node 1</li>
+     		  <li>Child node 2</li>
+		  <li>Child node 3</li>
+		  <li>Child node 4</li>
+		  <li>Child node 5</li>
+   	     </ul>
+            </li>
+           <li> tree 2 
+              <ul>
+                 <li>Child node 1</li>
+                 <li>Child node 2</li>
+        	 <li>Child node 3</li>
+        	 <li>Child node 4</li>
+   	     </ul>
+          </li>
+        </ul>
+       </div>    
+     </div>
+     <h3>Input Ground Truths</h3>
+     <div>
+       <button type="button">Upload</button> 
+       <div id="jstree_1">
+       <ul> 
+         <li> tree 1 
+           <ul>
+                <li>Child node 1</li>
+     		<li>Child node 2</li>
+     		<li>Child node 3</li>
+     		<li>Child node 4</li>
+     		<li>Child node 5</li>
+   	  </ul>
+       </li>
+       <li> tree 2 
+         <ul>
+              <li>Child node 1</li>
+     	      <li>Child node 2</li>
+        </ul>
+      </li>
+     </ul>
+     </div> 
+   </div>
+	<h3>General Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 1 Configuration</h3>
+	<div> ... Pane content ... </div>
+	<h3>Algorithm 2 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 3 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 4 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 5 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 6 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 7 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 8 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 9 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 10 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 11 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Algorithm 12 Configuration</h3>
+	<div>... pane content ... </div>
+	<h3>Ready</h3>
+	<div>
+	<button type="button">Launch</button> 
+     </div>
+    </div>
+   </div>
+    <div class="ui-layout-center inner">
+     <div class= "ui-layout-north">Nested North</div>
+     <div class= "ui-layout-center">Nested Center</div>
+    </div>
+  </body>
+</html>
