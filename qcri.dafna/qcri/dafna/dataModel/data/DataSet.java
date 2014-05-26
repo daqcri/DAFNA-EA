@@ -2,6 +2,7 @@ package qcri.dafna.dataModel.data;
 import java.nio.charset.Charset;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -199,18 +200,12 @@ public class DataSet {
 	/*------------------ Data Bucketing ------------------*/
 	public void computeValueBuckets(boolean tolerance) {
 		List<ValueBucket> buckets = null;
-		int i = 0;
 		for (String dataItemKey : dataItemClaims.keySet()) {
-//			System.out.println(dataItemKey);
-//			if (dataItemKey.equals("bostonfrijan2914RealFeel")) {
-//				System.out.println();
-//			}
 			buckets = computeValueBuckets(dataItemKey, dataItemClaims.get(dataItemKey), tolerance);
 			dataItemsBuckets.put(dataItemKey, buckets);
 			
 		}
 		initBucketIDs();
-//		System.out.println("Finish");
 	}
 
 	private List<ValueBucket> computeValueBuckets(String dataItemKey, List<SourceClaim> claims, boolean tolerance) {
@@ -433,8 +428,8 @@ public class DataSet {
 
 	private void insertclaimInBucketBoolean(String dataItemKey, SourceClaim claim, List<ValueBucket> buckets) {
 		if (!claim.isClean()) {
-			return; // TODO// no need as only synthetic data.
-//			insertUncleanedClaim(claim, buckets);
+			insertUncleanedClaim(claim, buckets);
+			return; 
 		}
 		for (ValueBucket b : buckets) {
 			if (claim.getPropertyValue().equals(b.getMaxValue())) {
@@ -491,4 +486,26 @@ public class DataSet {
 		}
 	}
 	/*------------------ END - Data Bucketing ------------------*/
+	public Integer[] getSourcesCoverageDistribution() {
+		Integer[] cov = new Integer[SourcesHash.size()];
+		
+		int i = 0;
+		for (Source s : SourcesHash.values()) {
+			cov[i] = s.getClaims().size();
+			i ++;
+		}
+		Arrays.sort(cov);
+		return cov;
+	}
+	public Integer[] getDIDistinctValueDistribution() {
+		Integer[] di = new Integer[dataItemsBuckets.size()];
+		
+		int i = 0;
+		for (List<ValueBucket> l : dataItemsBuckets.values()) {
+			di[i] = l.size();
+			i ++;
+		}
+		Arrays.sort(di);
+		return di;
+	}
 }
