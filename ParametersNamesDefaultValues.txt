@@ -1,13 +1,13 @@
 General Parameters:
 -------------------
 - cosineSimDiffStoppingCriteria: The difference beteween the Sources trustworthiness cosine similarity between 2 iterations must be  less than this value for a convergence sign.
-Should be very small double value, default 0.001.
+Should be very small double value, default 0.001.(double)
 
-- startingTrust: The value used for initializing all sources trustworthiness. Default Value 0.8.
+- startingTrust: The value used for initializing all sources trustworthiness. Default Value 0.8.(double)
 
-- startingErrorFactor: The value used for initializing all values error factor(if any- Only used for 3-Estimates). default value 0.4.
+- startingErrorFactor: The value used for initializing all values error factor(if any- Only used for 3-Estimates). default value 0.4.(double)
 
--startingConfidence: The value used for initializing all valuesConfidence (if any- Only used for Cosine). default value 1.0.
+- startingConfidence: The value used for initializing all valuesConfidence (if any- Only used for Cosine). default value 1.0.(double)
 
 Cosine: 
 -------
@@ -24,7 +24,7 @@ From zero to one, default Value 0.5. (double value)
 -normalizationWeight: The Normalization weight.
  From zero to one, default Value 0.5. (double value)
 
-LTM:
+LTM (Latent Truth Model):
 ----
 - (bita1, bita0)  default value (0.5, 0.5) (double value,  double value)
 bita1: prior true count.
@@ -45,26 +45,50 @@ alpha10: prior false negative count.
 
 Source Dependency-Aware Models: Depen, Accu, AccuSim, AccuNoDep
 ----------------------------------------------------------------
+(Depen:
+    boolean considerSimilarity = false;  
+    boolean considerSourcesAccuracy = false;  
+    boolean computeNormalDependency = true;  
+)
+
+(Accu:
+    boolean considerSimilarity = false;  
+    boolean considerSourcesAccuracy = true;  
+    boolean computeNormalDependency = true;  
+)
+
+(AccuSim:
+    boolean considerSimilarity = true;  
+    boolean considerSourcesAccuracy = true;  
+    boolean computeNormalDependency = true;  
+)
+
+(AccuNoDep:
+    boolean considerSimilarity = false;  
+    boolean considerSourcesAccuracy = true;  
+    boolean computeNormalDependency = false;  
+)
+
 - alpha: Apriori probability that 2 sources are dependent, from zero to 0.5. Default value = 0.2.
 - c: The probability that a value provided by a copier is copied. From zero to one, (double)
-- n: Number of false value per data item. Default value 100.
+- n: Number of false value per data item. Default value 100. (Integer)
 
 
 TruthFinder
 -----------
 - similarityConstant: The similarity Constant.
-From zero to One, default value = 0.5
+From zero to One, default value = 0.5(double)
 
-- dampingFactor: The dampning Factor, from zero to one, default value 0.1.
+- dampingFactor: The dampning Factor, from zero to one, default value 0.1.(double)
 
 Simple LCA AND Guess LCA
 -------------------------
-- Bita1: Overall prior truth probability. From zero to one, default value 0.5
+- Bita1: Overall prior truth probability. From zero to one, default value 0.5(double)
 
 MLE
 ---
-- Bita1: Overall prior truth probability. From zero to one, default value 0.5
-- r: The probabilty that a source provide a value for all data items. From zero to one, default value 0.5.
+- Bita1: Overall prior truth probability. From zero to one, default value 0.5(double)
+- r: The probabilty that a source provide a value for all data items. From zero to one, default value 0.5.(double)
 
 
 
