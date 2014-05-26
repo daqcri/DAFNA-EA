@@ -65,13 +65,13 @@ public class CSVDatasetReader {
 			double weight = 1.0; // TODO
 
 			while((record = reader.readNext()) != null){
-				claimId = new Integer(record[0]);
-				/*String entityID = record[1];*/
-				objectId = record[2];
-				 propertyName = record[3];
-				stringValue = record[4];
-				sourceId = record[5];
-				timeStamp = record[6];
+				int i = 0;
+				claimId = new Integer(record[i]); i++;
+				objectId = record[i]; i++;
+				 propertyName = record[i]; i++;
+				stringValue = record[i]; i++;
+				sourceId = record[i]; i++;
+				timeStamp = record[i]; i++;
 
 				// TODO when the dataset is clean this should be removed
 				if (stringValue.equals("Not Available") || stringValue.trim().isEmpty()) {
