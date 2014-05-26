@@ -30,13 +30,13 @@ public class CSVDatasetReader {
 	 * @param timings
 	 * @return
 	 */
-	public DataSet readDirectoryFiles(String directory, DataSetTimingMeasures timings, char delim) {
+	public DataSet readDirectoryFiles(String directory, DataSetTimingMeasures timings, String delim) {
 		try {
 			timings.startDataSetReadingTime();
 			DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(directory));
 
 			for (Path readFilePath : directoryStream) {
-				readCSVFile(readFilePath.toString(), delim);
+				readCSVFile(readFilePath.toString(), delim.charAt(0));
 			}
 			timings.endDataSetReadingTime();
 			directoryStream.close();
@@ -62,7 +62,7 @@ public class CSVDatasetReader {
 			String sourceId;
 			String timeStamp;
 
-			double weight = 1.0; // TODO
+			double weight = 1.0;
 
 			while((record = reader.readNext()) != null){
 				int i = 0;
@@ -73,7 +73,7 @@ public class CSVDatasetReader {
 				sourceId = record[i]; i++;
 				timeStamp = record[i]; i++;
 
-				// TODO when the dataset is clean this should be removed
+				// when the dataset is clean this should be removed
 				if (stringValue.equals("Not Available") || stringValue.trim().isEmpty()) {
 					continue;
 				}
