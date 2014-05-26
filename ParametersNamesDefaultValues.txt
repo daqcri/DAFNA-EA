@@ -1,0 +1,80 @@
+General Parameters:
+-------------------
+- cosineSimDiffStoppingCriteria: The difference beteween the Sources trustworthiness cosine similarity between 2 iterations must be  less than this value for a convergence sign.
+Should be very small double value, default 0.001.
+
+- startingTrust: The value used for initializing all sources trustworthiness. Default Value 0.8.
+
+- startingErrorFactor: The value used for initializing all values error factor(if any- Only used for 3-Estimates). default value 0.4.
+
+-startingConfidence: The value used for initializing all valuesConfidence (if any- Only used for Cosine). default value 1.0.
+
+Cosine: 
+-------
+- dampeningFactorCosine: The used Dampeneing Factor.
+from zero to one, default value 0.2. (double value)
+
+2-Estimates: 
+------------
+-normalizationWeight: The Normalization weight.
+From zero to one, default Value 0.5. (double value)
+
+3-Estimates:
+------------
+-normalizationWeight: The Normalization weight.
+ From zero to one, default Value 0.5. (double value)
+
+LTM:
+----
+- (bita1, bita0)  default value (0.5, 0.5) (double value,  double value)
+bita1: prior true count.
+bita0: prior false count.
+- (alpha01, alpha00)  default value (0.9, 0.1) (double value,  double value)
+alpha01: Prior false positive count.
+alpha00: prior true negative count.
+
+- (alpha11, alpha10)  default value (0.9, 0.1) (double value,  double value)
+alpha11: Prior true positive count.
+alpha10: prior false negative count.
+
+-(K, B, T): The collapsed Gipps Sampling parameters.
+- K: Number of Iterations default value 500 (integer)
+- B: Burn-in period default value 100 (integer)
+- T: Thinning default value 9 (ineger)
+
+
+Source Dependency-Aware Models: Depen, Accu, AccuSim, AccuNoDep
+----------------------------------------------------------------
+- alpha: Apriori probability that 2 sources are dependent, from zero to 0.5. Default value = 0.2.
+- c: The probability that a value provided by a copier is copied. From zero to one, (double)
+- n: Number of false value per data item. Default value 100.
+
+
+TruthFinder
+-----------
+- similarityConstant: The similarity Constant.
+From zero to One, default value = 0.5
+
+- dampingFactor: The dampning Factor, from zero to one, default value 0.1.
+
+Simple LCA AND Guess LCA
+-------------------------
+- Bita1: Overall prior truth probability. From zero to one, default value 0.5
+
+MLE
+---
+- Bita1: Overall prior truth probability. From zero to one, default value 0.5
+- r: The probabilty that a source provide a value for all data items. From zero to one, default value 0.5.
+
+
+
+
+
+
+
+
+
+
+
+
+
