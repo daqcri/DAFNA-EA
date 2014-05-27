@@ -71,7 +71,7 @@ Source Dependency-Aware Models: Depen, Accu, AccuSim, AccuNoDep
 
 - alpha: Apriori probability that 2 sources are dependent, from zero to 0.5. Default value = 0.2.
 - c: The probability that a value provided by a copier is copied. From zero to one, (double)
-- n: Number of false value per data item. Default value 100. (Integer)
+- n: Number of false value per data item. Default value 100. (Integer). should be zero
 
 
 TruthFinder
