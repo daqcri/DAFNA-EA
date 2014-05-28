@@ -137,14 +137,22 @@ $('.inner').layout({
 });
 });
 
-$(function () {
-    $('#fileupload').fileupload({
+    $(function () {
+ $('#upload_file').fileupload({
+        url: url,
+        
         dataType: 'json',
         done: function (e, data) {
-            $.each(data.result.files, function (index, file) {
-                $('<p/>').text(file.name).appendTo(document.body);
-            });
+          //  $.each(data.result.files, function (index, file) {
+              //  $('<p/>').text(file.name).appendTo('#files');
+              alert("File uploaded");
+          //  });
+        }, 
+        fail: function(e, data){
+              alert("Failed");
+
         }
-    });
+
+}); 
 });
 
