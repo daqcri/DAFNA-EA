@@ -48,7 +48,7 @@ var algorithms = [
 
 $(function() {
   // create accordion algorithm panes
-  var container = $("#input_ground_pane")
+  var container = $("#input_claims_pane")
   var html = ""
   $.each(algorithms, function(index, algorithm) {
     

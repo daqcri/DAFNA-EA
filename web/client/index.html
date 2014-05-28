@@ -30,8 +30,19 @@
       <div class="ui-layout-west">
         <div id = "accordion" >
           <h3>Input Claims</h3>
-          <div> 
-          <button type="button">Upload</button> 
+          <div id="input_claims_pane"> 
+
+    <form id='uploadForm' action="/upload" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+
+
+        <input id="upload" type="file" name="csv" ><br/>
+
+        <input type='submit' value='Upload' id='submit'/>
+
+    </form>
+
+
+<!--           <button type="button">Upload</button> 
 	  <div id="jstree">
 	    <ul> 
  	      <li> tree 1 
@@ -76,7 +87,7 @@
       </li>
      </ul>
      </div> 
-   </div>
+ -->   </div>
 	
 
   <h3>Ready</h3>
