@@ -162,8 +162,8 @@
 	display: block;
 	cursor: pointer;
 	position: relative;
-	margin-top: 2px;
-	padding: .5em .5em .5em .7em;
+	margin-top: 0px;
+	padding: 5em .5em .5em .7em;
 	min-height: 0; /* support: IE7 */
 }
 .ui-accordion .ui-accordion-icons {
@@ -764,7 +764,7 @@ button.ui-button::-moz-focus-inner {
 .ui-tabs .ui-tabs-panel {
 	display: block;
 	border-width: 0;
-	padding: 1em 1.4em;
+	padding: 0em 0em;
 	background: none;
 }
 .ui-tooltip {

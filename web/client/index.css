@@ -1,3 +1,31 @@
 .spinner {
 	width: 40px;
 }
+
+
+.ui-tabs .ui-tabs-nav li {
+    width:30%;
+    text-align: center;
+	
+}
+.ui-tabs .ui-tabs-nav li a {
+    display: inline-block;
+    float: none;
+    padding: 5px;
+    text-decoration: none;
+    width: 100%;
+}
+
+.progress{
+	margin-top: 7px;
+}
+
+label{ 
+    display: block;
+}
+
+.ui-icon{
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 2px;   
+}
