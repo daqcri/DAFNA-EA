@@ -1,3 +1,4 @@
+"ClaimID", "Remove", "ObjectID", PropertyID", "PropertyValue", "SourceID", "TimeStamp" 
 "13847312","","9780201853940","AuthorsNamesList","Not Available","eCampus.com","null"
 "13847313","","9780201853940","AuthorsNamesList","Knuth, Donald E.","Indoo.com","null"
 "13847314","","9780201853940","AuthorsNamesList","Knuth, Donald E.","A1Books","null"
