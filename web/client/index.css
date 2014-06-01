@@ -20,12 +20,12 @@
 	margin-top: 7px;
 }
 
-label{ 
-    display: block;
-}
-
 .ui-icon{
     vertical-align: middle;
     display: inline-block;
     margin-left: 2px;   
+}
+
+.algorithm_checkbox_label {
+    width: 200px;
 }
