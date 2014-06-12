@@ -32,8 +32,8 @@ public class LatentTruthModel extends Voter {
 	NormalVoterQualityMeasures voterQuality;
 
 	public LatentTruthModel
-	(double b1, double b0,double a00,double a01,double a10,double a11, DataSet dataSet,
-			int iterationCount,	int burnIn,	int sampleGap, VoterParameters params) {
+	(DataSet dataSet, VoterParameters params,double b1, double b0,double a00,double a01,double a10,double a11, 
+			int iterationCount,	int burnIn,	int sampleGap) {
 
 		super(dataSet, params);
 
