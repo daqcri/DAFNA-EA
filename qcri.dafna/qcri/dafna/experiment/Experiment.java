@@ -236,8 +236,8 @@ public abstract class Experiment {
 
 		convergence100 = false;
 
-		LatentTruthModel latentTruthModel = new LatentTruthModel(b1, b0, a00, a01, a10, a11, 
-				dataSetSinglePropertyValue, iterationCount, burnIn, sampleGap, params);
+		LatentTruthModel latentTruthModel = new LatentTruthModel(dataSetSinglePropertyValue, params, b1, b0, a00, a01, a10, a11, 
+				iterationCount, burnIn, sampleGap);
 		NormalVoterQualityMeasures latentTruthModelQualityMeasure = (NormalVoterQualityMeasures)latentTruthModel.launchVoter(convergence100, profileMEmory);
 		log(dataSetSinglePropertyValue, writer, precisionWriter, logger, Globals.voterLTM, latentTruthModelQualityMeasure, false);
 	}
@@ -330,8 +330,8 @@ public abstract class Experiment {
 
 				System.out.print(" & a01 = " + a01 + " & a00=" + a00 + " & ");
 				for (int x = 0; x < 100; x++) {
-					LatentTruthModel latentTruthModel = new LatentTruthModel(b1, b0, a00, a01, a10, a11, 
-							dataSetSinglePropertyValue, iterationCount, burnIn, sampleGap, params);
+					LatentTruthModel latentTruthModel = new LatentTruthModel(dataSetSinglePropertyValue, params, b1, b0, a00, a01, a10, a11, 
+							iterationCount, burnIn, sampleGap);
 					NormalVoterQualityMeasures latentTruthModelQualityMeasure = (NormalVoterQualityMeasures)latentTruthModel.launchVoter(convergence100, profileMEmory);
 //					log(dataSetSinglePropertyValue, writer, precisionWriter, logger, Globals.voterLTM, latentTruthModelQualityMeasure, false);
 					presisionStats.addValue(latentTruthModelQualityMeasure.getPrecision());

@@ -1,4 +1,4 @@
-package main;
+package qcri.dafna.main;
 
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.dataSet.dataSetFormatter.BiographyDataSetReadOldWriteNew;

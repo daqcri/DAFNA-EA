@@ -1,4 +1,4 @@
-package main;
+package qcri.dafna.main;
 
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.quality.dataQuality.DataQualityMeasurments;
