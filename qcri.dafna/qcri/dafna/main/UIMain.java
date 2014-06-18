@@ -43,6 +43,8 @@ public class UIMain {
 		switch(algo_name){
 		case "Cosine":
 			double dampeningFactorCosine = Double.parseDouble(args[8]); // 0-1
+			startingConf = Double.parseDouble(args[9]);
+			params = new VoterParameters(cosineSimDiff, startingTrust, startingConf,startingErrorFactor);
 			Cosine algo1 = new Cosine(ds, params, dampeningFactorCosine);	
 			q = algo1.launchVoter(convergence100 , profileMemory);
 			
@@ -54,6 +56,8 @@ public class UIMain {
 			break;
 		case "3-Estimates":
 			double ThreeNormalizationWeight = Double.parseDouble(args[8]);
+			startingErrorFactor = Double.parseDouble(args[9]);
+			params = new VoterParameters(cosineSimDiff, startingTrust, startingConf,startingErrorFactor);
 			ThreeEstimates algo3 = new ThreeEstimates(ds, params, ThreeNormalizationWeight);
 			q = algo3.launchVoter(convergence100 , profileMemory);
 			break;
@@ -95,7 +99,6 @@ public class UIMain {
 			q = algo8.launchVoter(convergence100, profileMemory);
 			break;
 		case "LTM":
-			boolean b = args[7].equals("true");
 			double b1 = Double.parseDouble(args[8]);
 			double b0 = Double.parseDouble(args[9]);
 			double a00 = Double.parseDouble(args[10]);
