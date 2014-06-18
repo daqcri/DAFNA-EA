@@ -12,6 +12,7 @@ import qcri.dafna.voter.SimpleLCA;
 import qcri.dafna.voter.GuessLCA;
 import qcri.dafna.voter.TruthFinder;
 import qcri.dafna.voter.VoterParameters;
+import qcri.dafna.voter.dependence.SourceDependenceModel;
 import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
 
 public class UIMain {
@@ -47,57 +48,65 @@ public class UIMain {
 			
 			break;
 		case "2-Estimates":
-			double normalizationWeight = Double.parseDouble(args[9]);
+			double normalizationWeight = Double.parseDouble(args[8]);
 			TwoEstimates algo2 = new TwoEstimates(ds, params,normalizationWeight );
 			q = algo2.launchVoter(convergence100 , profileMemory);
 			break;
 		case "3-Estimates":
-			double ThreeNormalizationWeight = Double.parseDouble(args[10]);
+			double ThreeNormalizationWeight = Double.parseDouble(args[8]);
 			ThreeEstimates algo3 = new ThreeEstimates(ds, params, ThreeNormalizationWeight);
 			q = algo3.launchVoter(convergence100 , profileMemory);
 			break;
 		case "Depen":
-			break;
 		case "Accu":
-			break;
 		case "AccuSim":
-			break;
 		case "AccuNoDep":
+			double alfa = Double.parseDouble(args[8]);
+			double c = Double.parseDouble(args[9]);
+			int n = Integer.parseInt(args[10]);
+			double similarityConstant = Double.parseDouble(args[11]);
+			boolean considerSimilarity = args[12].equals("true");
+			boolean considerSourcesAccuracy = args[13].equals("true");
+			boolean considerDependency = args[14].equals("true");
+			boolean orderSrcByDependence = args[15].equals("true");
+			SourceDependenceModel algo4 = new SourceDependenceModel(ds, params, alfa, c, n, similarityConstant, considerSimilarity, considerSourcesAccuracy, considerDependency, orderSrcByDependence);
+			q = algo4.launchVoter(convergence100, profileMemory);
 			break;
 		case "TruthFinder":
-			double similarityConstantTF = Double.parseDouble(args[11]); // 0-1
-			double dampeningFactorTF = Double.parseDouble(args[12]); // 0-1
-			TruthFinder algo8 = new TruthFinder(ds, params, similarityConstantTF, dampeningFactorTF);
-			q = algo8.launchVoter(convergence100, profileMemory);
+			double similarityConstantTF = Double.parseDouble(args[8]); // 0-1
+			double dampeningFactorTF = Double.parseDouble(args[9]); // 0-1
+			TruthFinder algo5 = new TruthFinder(ds, params, similarityConstantTF, dampeningFactorTF);
+			q = algo5.launchVoter(convergence100, profileMemory);
 			break;
 		case "SimpleLCA":
-			double Simplebeta1LCA = Double.parseDouble(args[13]);
-			SimpleLCA algo9 = new SimpleLCA(ds, params, Simplebeta1LCA);
-			q = algo9.launchVoter(convergence100, profileMemory);
+			double Simplebeta1LCA = Double.parseDouble(args[8]);
+			SimpleLCA algo6 = new SimpleLCA(ds, params, Simplebeta1LCA);
+			q = algo6.launchVoter(convergence100, profileMemory);
 			break;
 		case "GuessLCA":
-			double beta1LCA = Double.parseDouble(args[14]);
-			GuessLCA algo10 = new GuessLCA(ds, params, beta1LCA);
-			q = algo10.launchVoter(convergence100, profileMemory);
+			double beta1LCA = Double.parseDouble(args[8]);
+			GuessLCA algo7 = new GuessLCA(ds, params, beta1LCA);
+			q = algo7.launchVoter(convergence100, profileMemory);
 			break;
 		case "MLE":
-			double beta1MLE = Double.parseDouble(args[15]);
-			double rMLE = Double.parseDouble(args[16]);
-			MaximumLikelihoodEstimation algo11 = new MaximumLikelihoodEstimation(ds, params, beta1MLE, rMLE );
-			q = algo11.launchVoter(convergence100, profileMemory);
+			double beta1MLE = Double.parseDouble(args[8]);
+			double rMLE = Double.parseDouble(args[9]);
+			MaximumLikelihoodEstimation algo8 = new MaximumLikelihoodEstimation(ds, params, beta1MLE, rMLE );
+			q = algo8.launchVoter(convergence100, profileMemory);
 			break;
 		case "LTM":
-			double b1 = Double.parseDouble(args[17]);
-			double b0 = Double.parseDouble(args[18]);
-			double a00 = Double.parseDouble(args[19]);
-			double a01 = Double.parseDouble(args[20]);
-			double a10 = Double.parseDouble(args[21]);
-			double a11 = Double.parseDouble(args[22]);
-			int iterationCount = Integer.parseInt(args[23]);
-			int burnIn = Integer.parseInt(args[24]);
-			int sampleGap = Integer.parseInt(args[25]);
-			LatentTruthModel algo12 = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
-			q = algo12.launchVoter(convergence100, profileMemory);
+			boolean b = args[7].equals("true");
+			double b1 = Double.parseDouble(args[8]);
+			double b0 = Double.parseDouble(args[9]);
+			double a00 = Double.parseDouble(args[10]);
+			double a01 = Double.parseDouble(args[11]);
+			double a10 = Double.parseDouble(args[12]);
+			double a11 = Double.parseDouble(args[13]);
+			int iterationCount = Integer.parseInt(args[14]);
+			int burnIn = Integer.parseInt(args[15]);
+			int sampleGap = Integer.parseInt(args[16]);
+			LatentTruthModel algo9 = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
+			q = algo9.launchVoter(convergence100, profileMemory);
 			break;
 		}
 		System.out.println(q.getAccuracy());
