@@ -1,7 +1,12 @@
 package qcri.dafna.main;
 
+import java.util.HashMap;
+import java.util.List;
+
 import qcri.dafna.dataModel.data.DataSet;
-import qcri.dafna.dataModel.quality.dataQuality.DataQualityMeasurments;
+import qcri.dafna.dataModel.data.Source;
+import qcri.dafna.dataModel.data.SourceClaim;
+import qcri.dafna.dataModel.data.ValueBucket;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.ExperimentDataSetConstructor;
 import qcri.dafna.voter.Cosine;
@@ -23,7 +28,6 @@ public class UIMain {
 		String groundTruthDir = args[2];
 		String outputPath = args[3];
 		String delim = ",";
-		// TODO Auto-generated method stub
 		DataSet ds = ExperimentDataSetConstructor.readDataSet(
 				dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
 		
@@ -112,10 +116,27 @@ public class UIMain {
 			q = algo9.launchVoter(convergence100, profileMemory);
 			break;
 		}
-		System.out.println(q.getAccuracy());
-		System.out.println(q.getRecall());
-		System.out.println(q.getPrecision());
-					
+
+       HashMap<String, Source> map = ds.getSourcesHash();      
+       for(String key: map.keySet()){
+    	   System.out.println(key + "\t" +  map.get(key).getTrustworthiness());
+       }
+       
+       HashMap<String, List<ValueBucket>> map1 = ds.getDataItemsBuckets();     
+       for(String key: map1.keySet()){
+    	   List<ValueBucket> list = map1.get(key);
+    	   for(ValueBucket bucket: list)
+    		   System.out.println(key + "\t" + bucket.getConfidence());
+       }
+       
+       HashMap<String, List<SourceClaim>> map2 = ds.getDataItemClaims();       
+       for(String key: map2.keySet()){
+    	   List<SourceClaim> list = map2.get(key);
+    	   for(SourceClaim claim: list)
+    		   System.out.println(key + "\t" + claim.isTrueClaimByVoter());
+       }
+
+       System.out.println("Finished");
 	}
 
 }
