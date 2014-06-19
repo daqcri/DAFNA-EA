@@ -117,23 +117,27 @@ public class UIMain {
 			break;
 		}
 
-       HashMap<String, Source> map = ds.getSourcesHash();      
+       HashMap<String, Source> map = ds.getSourcesHash();
+       System.out.println("Sources\n\n");
        for(String key: map.keySet()){
     	   System.out.println(key + "\t" +  map.get(key).getTrustworthiness());
        }
        
+       System.out.println("Value buckets\n\n");
        HashMap<String, List<ValueBucket>> map1 = ds.getDataItemsBuckets();     
        for(String key: map1.keySet()){
     	   List<ValueBucket> list = map1.get(key);
     	   for(ValueBucket bucket: list)
     		   System.out.println(key + "\t" + bucket.getConfidence());
+    	   System.out.println();
        }
        
+       System.out.println("Source claims\n\n");
        HashMap<String, List<SourceClaim>> map2 = ds.getDataItemClaims();       
        for(String key: map2.keySet()){
     	   List<SourceClaim> list = map2.get(key);
     	   for(SourceClaim claim: list)
-    		   System.out.println(key + "\t" + claim.isTrueClaimByVoter());
+    		   System.out.println(key + "\t" + claim.getPropertyName() + "\t" + claim.getPropertyValueString() + "\t" + claim.isTrueClaimByVoter());
        }
 
        System.out.println("Finished");
