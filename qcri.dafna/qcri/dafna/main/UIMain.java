@@ -129,14 +129,14 @@ public class UIMain {
 		try {
 			trustworthinessWriter = Files.newBufferedWriter(Paths.get(trustworthinessResultsFile), 
 					Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
+			CSVWriter csvWriter = new CSVWriter(trustworthinessWriter , ',');
 			/* add header */
-			writeTrustworthiness(trustworthinessWriter, "sourceId", "trustworthiness", ',');
+			writeTrustworthiness(csvWriter, "sourceId", "trustworthiness");
 			HashMap<String, Source> map = ds.getSourcesHash();
-			System.out.println("Sources\n\n");
 			for(String key: map.keySet()){
-				System.out.println(key + "\t" +  map.get(key).getTrustworthiness());
-				writeTrustworthiness(trustworthinessWriter, key, String.valueOf(map.get(key).getTrustworthiness()), ',');
+				writeTrustworthiness(csvWriter, key, String.valueOf(map.get(key).getTrustworthiness()));
 			}
+			trustworthinessWriter.close();
 		} catch (IOException e) {
 			System.out.println("Cannot write the trustworthiness results");
 			e.printStackTrace();
@@ -147,19 +147,19 @@ public class UIMain {
 		try {
 			confidenceWriter = Files.newBufferedWriter(Paths.get(confidenceResultFile), 
 					Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			CSVWriter csvWriter = new CSVWriter(confidenceWriter, ',');
 
 			/*header*/
-			writeConfidenceResult(confidenceWriter, "claimId", "confidence", "trueOrFalse", ',');
-			System.out.println("\nClaims");
+			writeConfidenceResult(csvWriter, "claimId", "confidence", "trueOrFalse");
 			for (List<ValueBucket> bList : ds.getDataItemsBuckets().values()) {
 				for (ValueBucket b : bList) {
 					for (SourceClaim claim :  b.getClaims()) {
-						System.out.println(claim.getId() + "\t" + b.getConfidence() + "\t" + claim.isTrueClaimByVoter());
-						writeConfidenceResult(confidenceWriter, String.valueOf(claim.getId()), 
-								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()), ',');
+						writeConfidenceResult(csvWriter, String.valueOf(claim.getId()), 
+								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()));
 					}
 				}
 			}
+			confidenceWriter.close();
 		} catch (IOException e) {
 			System.out.println("Cannot write the confidence results");
 			e.printStackTrace();
@@ -167,18 +167,14 @@ public class UIMain {
 		System.out.println("Finished");
 	}
 
-	private static boolean writeConfidenceResult(BufferedWriter writer, String claimId,	String confidence, String trueOrFalse, char dlim) {
-		CSVWriter csvWriter = new CSVWriter(writer, dlim);
+	private static void writeConfidenceResult(CSVWriter writer, String claimId,	String confidence, String trueOrFalse) {
 		String [] lineComponents = new String[]{claimId, confidence, trueOrFalse};
-		csvWriter.writeNext(lineComponents);
-		return true;
+		writer.writeNext(lineComponents);
 	}
 
-	private static boolean writeTrustworthiness(BufferedWriter writer, String sourceId,	String trustworthiness, char dlim) {
-		CSVWriter csvWriter = new CSVWriter(writer, dlim);
+	private static void writeTrustworthiness(CSVWriter writer, String sourceId,	String trustworthiness) {
 		String [] lineComponents = new String[]{sourceId, trustworthiness};
-		csvWriter.writeNext(lineComponents);
-		return true;
+		writer.writeNext(lineComponents);
 	}
 
 
