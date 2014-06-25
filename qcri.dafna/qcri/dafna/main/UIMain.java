@@ -131,7 +131,7 @@ public class UIMain {
 					Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
 			CSVWriter csvWriter = new CSVWriter(trustworthinessWriter , ',');
 			/* add header */
-			writeTrustworthiness(csvWriter, "sourceId", "trustworthiness");
+			writeTrustworthiness(csvWriter, "SourceID", "Trustworthiness");
 			HashMap<String, Source> map = ds.getSourcesHash();
 			for(String key: map.keySet()){
 				writeTrustworthiness(csvWriter, key, String.valueOf(map.get(key).getTrustworthiness()));
@@ -150,7 +150,7 @@ public class UIMain {
 			CSVWriter csvWriter = new CSVWriter(confidenceWriter, ',');
 
 			/*header*/
-			writeConfidenceResult(csvWriter, "claimId", "confidence", "trueOrFalse");
+			writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue");
 			for (List<ValueBucket> bList : ds.getDataItemsBuckets().values()) {
 				for (ValueBucket b : bList) {
 					for (SourceClaim claim :  b.getClaims()) {
