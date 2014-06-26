@@ -50,6 +50,20 @@
     </plugins>
   </build>
 
+  <repositories>
+    <repository>
+      <id>my-local-repo</id>
+      <url>file://${basedir}/my-repo</url>
+    </repository>
+  </repositories>
+
+  <!-- install local packages in my-repo using the following commands:
+
+  mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/independance-vldb2010-solomon-cleaner.jar -DgroupId=com.att.research -DartifactId=solomon.cleaner -Dversion=0.0.1 -Dpackaging=jar -DlocalRepositoryPath=my-repo
+
+  mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/simmetrics_jar_v1_6_2_d07_02_07.jar -DgroupId=uk.ac.shef.wit -DartifactId=simmetrics -Dversion=1.6.2 -Dpackaging=jar -DlocalRepositoryPath=my-repo
+ -->
+ 
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
@@ -81,15 +95,11 @@
       <groupId>com.att.research</groupId>
       <artifactId>solomon.cleaner</artifactId>
       <version>0.0.1</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/independance-vldb2010-solomon-cleaner.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>uk.ac.shef.wit</groupId>
       <artifactId>simmetrics</artifactId>
       <version>1.6.2</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/simmetrics_jar_v1_6_2_d07_02_07.jar</systemPath>
     </dependency>
 
   </dependencies>
