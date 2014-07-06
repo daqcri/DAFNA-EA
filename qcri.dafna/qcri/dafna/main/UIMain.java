@@ -14,6 +14,7 @@ import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.Source;
 import qcri.dafna.dataModel.data.SourceClaim;
 import qcri.dafna.dataModel.data.ValueBucket;
+import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.ExperimentDataSetConstructor;
 import qcri.dafna.voter.Cosine;
@@ -150,12 +151,18 @@ public class UIMain {
 			CSVWriter csvWriter = new CSVWriter(confidenceWriter, ',');
 
 			/*header*/
-			writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue");
+			writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue", "BucketValue");
+			String bucketValue;
 			for (List<ValueBucket> bList : ds.getDataItemsBuckets().values()) {
 				for (ValueBucket b : bList) {
+					if (DataTypeMatcher.savedAsString(b.getClaims().get(0).getValueType())) {
+		    			   bucketValue = b.getCleanedString();
+		    		   } else {
+		    			   bucketValue = String.valueOf(b.getMinValue());
+		    		   }
 					for (SourceClaim claim :  b.getClaims()) {
 						writeConfidenceResult(csvWriter, String.valueOf(claim.getId()), 
-								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()));
+								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()), bucketValue);
 					}
 				}
 			}
@@ -167,8 +174,8 @@ public class UIMain {
 		System.out.println("Finished");
 	}
 
-	private static void writeConfidenceResult(CSVWriter writer, String claimId,	String confidence, String trueOrFalse) {
-		String [] lineComponents = new String[]{claimId, confidence, trueOrFalse};
+	private static void writeConfidenceResult(CSVWriter writer, String claimId,	String confidence, String trueOrFalse, String bucketValue) {
+		String [] lineComponents = new String[]{claimId, confidence, trueOrFalse, bucketValue};
 		writer.writeNext(lineComponents);
 	}
 
