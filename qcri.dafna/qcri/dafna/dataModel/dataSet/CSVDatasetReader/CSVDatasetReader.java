@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 
 import au.com.bytecode.opencsv.CSVReader;
 import qcri.dafna.dataModel.data.DataSet;
+import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.quality.dataQuality.DataSetTimingMeasures;
 
 public class CSVDatasetReader {
@@ -62,7 +63,7 @@ public class CSVDatasetReader {
 			String sourceId;
 			String timeStamp;
 
-			double weight = 1.0;
+			double weight = Globals.weight;
 
 			while((record = reader.readNext()) != null){
 				int i = 0;

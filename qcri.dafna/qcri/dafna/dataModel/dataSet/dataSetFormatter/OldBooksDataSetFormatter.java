@@ -18,11 +18,15 @@ import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher.ValueType;
 import qcri.dafna.dataModel.dataSet.ClaimWriter;
 
 public class OldBooksDataSetFormatter {
-	private int claimId = Globals.lastClaimID;
-	private final String booksDirectory = Globals.directory_UnformattedBooksFiles;
-	private String newFilesDirectory = Globals.directory_formattedDAFNADataset_Books_Claims_Folder + "/claim";
+	private static int claimId = Globals.lastClaimID;
+	private static final String booksDirectory = Globals.directory_UnformattedBooksFiles;
+	private static String newFilesDirectory = Globals.directory_formattedDAFNADataset_Books_Claims_Folder + "/claim";
 
-	public void readOldBooksWriteFormattedBooks (String newFileDelimiter, boolean singleClaimValue, boolean MLE) {
+	public static void main(String[] args) {
+		readOldBooksWriteFormattedBooks(",", false, false, true);
+	}
+
+	public static void readOldBooksWriteFormattedBooks (String newFileDelimiter, boolean singleClaimValue, boolean MLE, boolean cleanListValues) {
 
 		if (singleClaimValue) {
 			newFilesDirectory = Globals.directory_formattedDAFNADataset_BooksFolder_SingleClaimValue + "/claim";
@@ -75,7 +79,10 @@ public class OldBooksDataSetFormatter {
 
 							if (! authorsList.trim().equals("")) {
 								if ( ! singleClaimValue) {
-
+									// normal
+									if (cleanListValues) {
+										authorsList = (String) DataCleaner.clean(authorsList, ValueType.ListNames);
+									}
 									lineWriten = ClaimWriter.writeClaim(writer,claimId, isbn, Globals.bookDataSet_AuthorsNamesList, 
 											authorsList, timeStamp, sourceID, Globals.delimiterText /*Globals.delimiterText*/);
 									if (lineWriten) {

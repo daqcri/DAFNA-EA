@@ -40,7 +40,7 @@ public class SimpleLCA extends Voter {
 		double newTrustCosinSim, newconfCosineSim;
 
 		boolean continueComputation = true;
-		while (continueComputation && numOfIteration < Globals.iterationCount) {
+		while (continueComputation && numOfIteration < Globals.maxIterationCount) {
 			computeConfidence();
 			computeTrustworthiness();
 
@@ -49,7 +49,7 @@ public class SimpleLCA extends Voter {
 			continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
 					(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
 			if (convergence100) {
-				if (numOfIteration > Globals.iterationCount) {
+				if (numOfIteration > Globals.maxIterationCount) {
 					continueComputation = false;
 				} else {
 					continueComputation = true;
@@ -68,6 +68,7 @@ public class SimpleLCA extends Voter {
 		double temp;
 		double numOfDiffClaims;
 		double sumofAllConfidences;
+		double tempWeight = 1.0;
 		for (List<ValueBucket> bucketsList : dataSet.getDataItemsBuckets().values()) {
 			numOfDiffClaims = bucketsList.size();
 			sumofAllConfidences = 0;
@@ -75,13 +76,28 @@ public class SimpleLCA extends Voter {
 			for (ValueBucket bucket : bucketsList) {
 				temp = pym;
 				for (Source s : bucket.getSources()) {
-					temp = temp * s.getTrustworthiness();
+					for (SourceClaim c : bucket.getClaims()) {
+						if (c.getSource().getSourceIdentifier().equals(s.getSourceIdentifier())) {
+							tempWeight = c.getWeight();
+							break;
+						}
+					}
+//					temp = temp * s.getTrustworthiness(); // without weight
+					temp = temp * Math.pow(s.getTrustworthiness(), tempWeight);
 				}
 				for (String key : bucket.getDisagreeingSourcesKeys()) {
+					for (SourceClaim c : bucket.getClaims()) {
+						if (c.getSource().getSourceIdentifier().equals(key)) {
+							tempWeight = c.getWeight();
+							break;
+						}
+					}
 					/*
 					 * if numOfDiffClaims = 1, the it shouldn't be any disagreeing sources, then the denominator never zero.
 					 */
-					temp = temp * ( (1 - dataSet.getSourcesHash().get(key).getTrustworthiness())/ (numOfDiffClaims-1));
+//					temp = temp * ( (1 - dataSet.getSourcesHash().get(key).getTrustworthiness())/ (numOfDiffClaims-1)); // without weight
+					temp = temp * 
+							Math.pow(( (1 - dataSet.getSourcesHash().get(key).getTrustworthiness())/ (numOfDiffClaims-1)), tempWeight);
 				}
 				bucket.setConfidenceWithSimilarity(bucket.getConfidence());// save the old value before update
 				bucket.setConfidence(temp);
@@ -98,16 +114,22 @@ public class SimpleLCA extends Voter {
 
 	private void computeTrustworthiness() {
 		double trustworthiness;
+		double weightSum;
 		for (Source s : dataSet.getSourcesHash().values()) {
 			trustworthiness = 0;
+			weightSum = 0;
 			for (SourceClaim claim : s.getClaims()) {
-				trustworthiness = trustworthiness + claim.getBucket().getConfidence();
+//				trustworthiness = trustworthiness + claim.getBucket().getConfidence(); // without weight
+				trustworthiness = trustworthiness + Math.pow(claim.getBucket().getConfidence(), claim.getWeight());
+				weightSum += claim.getWeight();
 			}
 			s.setOldTrustworthiness(s.getTrustworthiness());
 			if (Double.isNaN(trustworthiness/(double)s.getClaims().size())) {
 				System.out.println();
 			}
-			s.setTrustworthiness(trustworthiness/(double)s.getClaims().size());
+			
+//			s.setTrustworthiness(trustworthiness/(double)s.getClaims().size()); // without weight
+			s.setTrustworthiness(trustworthiness/weightSum);
 		}
 	}
 

@@ -16,7 +16,7 @@ import qcri.dafna.dataModel.quality.dataQuality.DataItemMeasures;
 public class CSVTruthReader extends TruthReader {
 	/*
 	 * File format
-	 * object Id \t propertyNAme \t value
+	 * object Id \t propertyName \t value
 	 */
 	public CSVTruthReader(HashMap<String, DataItemMeasures> dataItemMeasures) {
 		super(dataItemMeasures);
@@ -53,6 +53,7 @@ public class CSVTruthReader extends TruthReader {
 				String propertyName = record[1];
 				String value = record[2];
 				addTrueValue("", objectID, propertyName, value);
+			    setTrueValueCount(getTrueValueCount() + 1 );
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {

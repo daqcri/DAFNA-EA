@@ -156,7 +156,7 @@ public class SourceDependenceModel extends Voter {
 			computeDependencies(true);
 		}
 
-		while (continueComputation && numOfIteration < Globals.iterationCount) {
+		while (continueComputation && numOfIteration < Globals.maxIterationCount) {
 			numOfIteration ++;
 
 			computeConfidence();
@@ -176,7 +176,7 @@ public class SourceDependenceModel extends Voter {
 			}
 
 			if (convergence100) {
-				if (numOfIteration > Globals.iterationCount) {
+				if (numOfIteration > Globals.maxIterationCount) {
 					continueComputation = false;
 				}
 			} else if (Math.abs(newTrustCosinSim - oldTrustCosinSim) < ConvergenceTester.convergenceThreshold) {

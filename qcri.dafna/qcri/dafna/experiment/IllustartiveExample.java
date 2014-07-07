@@ -19,7 +19,7 @@ public class IllustartiveExample extends qcri.dafna.experiment.Experiment{
 		boolean runLTM = false;
 		
 		String dir = Globals.directory_formattedDAFNADataset_IllustativeExample + "/experimentResult";
-		runExperiment(convergence100, dataset, dir, runLTM, null, runSyntheticBoolean, null);
+		runExperiment(convergence100, dataset, dir, runLTM, null, runSyntheticBoolean, null, "");
 	}
 	public static DataSet getDataSet(double startingConfidence, double statingTrustworthiness, double toleranceFactor) {
 		Globals.tolerance_Factor = toleranceFactor;

@@ -127,7 +127,7 @@ public class DataSet {
 	 * Add the sourceClaim in both dataItemClaims map and objectToClaimHash.
 	 * @param claim the SourceClaim object to be added to the dataSet
 	 */
-	public void addClaim(int claimId, /*String entityId,*/ String objectId, String uncleanedObjectId,
+	public SourceClaim addClaim(int claimId, /*String entityId,*/ String objectId, String uncleanedObjectId,
 			String propertyName, String propertyStringValue, double claimWeight, String timeStamp, String sourceId) {
 		Source source = addSource(sourceId);
 		
@@ -148,6 +148,7 @@ public class DataSet {
 			objectToClaimHash.put(claim.objectKey(), objectClaims);
 		}
 		objectClaims.add(claim);
+		return claim;
 	}
 
 	/**
@@ -488,7 +489,7 @@ public class DataSet {
 	/*------------------ END - Data Bucketing ------------------*/
 	public Integer[] getSourcesCoverageDistribution() {
 		Integer[] cov = new Integer[SourcesHash.size()];
-		
+
 		int i = 0;
 		for (Source s : SourcesHash.values()) {
 			cov[i] = s.getClaims().size();
@@ -497,9 +498,10 @@ public class DataSet {
 		Arrays.sort(cov);
 		return cov;
 	}
+
 	public Integer[] getDIDistinctValueDistribution() {
 		Integer[] di = new Integer[dataItemsBuckets.size()];
-		
+
 		int i = 0;
 		for (List<ValueBucket> l : dataItemsBuckets.values()) {
 			di[i] = l.size();

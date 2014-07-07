@@ -46,6 +46,9 @@ public class Globals {
 	public static final String voterAccuNoDep = "AccuNoDep";// new
 	public static final String voterLTM = "LTM";
 	public static final String voterMLE = "MLE";// Maximum likelihood estimation
+	
+	public static final String voterNewName = "New Voter";// Add a name to any new voter implementation
+	
 
 	public static final String syntheticDataSet_Property = "property";
 	public static final String syntheticDataSet_BooleanProperty = "booleanProperty";
@@ -62,6 +65,14 @@ public class Globals {
 	public static final String weatherDataSet_Humidity = "Humidity";
 	public static final String weatherDataSet_Pressure = "Pressure";
 	public static final String weatherDataSet_Visibility = "Visibility";
+
+	// Conflicts Dataset
+	public static final String conflicts_StartDate = "conflictStartDate";
+	public static final String conflicts_Continent = "conflictContinent";
+	public static final String conflicts_Locations = "conflictLocations";
+	public static final String conflicts_cumulativeFatalities = "conflictCumulativeFatalities";
+	public static final String conflicts_Fatalities2013 = "conflictFatalities2013";
+	public static final String conflicts_Fatalities2014 = "conflictFatalities2014";
 
 	private static String name = "/home/dalia";
 	private static final String directory_Log = name + "/DAFNAData/experiments";
@@ -114,6 +125,7 @@ public class Globals {
 	public static final String biographiesDataSet_Born = "Born";
 	public static final String biographiesDataSet_Died = "Died";
 	public static final String biographiesDataSet_Spouse = "Spouse";
+	public static final String biographiesDataSet_Spouse_s = "spouse_s";
 	public static final String biographiesDataSet_Children = "Children";
 	public static final String biographiesDataSet_Father = "Father";
 	public static final String biographiesDataSet_Mother = "Mother";
@@ -166,53 +178,20 @@ public class Globals {
 
 
 	// The delimiter used in the data file
-	//public static final String delimiterText =  "|\t";
-	public static final String delimiterText = ",";
+	public static final String delimiterText =  ",";
+	public static final String delimiterText_deprecated = "|\t";
 	// The regular expression used to detect the delimiter
-	//public static final String delimiterRegularExpression = "\\|\\t";
 	public static final String delimiterRegularExpression = ",";
+	public static final String delimiterRegularExpression_deprecated = "\\|\\t";
+//	public static final String delimiterRegularExpression = ",";
 	public static final String cleanedListDelimiter = ";";
 	public static final Charset FILE_ENCODING = StandardCharsets.UTF_8;//.ISO_8859_1;
 
 //	public static char CSVDelimiter = ',';
 
-	public static final int iterationCount = 50;//50
+	public static final int maxIterationCount = 100;//50
 
-
-	/* -------------------- database ---------------------------*/
-
-	/**
-	 * All Data Items have the same number of different claimed values by the set of sources
-	 */
-	public static final int db_differentValuesMethod_uniform = 0;
-	/**
-	 * 80% of the Data Items have 20% of the provided number of different values.
-	 * 20% of the Data Items have 80% of the provided number of different values.
-	 */
-	public static final int db_differentValuesMethod_80_20_simple = 0;
-	/**
-	 * Data Items different values are exponentially distributed.
-	 */
-	public static final int db_differentValuesMethod_exponential= 0;
-
-	/**
-	 * No control on the number of true values provided by each source.
-	 */
-	public static final int db_control_source_true_value_count_method_not_used = 0;
-	/**
-	 * Number of true values provided by each source are all equal.
-	 */
-	public static final int db_control_source_true_value_count_method_not_uniform = 0;
-	/**
-	 * 80% of the sources, provide always true claims.
-	 * 20% of the sources, provide always false claims.
-	 */
-	public static final int db_control_source_true_value_count_method_not_80_20_simple = 0;
-	/**
-	 * 80% of the sources, provide 20% true claims among all their claims.
-	 * 20% of the sources, provide 80% true claims among all their claims.
-	 */
-	public static final int db_control_source_true_value_count_method_not_80_20_complex = 0;
+	public static final double weight = 1.0;
 
 	public static void log(String s) {
 		System.out.println(s);

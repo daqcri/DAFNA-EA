@@ -18,29 +18,20 @@ public class SyntheticExperiment extends Experiment{
 	private static Connection connect = null;
 	private static 	Statement readingStatement = null;
 	private static 	Statement writingStatement = null;
-	//	private static PreparedStatement preparedStatement = null;
-	public static void main(String[] args) {
-//		for (int i = 0; i < 100; i++) {
 
-		boolean runLTM = false;// only true for scalability
+	public static void main(String[] args) {
+//		boolean runLTM = true;// only true for scalability
 //		startExperiments(getSelectQueryForScalability(), runLTM);
 			
-			startExperiments(getSyntheticExperimentSelectQuery(false), false);
+		startExperiments(getSyntheticExperimentSelectQuery(false), false);
 			
-//			startExperiments(getSyntheticExperimentForDependency(),false);// subset of depen
-
-//			startExperiments(getSyntheticExperimentForDependency2());// subset of depen
-//		}
-		
 	}
 
 	public static String getSelectQueryForScalability() {
 		String select = "SELECT dataset_id, dataset_file_name, num_of_sources, num_of_data_item  FROM dataset ";
 		String where = " WHERE  num_of_sources IN ( 1000, 5000, 10000) ";
 		String where2 = " AND dataset_id NOT IN (SELECT dataset_id from "
-//				+ "erThreeEst_normalizeAll)";
 				+ "experiment_results where voter_name = 'LTM')";
-//		String where3 = " WHERE dataset_file_name = '" + fileName + "'";
 
 		String orderBy = " ORDER BY num_of_sources, num_of_data_item";
 		
@@ -50,142 +41,78 @@ public class SyntheticExperiment extends Experiment{
 	}
 	
 
-	private static String getSyntheticExperimentForDependency(){
-		int numOfDistinctValues = -1;
-		List<Integer> numOfDistinctValues_List = new ArrayList<Integer>();
-
-
-//		double dataItemCoverage = 0.25;
-		List<Double> coverage_list = new ArrayList<Double>();
-		coverage_list.add(0.25);
-		coverage_list.add(0.75);
-
-		int numOfDiferentValueGenerationMethod = 1;//uniform
-		int controlSrcTrueValMethod = 3; // 30 = fully optimistic
-		double percentageOfTruValPerSrc = 0.5;// only used for uniform method 
-		int controlNumOfSrcPerValMethod = -1;
-
-		String select = "SELECT dataset_id, dataset_file_name, num_of_sources, num_of_data_item  FROM dataset ";
-		String where = " WHERE ";
-//				where = where + "num_of_sources  " + numOfSources + " AND ";
-		//		where = where + "num_of_data_item = " + (numOfProperties * numOfObjects) + " AND " ;
-//		where = where + "( ";
-//		for (double dataItemCoverage : coverage_list) {
-//			where = where + "coverage > " + (0.25 - 0.0001) + " AND coverage < " + (0.25 + 0.0001) + " OR ";
-//		}
-//		where = where + " coverage > " + (0.24) + " AND coverage < " + (0.26);
-//		where = where.trim().substring(0, where.length() - 4) + " ) AND ";
-				where = where + " dependency_id = 1 ";
-				where = where + " AND similarity_id = 1 ";
-//				where = where + " AND percentage_of_copied_values > 0.99 ";
-				where = where + " AND num_of_independent_sources IN (10, 20, 30, 40, 50) " ;
-//				where = where + " AND control_src_true_value_method_id IN (2,3,4) ";
-				where = where + " AND di_different_values_method_id = 1 "; // unifrom
-		String where2 = " dataset_id NOT IN (SELECT dataset_id from "
-//				+ "erThreeEst_normalizeAll)";
-				+ "experiment_results)";
-//		String where3 = " WHERE dataset_file_name = '" + fileName + "'";
-		String selectQuery = select + where + " AND " + where2 ;//+ " ORDER BY num_of_sources, num_of_data_item";
-
-		//		where = where + "num_of_different_values = " + numOfDistinctValues + " ";.
-		return selectQuery; 
-	}
-	private static String getSyntheticExperimentForDependency2(){
-		int numOfDistinctValues = -1;
-		List<Integer> numOfDistinctValues_List = new ArrayList<Integer>();
-
-
-//		double dataItemCoverage = 0.25;
-		List<Double> coverage_list = new ArrayList<Double>();
-		coverage_list.add(0.25);
-		coverage_list.add(0.75);
-
-		int numOfDiferentValueGenerationMethod = 1;//uniform
-		int controlSrcTrueValMethod = 3; // 30 = fully optimistic
-		double percentageOfTruValPerSrc = 0.5;// only used for uniform method 
-		int controlNumOfSrcPerValMethod = -1;
-
-		String select = "SELECT dataset_id, dataset_file_name, num_of_sources, num_of_data_item  FROM dataset ";
-		String where = " WHERE ";
-//				where = where + "num_of_sources  " + numOfSources + " AND ";
-		//		where = where + "num_of_data_item = " + (numOfProperties * numOfObjects) + " AND " ;
-//		where = where + "( ";
-//		for (double dataItemCoverage : coverage_list) {
-//			where = where + "coverage > " + (0.25 - 0.0001) + " AND coverage < " + (0.25 + 0.0001) + " OR ";
-//		}
-//		where = where + " coverage > " + (0.24) + " AND coverage < " + (0.26);
-//		where = where.trim().substring(0, where.length() - 4) + " ) AND ";
-				where = where + " dependency_id = 1 ";
-				where = where + " AND similarity_id = 1 ";
-				where = where + " AND percentage_of_copied_values > 0.99 ";
-				where = where + " AND num_of_independent_sources IN (10, 20, 30, 40, 50) " ;
-				where = where + " AND control_src_true_value_method_id IN (1,5,6) ";
-				where = where + " AND di_different_values_method_id = 1 "; // unifrom
-		String where2 = " dataset_id NOT IN (SELECT dataset_id from "
-//				+ "erThreeEst_normalizeAll)";
-				+ "experiment_results)";
-//		String where3 = " WHERE dataset_file_name = '" + fileName + "'";
-		String selectQuery = select + where + " AND " + where2 ;//+ " ORDER BY num_of_sources, num_of_data_item";
-
-		//		where = where + "num_of_different_values = " + numOfDistinctValues + " ";.
-		return selectQuery; 
-	}
-
 
 	private static String getSyntheticExperimentSelectQuery(boolean runLTM){
-		int numOfSources = 877;
-		int numOfObjects = 1263;
-		int numOfProperties = 1;
+		int numOfSources = 50;
+		int numOfObjects = 200;
+		int numOfProperties = 5;
 
-		int numOfDistinctValues = -1;
 		List<Integer> numOfDistinctValues_List = new ArrayList<Integer>();
+		for (int i = 2; i <=20; i++) {
+			numOfDistinctValues_List.add(i);
+		}
 
 		int numOfSourcesPerValue = -1;
 		int dependencyID = Globals.controlSourcesDependency_Nocontrol;
 		int similarityID = Globals.valueSimilarity_dissSimilar;
 
-//		double dataItemCoverage = 0.25;
 		List<Double> coverage_list = new ArrayList<Double>();
 //		coverage_list.add(0.25);
 		coverage_list.add(0.75);
-		int data_items_coverage_method_id = 1;// 2->expo
+		int data_items_coverage_method_id = 2;// 2->expo
 
 		int numOfDiferentValueGenerationMethod = 3;
-		int numDistinctValues = 20;
-		int controlSrcTrueValMethod = 6; // 30 = fully optimistic
+		int controlSrcTrueValMethod = 2; // 3 = FO, 2 PF, 
 		double percentageOfTruValPerSrc = 0.5;// only used for uniform method 
 		int controlNumOfSrcPerValMethod = -1;
 
 		String select = "SELECT dataset_id, dataset_file_name, num_of_sources, num_of_data_item  FROM dataset ";
 		String where = " WHERE ";
 				where = where + "num_of_sources =  " + numOfSources;
-		//		where = where + " AND num_of_data_item = " + (numOfProperties * numOfObjects) + " AND " ;
-//		where = where + "( ";
-//		for (double dataItemCoverage : coverage_list) {
-//			where = where + "coverage > " + (dataItemCoverage - 0.0001) + " AND coverage < " + (dataItemCoverage + 0.0001) + " OR ";
-//		}
-//		where = where + " coverage > " + (0.74) + " AND coverage < " + (0.76);
-//		where = where.trim().substring(0, where.length() - 4) + " ) AND ";
-//				where = where + " AND dependency_id = " + dependencyID;
-				where = where + " AND num_of_different_values = " + numDistinctValues;
-//				where = where + " num_of_independent_sources " + " IN " + " (10, 20, 30, 40, 50) AND " ;
-//				where = where + " percentage_of_copied_values > 0.99 ";
-//				where = where + " AND similarity_id = " + similarityID;// + " AND ";
-		//		where = where + "control_num_of_src_per_value_method_id = " + controlNumOfSrcPerValMethod + " AND ";
-//		where = where + " AND control_src_true_value_method_id = " + controlSrcTrueValMethod;// + " AND ";
-//				where = where + " AND di_different_values_method_id = " + numOfDiferentValueGenerationMethod;
+				where = where + " AND num_of_data_item = " + (numOfProperties * numOfObjects);
+				
 				where = where + " AND data_items_coverage_method_id = " + data_items_coverage_method_id;
-		//		where = where + " AND num_of_sources_per_value = " + numOfSourcesPerValue + " AND ";
-//		where = where + " percentage_true_val_per_src > " + (percentageOfTruValPerSrc - 0.0001) + 
-//				" AND percentage_true_val_per_src < " + (percentageOfTruValPerSrc + 0.0001);
-		//		String orderBy = " ORDER BY num_of_different_values ";
-		String where2 = " dataset_id NOT IN (SELECT dataset_id from "
-//				+ "erThreeEst_normalizeAll)";
-				+ "experiment_results)";
-//		String where3 = " WHERE dataset_file_name = '" + fileName + "'";
-		String selectQuery = select + where + " AND " + where2 ;//+ " ORDER BY num_of_sources, num_of_data_item";
+				if (data_items_coverage_method_id == 1) {
+					where = where + " AND ( ";
+					for (double dataItemCoverage : coverage_list) {
+						where = where + "coverage > " + (dataItemCoverage - 0.0001) + 
+								" AND coverage < " + (dataItemCoverage + 0.0001) + " OR ";
+					}
+					where = where.trim().substring(0, where.length() - 4) + " ) AND ";
+				}
 
-		//		where = where + "num_of_different_values = " + numOfDistinctValues + " ";.
+				where = where + " AND control_src_true_value_method_id = " + controlSrcTrueValMethod;
+				if (controlSrcTrueValMethod == 1) {
+					where = where + " AND percentage_true_val_per_src > " + (percentageOfTruValPerSrc - 0.0001) + 
+							" AND percentage_true_val_per_src < " + (percentageOfTruValPerSrc + 0.0001);
+				}
+				
+				where = where + " AND di_different_values_method_id = " + numOfDiferentValueGenerationMethod;
+				if ( ! numOfDistinctValues_List.isEmpty()) {
+					where = where + " AND num_of_different_values in (";
+					for (int i : numOfDistinctValues_List) {
+						where = where + i + ", ";
+					}
+					where = where.substring(0, where.length()-2) + ") ";
+					
+				}
+
+//				where = where + " AND control_num_of_src_per_value_method_id = " + controlNumOfSrcPerValMethod + " AND ";
+//				where = where + " AND num_of_sources_per_value = " + numOfSourcesPerValue + " AND ";
+
+				where = where + " AND similarity_id = " + similarityID;// + " AND ";
+				where = where + " AND dependency_id = " + dependencyID;
+				if (dependencyID == 1) {
+					where = where + " AND num_of_independent_sources " + " IN " + " (10, 20, 30, 40, 50) " ;
+					where = where + " AND percentage_of_copied_values > 0.99 ";
+				}
+
+
+		String whereNotAlreadyRun = " dataset_id NOT IN (SELECT dataset_id from experiment_results)";
+		String selectQuery = select + where 
+				;
+//				+ " AND " + whereNotAlreadyRun ;
+
 		return selectQuery; 
 	}
 
@@ -207,7 +134,6 @@ public class SyntheticExperiment extends Experiment{
 		HashMap<String, VoterQualityMeasures> resultMap;
 		VoterQualityMeasures tempResult;
 		String insert = "INSERT INTO "
-//				+ " erThreeEst_normalizeAll ("
 				+ "experiment_results ("
 				+ "`dataset_id`, "
 				+ "`voter_name`, "
@@ -253,7 +179,7 @@ public class SyntheticExperiment extends Experiment{
 				writingStatement.executeUpdate(tempInsert);
 
 				// contengency table does not contain the accnodep
-//				String contengencyTableInsert = contengencyTable.saveTrueValues(connect, datasetId);
+				String contengencyTableInsert = contengencyTable.saveTrueValuesToDatabase(connect, datasetId);
 			}
 		} catch (SQLException e) {
 			System.out.println(s);
@@ -263,9 +189,9 @@ public class SyntheticExperiment extends Experiment{
 
 	private static HashMap<String, VoterQualityMeasures> launchSyntheticExperiment(String dataSetDir, String truthDir, String experimentName, boolean runLTM) {
 //		System.out.println("Start synthetic experiment...");
-		DataSet dataSet = ExperimentDataSetConstructor_test.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
+		DataSet dataSet = ExperimentDataSetConstructor_Development.readDataSet(Globals.starting_Confidence, Globals.starting_trustworthiness, 
 				dataSetDir, 0, false, null, 
-				qcri.dafna.experiment.ExperimentDataSetConstructor_test.Experiment.Synthetic, truthDir, false);
+				qcri.dafna.experiment.ExperimentDataSetConstructor_Development.Experiment.Synthetic, truthDir, false);
 		DataSet dataSetSinglePropertyValue = null;
 		//		DataSet dataSetSinglePropertyValue = ExperimentDataSetConstructor.readDataSet(0, 0, 
 		//				Globals.directory_formattedDAFNADataset_BooksFolder_SingleClaimValue, 0, true, 
@@ -276,7 +202,7 @@ public class SyntheticExperiment extends Experiment{
 //		boolean runLTM = false;
 
 		HashMap<String, VoterQualityMeasures> resultsMap = runExperiment(convergence100 ,dataSet, experimentName, 
-				runLTM, dataSet, runSyntheticBoolean, null);
+				runLTM, dataSet, runSyntheticBoolean, null, "");
 //		System.out.println("Synthetic experiment finished.");
 		return resultsMap;
 	}

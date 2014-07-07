@@ -59,7 +59,7 @@ public class MaximumLikelihoodEstimation extends Voter {
 
 		int numberOfIteration = 0;
 		init();
-		while (continueComputation(convergence100, numberOfIteration)  && numberOfIteration < Globals.iterationCount) {
+		while (continueComputation(convergence100, numberOfIteration)  && numberOfIteration < Globals.maxIterationCount) {
 //			System.out.print("iteration " +  + " , ");
 			/* compute the confidence as function of the old a and b parameters*/
 			computeLatentConfidence();
@@ -160,7 +160,7 @@ public class MaximumLikelihoodEstimation extends Voter {
 		bCosineSim = bcs;
 
 		if (convergence100) {
-			if (i < Globals.iterationCount) {
+			if (i < Globals.maxIterationCount) {
 				return true;
 			} else {
 				return false;
@@ -192,6 +192,12 @@ public class MaximumLikelihoodEstimation extends Voter {
 			b.put(key, ((1-r)*s/(1-bita)));//b.put(key, 0.49); //b.put(key, normalizeNextRandom(randomGeneratorB));
 		}
 	}
+
+//	private double normalizeNextRandom(UniformRandomGenerator generator) {
+//		double random = generator.nextNormalizedDouble() + Math.sqrt(3); /* the nextNormalizedDouble returns a value from -sqrt(3) to +sqrt(3)  */
+//		random = ((double)random/(2*Math.sqrt(3))); /* now random is from 0 to 1 */
+//		return random;
+//	}
 
 
 	/**

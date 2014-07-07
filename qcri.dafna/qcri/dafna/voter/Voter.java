@@ -29,6 +29,9 @@ public abstract class Voter {
 		
 		initParameters();
 	}
+	/**
+	 * 
+	 */
 	protected abstract void initParameters();
 	/**
 	 * 

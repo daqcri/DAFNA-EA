@@ -65,7 +65,7 @@ public class ThreeEstimate_Old extends Voter {
 			double cosineSimilarityDifference = Math.abs(trustworthinessCosineSimilarity - newCosineSimilarity);
 			computeMeasuresPerIteration(true, cosineSimilarityDifference, Math.abs(confidenceCosineSimilarity - newConfCosineSimilarity));
 			if (convergence100) {
-				if (i > Globals.iterationCount) {
+				if (i > Globals.maxIterationCount) {
 					continueComputation = false;
 				}
 			} else if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {

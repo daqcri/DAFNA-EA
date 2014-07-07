@@ -14,6 +14,12 @@ import qcri.dafna.dataModel.quality.dataQuality.ConvergenceTester;
 public class TwoEstimates extends Voter {
 	private final double normalizationWeight; // The lower value the better results (equal result for 0.2 and less)
 
+	/**
+	 * 
+	 * @param dataSet
+	 * @param params
+	 * @param normalizationWeight: From zero to one, default Value 0.5.
+	 */
 	public TwoEstimates(DataSet dataSet, VoterParameters params, double normalizationWeight) {
 		super(dataSet, params);
 		this.normalizationWeight = normalizationWeight;
@@ -34,7 +40,7 @@ public class TwoEstimates extends Voter {
 		double newConfCosineSimilarity;
 		int i = 0;
 
-		while (continueComputation && i < Globals.iterationCount) {
+		while (continueComputation && i < Globals.maxIterationCount) {
 			i++;
 			computeConfidence();
 			normalizeConfidence();
@@ -46,7 +52,7 @@ public class TwoEstimates extends Voter {
 			double cosineSimilarityDifference = Math.abs(trustworthinessCosineSimilarity - newCosineSimilarity);
 			computeMeasuresPerIteration(true, cosineSimilarityDifference, Math.abs(confidenceCosineSimilarity - newConfCosineSimilarity));
 			if (convergence100) {
-				if (i > Globals.iterationCount) {
+				if (i > Globals.maxIterationCount) {
 					continueComputation = false;
 				}
 			} else if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {

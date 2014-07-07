@@ -2,8 +2,6 @@ package qcri.dafna.voter;
 
 import java.util.List;
 
-import org.apache.commons.math3.random.UniformRandomGenerator;
-
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.Source;
@@ -40,13 +38,14 @@ public class GuessLCA extends Voter {
 		double newTrustCosinSim, newconfCosineSim;
 
 		boolean continueComputation = true;
-		while (continueComputation  && numOfIteration < Globals.iterationCount) {
+		while (continueComputation  && numOfIteration < Globals.maxIterationCount) {
 			computeConfidence(); 
 			computeTrustworthiness();
+
 			newTrustCosinSim = ConvergenceTester.computeTrustworthinessCosineSimilarity(dataSet);
 			newconfCosineSim = ConvergenceTester.computeConfidenceCosineSimilarity(dataSet);
 			if (convergence100) {
-				if (numOfIteration > Globals.iterationCount) {
+				if (numOfIteration > Globals.maxIterationCount) {
 					continueComputation = false;
 				}
 			} else {
@@ -67,22 +66,40 @@ public class GuessLCA extends Voter {
 		double confidenceSum;
 		double pGuess;
 
+		double tempWeight = 0;
+
 		for (List<ValueBucket> bucketsList : dataSet.getDataItemsBuckets().values()) {
-			
+
 			confidenceSum = 0;
 			for (ValueBucket bucket : bucketsList) {
-				pGuess = bucket.getErrorFactor(); // the guess probability of each claim bucket is saved in the error facto field
+				pGuess = bucket.getErrorFactor(); // the guess probability of each claim bucket is saved in the error factor field
 				conf = pym;
 				for (Source s : bucket.getSources()) {
-					temp = s.getTrustworthiness() + ( ( 1 - s.getTrustworthiness() ) * pGuess );
+					tempWeight = 1.0;
+					for (SourceClaim c : bucket.getClaims()) {
+						if (c.getSource().getSourceIdentifier().equals(s.getSourceIdentifier())) {
+							tempWeight = c.getWeight();
+							break;
+						}
+					}
+					temp = Math.pow(s.getTrustworthiness() + ( ( 1 - s.getTrustworthiness() ) * pGuess ), tempWeight);
+//					temp = s.getTrustworthiness() + ( ( 1 - s.getTrustworthiness() ) * pGuess ); // without weight
 					conf = conf * temp ;
 					if (Double.isNaN(conf)) {
 						System.out.println();
 					}
 				}
 				for (String key : bucket.getDisagreeingSourcesKeys()) {
+//					tempWeight = 1.0;
+					for (SourceClaim c : bucket.getClaims()) {
+						if (c.getSource().getSourceIdentifier().equals(key)) {
+							tempWeight = c.getWeight();
+							break;
+						}
+					}
 					Source s = dataSet.getSourcesHash().get(key);
-					conf = conf * ( (1.0 - s.getTrustworthiness()) * pGuess );
+					conf = conf * Math.pow(( (1.0 - s.getTrustworthiness()) * pGuess ), tempWeight);
+//					conf = conf * ( (1.0 - s.getTrustworthiness()) * pGuess ); // without weight
 					if (Double.isNaN(conf)) {
 						System.out.println();
 					}
@@ -90,7 +107,6 @@ public class GuessLCA extends Voter {
 				bucket.setConfidenceWithSimilarity(bucket.getConfidence());
 				bucket.setConfidence(conf);
 				confidenceSum = confidenceSum + conf;
-				
 			}
 			/** Compute the expectation-step equation */
 			for (ValueBucket bucket : bucketsList) {
@@ -121,7 +137,8 @@ public class GuessLCA extends Voter {
 						System.out.println();
 					}
 					numerator = numerator + ( b.getConfidence() * pGuess);
-					denom = denom + b.getConfidence();
+					denom = denom + ( b.getConfidence() * claim.getWeight());
+//					denom = denom + b.getConfidence(); // without weight
 				}
 				/**
 				 *  Remove the value for (claim.conf * pGuess), it was added in the last loop without need 
@@ -175,11 +192,11 @@ public class GuessLCA extends Voter {
 			}
 		}
 	}
-	private double normalizeNextRandom(UniformRandomGenerator generator) {
-		double random = generator.nextNormalizedDouble() + Math.sqrt(3); /* the nextNormalizedDouble returns a value from -sqrt(3) to +sqrt(3)  */
-		random = ((double)random/(2*Math.sqrt(3))); /* now random is from 0 to 1 */
-		return random;
-	}
+//	private double normalizeNextRandom(UniformRandomGenerator generator) {
+//		double random = generator.nextNormalizedDouble() + Math.sqrt(3); /* the nextNormalizedDouble returns a value from -sqrt(3) to +sqrt(3)  */
+//		random = ((double)random/(2*Math.sqrt(3))); /* now random is from 0 to 1 */
+//		return random;
+//	}
 
 
 }

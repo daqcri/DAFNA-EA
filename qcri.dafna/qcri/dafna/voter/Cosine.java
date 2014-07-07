@@ -20,6 +20,13 @@ public class Cosine extends Voter {
 		singlePropertyValue = false; 
 		onlyMaxValueIsTrue = true;
 	}
+
+	/**
+	 * 
+	 * @param dataSet: The Data set
+	 * @param params
+	 * @param dampeningFactorCosine: from zero to one, default value 0.2.
+	 */
 	public Cosine(DataSet dataSet, VoterParameters params, double dampeningFactorCosine) {
 		super(dataSet, params);
 		if (dampeningFactorCosine > 0) {
@@ -39,7 +46,7 @@ public class Cosine extends Voter {
 		double newCosineSimilarity;
 		double confidenceCosineSimilarity = 0.0;
 		double newConfCosineSimilarity;
-		while (continueComputation && i < Globals.iterationCount) {
+		while (continueComputation && i < Globals.maxIterationCount) {
 			i++;
 			computeTrustworthiness();
 			computeConfidence();
@@ -50,7 +57,7 @@ public class Cosine extends Voter {
 			newConfCosineSimilarity = ConvergenceTester.computeConfidenceCosineSimilarity(dataSet);
 			double cosineSimilarityDifference = Math.abs(trustworthinessCosineSimilarity - newCosineSimilarity);
 			if (convergence100) {
-				if (i > Globals.iterationCount) {
+				if (i > Globals.maxIterationCount) {
 					continueComputation = false;
 				}
 			} else if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {

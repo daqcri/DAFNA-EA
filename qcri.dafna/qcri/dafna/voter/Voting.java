@@ -10,10 +10,10 @@ import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.profiling.Profiler;
 
 public class Voting extends Voter{
-
 	public Voting(DataSet dataSet, VoterParameters params) {
 		super(dataSet, params);
 	}
+
 	@Override
 	public int runVoter(boolean convergence100) {
 		int numOfSrc, temp;
@@ -50,7 +50,7 @@ public class Voting extends Voter{
 			profiler.stopProfiling(voterQuality);
 //			System.out.println(voterQuality.getMaxMemoryConsumption());
 		}
-		
+
 
 		voterQuality.setNumberOfIterations(iterationCount);
 		voterQuality.computeVoterQualityMeasures(singlePropertyValue); // list data type is provided as single value over multiple claims

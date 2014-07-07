@@ -13,7 +13,7 @@ import qcri.dafna.dataModel.quality.dataQuality.DataItemMeasures;
 public class MainClass {
 	
 	public static void main(String[] args) {
-		readOldBookFilesWriteNewFilesMLE();
+		
 
 //		readOldWeatherFilesWriteNewFiles();
 
@@ -26,7 +26,9 @@ public class MainClass {
 //		readOldBiographyFilesWriteNewFiles();
 
 //		readOldFlightFilesWriteNewFiles();
-		readOldBookFilesWriteNewFilesSingleClaimValue();
+		
+//		readOldBookFilesWriteNewFilesMLE();
+//		readOldBookFilesWriteNewFilesSingleClaimValue();
 //		readOldBookFilesWriteNewFiles();
 	}
 
@@ -54,24 +56,24 @@ public class MainClass {
 		dsw.readOldFlightFileAndWriteNewFiles(Globals.delimiterText);
 		System.out.println("Done");
 	}
-	static private void readOldBookFilesWriteNewFiles() {
-		OldBooksDataSetFormatter bookFormatter = new OldBooksDataSetFormatter();
-		System.out.println("Started");
-		bookFormatter.readOldBooksWriteFormattedBooks(Globals.delimiterText, false, false);
-		System.out.println("Done");
-	}
-	static private void readOldBookFilesWriteNewFilesSingleClaimValue() {
-		OldBooksDataSetFormatter bookFormatter = new OldBooksDataSetFormatter();
-		System.out.println("Started");
-		bookFormatter.readOldBooksWriteFormattedBooks(Globals.delimiterText, true, false);
-		System.out.println("Done");
-	}
-	static private void readOldBookFilesWriteNewFilesMLE() {
-		OldBooksDataSetFormatter bookFormatter = new OldBooksDataSetFormatter();
-		System.out.println("Started Book-MLE");
-		bookFormatter.readOldBooksWriteFormattedBooks(Globals.delimiterText, true, true);
-		System.out.println("Done Book-MLE");
-	}
+//	static private void readOldBookFilesWriteNewFiles() {
+//		OldBooksDataSetFormatter bookFormatter = new OldBooksDataSetFormatter();
+//		System.out.println("Started");
+//		bookFormatter.readOldBooksWriteFormattedBooks(Globals.delimiterText, false, false);
+//		System.out.println("Done");
+//	}
+//	static private void readOldBookFilesWriteNewFilesSingleClaimValue() {
+//		OldBooksDataSetFormatter bookFormatter = new OldBooksDataSetFormatter();
+//		System.out.println("Started");
+//		bookFormatter.readOldBooksWriteFormattedBooks(Globals.delimiterText, true, false);
+//		System.out.println("Done");
+//	}
+//	static private void readOldBookFilesWriteNewFilesMLE() {
+//		OldBooksDataSetFormatter bookFormatter = new OldBooksDataSetFormatter();
+//		System.out.println("Started Book-MLE");
+//		bookFormatter.readOldBooksWriteFormattedBooks(Globals.delimiterText, true, true);
+//		System.out.println("Done Book-MLE");
+//	}
 	static private void readOldBiographyFilesWriteNewFiles() {
 		BiographyDataSetReadOldWriteNew bio = new BiographyDataSetReadOldWriteNew();
 		System.out.println("Started");

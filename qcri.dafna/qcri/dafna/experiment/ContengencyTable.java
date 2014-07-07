@@ -1,5 +1,10 @@
 package qcri.dafna.experiment;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -8,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import au.com.bytecode.opencsv.CSVWriter;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.ValueBucket;
@@ -40,9 +46,38 @@ public class ContengencyTable {
 		modelsName.add(modelName);
 		trueValues.add(modelTrueValues);
 	}
+	/**
+	 * 
+	 * @param outputFolder: The path for the output folder with the name of the file without an extension.
+	 * @return
+	 */
+	public boolean saveTrueValuesToFile(String outputFolder) {
+		boolean success = true;
+		try {
+			int i = 0;
+			for (String model : modelsName) {
+				BufferedWriter writer = Files.newBufferedWriter(Paths.get(outputFolder + "contengencey" + model + ".csv"), 
+						Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
+				CSVWriter csvWriter = new CSVWriter(writer,',');
+				/*header*/
+				String [] lineComponents = new String[]{"data Item Key", "True value by voter"};
+				csvWriter.writeNext(lineComponents);
+				HashMap<String, String> map = trueValues.get(i);
+				for (String dikey : map.keySet()) {
+					lineComponents = new String[]{dikey, map.get(dikey)};
+					csvWriter.writeNext(lineComponents);
+				}
+				i++;
+			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-	public String saveTrueValues(Connection connect, int dataset_database_id) {
+		return success;
+	}
+
+	public String saveTrueValuesToDatabase(Connection connect, int dataset_database_id) {
 		Statement writingStatement = null;
 		try {
 			if (connect == null) {
@@ -53,7 +88,7 @@ public class ContengencyTable {
 			// Statements allow to issue SQL queries to the database
 			writingStatement = connect.createStatement();
 			String insert = getInsertStatement(String.valueOf(dataset_database_id));
-System.out.println(insert);
+			System.out.println(insert);
 			writingStatement.executeUpdate(insert);
 			return insert;
 		} catch (Exception e) {
@@ -61,7 +96,6 @@ System.out.println(insert);
 		}
 		return "";
 	}
-
 
 	public String getInsertStatement(String dataset_database_id) {
 		try {
@@ -120,4 +154,5 @@ System.out.println(insert);
 		}
 		return "";
 	}
+
 }
