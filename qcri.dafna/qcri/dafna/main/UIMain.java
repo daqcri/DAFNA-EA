@@ -151,18 +151,12 @@ public class UIMain {
 			CSVWriter csvWriter = new CSVWriter(confidenceWriter, ',');
 
 			/*header*/
-			writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue", "BucketValue");
-			String bucketValue;
+			writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue", "BucketId");
 			for (List<ValueBucket> bList : ds.getDataItemsBuckets().values()) {
 				for (ValueBucket b : bList) {
-					if (DataTypeMatcher.savedAsString(b.getClaims().get(0).getValueType())) {
-		    			   bucketValue = b.getCleanedString();
-		    		   } else {
-		    			   bucketValue = String.valueOf(b.getMinValue());
-		    		   }
 					for (SourceClaim claim :  b.getClaims()) {
 						writeConfidenceResult(csvWriter, String.valueOf(claim.getId()), 
-								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()), bucketValue);
+								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()), String.valueOf(b.getId()));
 					}
 				}
 			}
