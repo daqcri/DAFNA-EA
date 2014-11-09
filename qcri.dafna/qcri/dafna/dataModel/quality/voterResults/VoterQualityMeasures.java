@@ -365,13 +365,13 @@ public abstract class VoterQualityMeasures {
 	/*------------------------------*/
 	public void printMeasures() {
 		//				System.out.println();
-		System.out.println("precision: " + this.precision + "\n");
-		System.out.println("accuracy: " + this.accuracy + "\n");
-		System.out.println("recall: " + this.recall + "\n");
-		System.out.println("specificity: " + this.specificity + "\n");
-		System.out.println("Number of iterations = " + this.numberOfIterations);
-		System.out.println("Measures computation duration: " + timings.getMeasuresComputationDuration() + " millisecond");
-		System.out.println("Voter algorithm duration: " + timings.getVoterDuration() + " millisecond");
+		System.out.println("precision: " + this.precision);
+		System.out.println("accuracy: " + this.accuracy);
+		System.out.println("recall: " + this.recall);
+		System.out.println("specificity: " + this.specificity);
+		System.out.println("Number of iterations: " + this.numberOfIterations);
+		System.out.println("Measures computation duration (milliseconds): " + timings.getMeasuresComputationDuration());
+		System.out.println("Voter algorithm duration (milliseconds): " + timings.getVoterDuration());
 		System.out.println();
 	}
 

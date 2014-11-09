@@ -30,15 +30,33 @@ import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
 
 public class UIMain {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+
+		String outputPath = args[3];
+
+		DataSet ds = createDataSet(args, outputPath);
+		VoterQualityMeasures qualityMeasures = launch(args, ds);
+		writeTrustworthiness(ds, outputPath);
+		writeConfidence(ds, outputPath);
+		
+		qualityMeasures.printMeasures();
+		System.out.println("Finished");
+	}
+
+	private static DataSet createDataSet(String[] args, String outputPath) {
 		double toleranceFactor = 0.01; // 0.1 max, 0 min
 		String dataSetDirectory = args[1];
 		String groundTruthDir = args[2];
-		String outputPath = args[3];
 		String delim = ",";
-		DataSet ds = ExperimentDataSetConstructor.readDataSet(
-				dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
 
+		return ExperimentDataSetConstructor.readDataSet(
+			dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
+	}
+	
+	private static VoterQualityMeasures launch(String[] args, DataSet ds) {
+		VoterQualityMeasures q = null;
+		boolean convergence100 = false;
+		boolean profileMemory = false;
 		// for all voters
 		double cosineSimDiff = Double.parseDouble(args[4]);  // 0-1
 		double startingTrust = Double.parseDouble(args[5]);  // 0-1
@@ -47,10 +65,6 @@ public class UIMain {
 		VoterParameters params = new VoterParameters(cosineSimDiff, startingTrust, startingConf, startingErrorFactor);
 
 		// specific params
-		VoterQualityMeasures q = null;
-		boolean convergence100 = false;
-		boolean profileMemory = false;
-
 		String algo_name = args[0];
 		switch(algo_name){
 		case "Cosine":
@@ -123,56 +137,55 @@ public class UIMain {
 			LatentTruthModel algo9 = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
 			q = algo9.launchVoter(convergence100, profileMemory);
 			break;
+		default:
+			throw new RuntimeException("Unknown algorithm specified '" + algo_name + "'");
 		}
-
-		String trustworthinessResultsFile = outputPath + System.getProperty("file.separator") + "Trustworthiness.csv";
-		BufferedWriter trustworthinessWriter;
-		try {
-			trustworthinessWriter = Files.newBufferedWriter(Paths.get(trustworthinessResultsFile), 
-					Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
-			CSVWriter csvWriter = new CSVWriter(trustworthinessWriter , ',');
-			/* add header */
-			writeTrustworthiness(csvWriter, "SourceID", "Trustworthiness");
-			HashMap<String, Source> map = ds.getSourcesHash();
-			for(String key: map.keySet()){
-				writeTrustworthiness(csvWriter, key, String.valueOf(map.get(key).getTrustworthiness()));
-			}
-			trustworthinessWriter.close();
-		} catch (IOException e) {
-			System.out.println("Cannot write the trustworthiness results");
-			e.printStackTrace();
-		}
-
+		
+		return q;
+	}
+	
+	private static void writeConfidence(DataSet ds, String outputPath)
+	throws IOException {
 		String confidenceResultFile = outputPath + System.getProperty("file.separator") + "Confidences.csv";
 		BufferedWriter confidenceWriter;
-		try {
-			confidenceWriter = Files.newBufferedWriter(Paths.get(confidenceResultFile), 
-					Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			CSVWriter csvWriter = new CSVWriter(confidenceWriter, ',');
+		confidenceWriter = Files.newBufferedWriter(Paths.get(confidenceResultFile), 
+				Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		CSVWriter csvWriter = new CSVWriter(confidenceWriter, ',');
 
-			/*header*/
-			writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue", "BucketId");
-			for (List<ValueBucket> bList : ds.getDataItemsBuckets().values()) {
-				for (ValueBucket b : bList) {
-					for (SourceClaim claim :  b.getClaims()) {
-						writeConfidenceResult(csvWriter, String.valueOf(claim.getId()), 
-								String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()), String.valueOf(b.getId()));
-					}
+		/*header*/
+		writeConfidenceResult(csvWriter, "ClaimID", "Confidence", "IsTrue", "BucketId");
+		for (List<ValueBucket> bList : ds.getDataItemsBuckets().values()) {
+			for (ValueBucket b : bList) {
+				for (SourceClaim claim :  b.getClaims()) {
+					writeConfidenceResult(csvWriter, String.valueOf(claim.getId()), 
+							String.valueOf(b.getConfidence()), String.valueOf(claim.isTrueClaimByVoter()), String.valueOf(b.getId()));
 				}
 			}
-			confidenceWriter.close();
-		} catch (IOException e) {
-			System.out.println("Cannot write the confidence results");
-			e.printStackTrace();
 		}
-		System.out.println("Finished");
+		confidenceWriter.close();
 	}
-
+	
 	private static void writeConfidenceResult(CSVWriter writer, String claimId,	String confidence, String trueOrFalse, String bucketValue) {
 		String [] lineComponents = new String[]{claimId, confidence, trueOrFalse, bucketValue};
 		writer.writeNext(lineComponents);
 	}
 
+	private static void writeTrustworthiness(DataSet ds, String outputPath) 
+	throws IOException{
+		String trustworthinessResultsFile = outputPath + System.getProperty("file.separator") + "Trustworthiness.csv";
+		BufferedWriter trustworthinessWriter;
+		trustworthinessWriter = Files.newBufferedWriter(Paths.get(trustworthinessResultsFile), 
+				Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING );
+		CSVWriter csvWriter = new CSVWriter(trustworthinessWriter , ',');
+		/* add header */
+		writeTrustworthiness(csvWriter, "SourceID", "Trustworthiness");
+		HashMap<String, Source> map = ds.getSourcesHash();
+		for(String key: map.keySet()){
+			writeTrustworthiness(csvWriter, key, String.valueOf(map.get(key).getTrustworthiness()));
+		}
+		trustworthinessWriter.close();
+	}
+	
 	private static void writeTrustworthiness(CSVWriter writer, String sourceId,	String trustworthiness) {
 		String [] lineComponents = new String[]{sourceId, trustworthiness};
 		writer.writeNext(lineComponents);
