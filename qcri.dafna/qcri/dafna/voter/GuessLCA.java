@@ -49,8 +49,11 @@ public class GuessLCA extends Voter {
 					continueComputation = false;
 				}
 			} else {
-				continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
-						(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
+				//continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
+				//		(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
+				continueComputation = !( (1-newconfCosineSim < ConvergenceTester.convergenceThreshold) &&
+						(1-newTrustCosinSim < ConvergenceTester.convergenceThreshold));
+			
 			}
 			numOfIteration ++;
 			computeMeasuresPerIteration(true, Math.abs(newTrustCosinSim-oldTrustCosinSim), Math.abs(newconfCosineSim-oldConfCosineSim));

@@ -165,7 +165,8 @@ public class MaximumLikelihoodEstimation extends Voter {
 			} else {
 				return false;
 			}
-		} else if (trustCosineSimDiff < ConvergenceTester.convergenceThreshold && confCosineSimDiff < ConvergenceTester.convergenceThreshold) {
+		} //else if (trustCosineSimDiff < ConvergenceTester.convergenceThreshold && confCosineSimDiff < ConvergenceTester.convergenceThreshold) {
+			else if ((1-acs < ConvergenceTester.convergenceThreshold) && (1-bcs < ConvergenceTester.convergenceThreshold)) {
 			return false;
 		}
 		return true;

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import qcri.dafna.combiner.Combiner;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.Source;
@@ -137,6 +138,19 @@ public class UIMain {
 			LatentTruthModel algo9 = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
 			q = algo9.launchVoter(convergence100, profileMemory);
 			break;
+		case "Combine":
+			int number_algorithms = Integer.parseInt(args[8]);
+			String[] confidenceFilePaths = new String[number_algorithms];
+			int i = 0;
+			while(i < number_algorithms)
+			{
+				confidenceFilePaths[i] = args[i+9];
+				i++;
+			}
+			Combiner algo10 = new Combiner(ds, params, number_algorithms, confidenceFilePaths);
+			q = algo10.launchVoter(convergence100, profileMemory);
+			break;
+			
 		default:
 			throw new RuntimeException("Unknown algorithm specified '" + algo_name + "'");
 		}

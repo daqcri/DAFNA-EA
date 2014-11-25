@@ -46,9 +46,12 @@ public class MistakeLCA extends Voter {
 			newTrustCosinSim = ConvergenceTester.computeTrustworthinessCosineSimilarity(dataSet);
 			newconfCosineSim = ConvergenceTester.computeConfidenceCosineSimilarity(dataSet);
 			newDCosineSim = ConvergenceTester.computeValuesCosineSimilarity(oldD, newD, dataSet.getSourcesHash().keySet());
-			continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < cosineSimilarityStoppingCondition) &&
-					(Math.abs(newTrustCosinSim-oldTrustCosinSim) < cosineSimilarityStoppingCondition) && 
-					(Math.abs(newDCosineSim-oldDCosineSim) < cosineSimilarityStoppingCondition));
+			//continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < cosineSimilarityStoppingCondition) &&
+			//		(Math.abs(newTrustCosinSim-oldTrustCosinSim) < cosineSimilarityStoppingCondition) && 
+			//		(Math.abs(newDCosineSim-oldDCosineSim) < cosineSimilarityStoppingCondition));
+			continueComputation = !( (1-newconfCosineSim < cosineSimilarityStoppingCondition) &&
+					(1-newTrustCosinSim < cosineSimilarityStoppingCondition) && 
+					(1-newDCosineSim < cosineSimilarityStoppingCondition));
 			oldTrustCosinSim = newTrustCosinSim;
 			oldConfCosineSim = newconfCosineSim;
 			oldDCosineSim = newDCosineSim;

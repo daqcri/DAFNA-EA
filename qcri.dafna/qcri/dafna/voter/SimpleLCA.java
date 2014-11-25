@@ -46,8 +46,10 @@ public class SimpleLCA extends Voter {
 
 			newTrustCosinSim = ConvergenceTester.computeTrustworthinessCosineSimilarity(dataSet);
 			newconfCosineSim = ConvergenceTester.computeConfidenceCosineSimilarity(dataSet);
-			continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
-					(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
+			//continueComputation = !( (Math.abs(newconfCosineSim-oldConfCosineSim) < ConvergenceTester.convergenceThreshold) &&
+			//		(Math.abs(newTrustCosinSim-oldTrustCosinSim) < ConvergenceTester.convergenceThreshold));
+			continueComputation = !( (1-newconfCosineSim < ConvergenceTester.convergenceThreshold) &&
+					(1-newTrustCosinSim < ConvergenceTester.convergenceThreshold));
 			if (convergence100) {
 				if (numOfIteration > Globals.maxIterationCount) {
 					continueComputation = false;

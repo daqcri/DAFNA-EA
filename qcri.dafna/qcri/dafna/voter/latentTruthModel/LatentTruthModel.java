@@ -9,6 +9,7 @@ import org.apache.commons.math3.random.RandomGenerator;
 import org.apache.commons.math3.random.UniformRandomGenerator;
 
 import qcri.dafna.dataModel.data.DataSet;
+import qcri.dafna.dataModel.data.Source;
 import qcri.dafna.dataModel.data.SourceClaim;
 import qcri.dafna.dataModel.data.ValueBucket;
 import qcri.dafna.dataModel.quality.voterResults.NormalVoterQualityMeasures;
@@ -62,6 +63,17 @@ public class LatentTruthModel extends Voter {
 		dataSet.resetDataSet(0, 0, 0);
 		initialize();
 		iterate();
+		LTMSourceData sCounters;
+		for(Source source : dataSet.getSourcesHash().values()){
+			sCounters = sourceCounters.get(source.getSourceIdentifier());
+			// Sensitivity, Specificity, Precision
+			//System.out.println(sCounters.getq11()/(sCounters.getq11()+sCounters.getq10()));
+			//System.out.println(sCounters.getq00()/(sCounters.getq00()+sCounters.getq01()));
+			//System.out.println(sCounters.getq11()/(sCounters.getq11()+sCounters.getq01()));
+			//Precision as Source Trust Worthiness
+			source.setTrustworthiness(sCounters.getq11()/(sCounters.getq11()+sCounters.getq01()));
+		}
+		
 		return iterationCount;
 	}
 
@@ -186,12 +198,30 @@ public class LatentTruthModel extends Voter {
 					if (i > burnIn && test) {
 						if (bucket.getClaims().get(0).isTrueClaimByVoter()) {
 							bucket.setConfidence(bucket.getConfidence() + (((double)1/sampleSize)));
+							//bucket.setConfidence(bucket.getConfidence() + 1);
+							// else add 0
+						}
+						
+						for(Source source : dataSet.getSourcesHash().values()){
+							sCounters = sourceCounters.get(source.getSourceIdentifier());
+							sCounters.setq00(sCounters.getq00()+sCounters.getN00());
+							sCounters.setq01(sCounters.getq01()+sCounters.getN01());
+							sCounters.setq10(sCounters.getq10()+sCounters.getN10());
+							sCounters.setq11(sCounters.getq11()+sCounters.getN11());
 						}
 					}
 				}
 			}
 			computeMeasuresPerIteration(false,-1,-1);
-		}
+		    }
+		
+			for(Source source : dataSet.getSourcesHash().values()){
+				sCounters = sourceCounters.get(source.getSourceIdentifier());
+				sCounters.setq00(sCounters.getq00()/sampleSize + a00);
+				sCounters.setq01(sCounters.getq01()/sampleSize + a01);
+				sCounters.setq10(sCounters.getq10()/sampleSize + a10);
+				sCounters.setq11(sCounters.getq11()/sampleSize + a11);
+			}
 	}
 
 	/**

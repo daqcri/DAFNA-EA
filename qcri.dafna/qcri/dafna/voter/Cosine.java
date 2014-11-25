@@ -60,7 +60,8 @@ public class Cosine extends Voter {
 				if (i > Globals.maxIterationCount) {
 					continueComputation = false;
 				}
-			} else if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {
+			} //else if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {
+				else if (1- newCosineSimilarity <= ConvergenceTester.convergenceThreshold) {
 				continueComputation = false;
 			}
 

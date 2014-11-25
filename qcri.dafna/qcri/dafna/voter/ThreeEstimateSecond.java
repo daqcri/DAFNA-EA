@@ -53,7 +53,8 @@ public class ThreeEstimateSecond extends Voter {
 
 			newCosineSimilarity = ConvergenceTester.computeTrustworthinessCosineSimilarity(dataSet);
 			double cosineSimilarityDifference = Math.abs(trustworthinessCosineSimilarity - newCosineSimilarity);
-			if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {
+			//if (cosineSimilarityDifference <= ConvergenceTester.convergenceThreshold) {
+			if (1-newCosineSimilarity <= ConvergenceTester.convergenceThreshold) {
 				continueComputation = false;
 			} else {
 				trustworthinessCosineSimilarity = newCosineSimilarity;

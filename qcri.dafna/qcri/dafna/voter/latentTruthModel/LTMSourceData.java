@@ -18,6 +18,16 @@ public class LTMSourceData {
 	 * The counter of claims with voter  truth opinion = true and dataset observation = true 
 	 */
 	int n11;
+	
+	/* Quality of each source - Naman */
+	
+	double q00;
+	double q01;
+	double q10;
+	double q11;
+	
+	/* Naman */
+	
 	double phay0;
 	double phay1;
 	public LTMSourceData() {
@@ -25,6 +35,16 @@ public class LTMSourceData {
 		n01 = 0;
 		n10 = 0;
 		n11 = 0;
+		
+		/*Quality - Naman */
+		
+		q00 = 0;
+		q01 = 0;
+		q10 = 0;
+		q11 = 0;
+		
+		/* Naman */
+		
 	}
 	/**
 	 *  Increment the counter of claims with voter  truth opinion = false and dataset observation = false 
@@ -98,6 +118,44 @@ public class LTMSourceData {
 	public int getN11() {
 		return n11;
 	}
+	
+	/* Naman */
+	 
+	public double getq00() {
+		return q00;
+	}
+	
+	public double getq01() {
+		return q01;
+	}
+	
+	public double getq10() {
+		return q10;
+	}
+	
+	public double getq11() {
+		return q11;
+	}
+	
+	public void setq00(double value) {
+		q00 = value;
+	}
+	
+	public void setq01(double value) {
+		q01 = value;
+	}
+	
+	public void setq10(double value) {
+		q10 = value;
+	}
+	
+	public void setq11(double value) {
+		q11 = value;
+	}
+	
+	/* Naman */
+	  
+	  
 	public void setPhay0(double phay0) {
 		this.phay0 = phay0;
 	}
