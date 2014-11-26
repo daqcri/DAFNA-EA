@@ -15,7 +15,6 @@ import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.Source;
 import qcri.dafna.dataModel.data.SourceClaim;
 import qcri.dafna.dataModel.data.ValueBucket;
-import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.ExperimentDataSetConstructor;
 import qcri.dafna.voter.Cosine;
@@ -138,7 +137,7 @@ public class UIMain {
 			LatentTruthModel algo9 = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
 			q = algo9.launchVoter(convergence100, profileMemory);
 			break;
-		case "Combine":
+		case "Combiner":
 			int number_algorithms = Integer.parseInt(args[8]);
 			String[] confidenceFilePaths = new String[number_algorithms];
 			int i = 0;
