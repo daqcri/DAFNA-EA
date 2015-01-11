@@ -29,7 +29,7 @@ public class Combiner extends Voter {
 	
 	protected void initParameters() {
 		singlePropertyValue = false;
-		onlyMaxValueIsTrue = false;
+		onlyMaxValueIsTrue = true;
 	}
 	
 	protected int runVoter(boolean convergence100) {
