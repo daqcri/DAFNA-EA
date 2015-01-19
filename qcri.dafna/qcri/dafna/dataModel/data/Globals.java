@@ -192,6 +192,7 @@ public class Globals {
 	public static final int maxIterationCount = 100;//50
 
 	public static final double weight = 1.0;
+	public static String fakeSourceName = "AllegatorFakeSource";
 
 	public static void log(String s) {
 		System.out.println(s);
