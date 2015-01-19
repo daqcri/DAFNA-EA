@@ -107,7 +107,7 @@ public class Allegator {
 			return -1;
 		}
 		
-		SourceClaim newClaim = dataSet.addClaim(claimIdMax+1, targetObjectId, dataSet.getDataItemsBuckets().get(targetDataItemKey).get(0).getClaims().get(0).getUncleanedObjectIdentifier(), targetPropertyName, secondMax.getClaims().get(0).getPropertyValueString() , Globals.weight, "Now", newSourceName);
+		SourceClaim newClaim = dataSet.addClaim(claimIdMax+1, targetObjectId, dataSet.getDataItemsBuckets().get(targetDataItemKey).get(0).getClaims().get(0).getUncleanedObjectIdentifier(), targetPropertyName, secondMax.getClaims().get(0).getPropertyValueString() , Globals.weight, "null", newSourceName);
 		dataSet.addClaimToBucket(newClaim, secondMax);
 		claimsAdded = claimsAdded + 1;
 		fakeSourceCount++;

@@ -174,19 +174,19 @@ public class UIMain {
 		CSVWriter csvWriter = new CSVWriter(allegationWriter, ',');
 
 		/*header*/
-		writeAllegationClaims(csvWriter, "ClaimID", "ObjectID", "PropertyID", "PropertyValue", "SourceID", "TimeStamp");
+		writeAllegationClaims(csvWriter, "ObjectID", "PropertyID", "PropertyValue", "SourceID", "TimeStamp");
 		for(int i = 0; i < fakeSourceCount; i++){
 			String SourceIdentifier = Globals.fakeSourceName+String.valueOf(i);
 			for(SourceClaim claim : ds.getSourcesHash().get(SourceIdentifier).getClaims())
 			{
-				writeAllegationClaims(csvWriter, String.valueOf(claim.getId()), claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(), claim.getSource().getSourceIdentifier(), claim.getTimeStamp());
+				writeAllegationClaims(csvWriter, claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(), claim.getSource().getSourceIdentifier(), claim.getTimeStamp());
 			}
 		}
 		allegationWriter.close();
 	}
 	
-	private static void writeAllegationClaims(CSVWriter writer, String claimId,	String objectID, String propertyID, String propertyValue, String sourceID, String timeStamp) {
-		String [] lineComponents = new String[]{claimId, objectID, propertyID, propertyValue, sourceID, timeStamp};
+	private static void writeAllegationClaims(CSVWriter writer, String objectID, String propertyID, String propertyValue, String sourceID, String timeStamp) {
+		String [] lineComponents = new String[]{objectID, propertyID, propertyValue, sourceID, timeStamp};
 		writer.writeNext(lineComponents);
 	}
 	
