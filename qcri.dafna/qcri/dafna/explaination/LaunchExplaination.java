@@ -1,6 +1,7 @@
 package qcri.dafna.explaination;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,6 +17,10 @@ import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.ExperimentDataSetConstructor;
 import qcri.dafna.voter.VoterParameters;
 import au.com.bytecode.opencsv.CSVWriter;
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.featureselection.ranking.RecursiveFeatureEliminationSVM;
+import net.sf.javaml.featureselection.scoring.RELIEF;
+import net.sf.javaml.tools.data.FileHandler;
 
 public class LaunchExplaination {
 	public static void main(String args[])
@@ -53,9 +58,21 @@ public class LaunchExplaination {
 		for(int i = 24432; i<26436; i++){
 			ds = ExperimentDataSetConstructor.readDataSet(dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
 			String claimID = String.valueOf(i);
-			MetricsGenerator algo5 = new MetricsGenerator(ds, params, claimID, confidenceFilePath, trustWorthinessFilePath);
+			MetricsGenerator algo5 = new MetricsGenerator(ds, params, claimID, confidenceFilePath, trustWorthinessFilePath, outputPath);
 			q = algo5.launchVoter(convergence100, profileMemory);
 		}
+		
+		try {
+			Dataset data = FileHandler.loadDataset(new File("/home/dalia/Desktop/explaination.data"),11, ",");
+			RELIEF reliefF = new RELIEF();
+			reliefF.build(data);
+			for (int i = 0; i < reliefF.noAttributes(); i++)
+	            System.out.println(reliefF.score(i));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    			
 		//System.out.println(q.getPrecision());
 		//System.out.println(q.getRecall());
 		//System.out.println(q.getAccuracy());

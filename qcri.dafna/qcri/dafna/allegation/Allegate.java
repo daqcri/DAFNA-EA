@@ -244,8 +244,10 @@ public class Allegate extends Voter {
 			if(secondMaxOriginalConfidence == "" && secondMaxBucket != null)
 				secondMaxOriginalConfidence = String.valueOf(secondMaxBucket.getConfidence());
 		}
-		if(iterationCount == 50)
+		if(iterationCount == 50){
+			//System.out.println("Hard to Break");
 			return -1;
+		}
 		else
 			return 1;
 	}
@@ -297,9 +299,10 @@ public class Allegate extends Voter {
 		
 		uncleanedObjectId = dataSet.getDataItemsBuckets().get(targetDataItemKey).get(0).getClaims().get(0).getUncleanedObjectIdentifier();
 		
+		if(secondMax != null)
 		secondMaxBucket = secondMax;
 		
-		if(iterationCount == 0)
+		if(iterationCount == 0 && secondMax != null)
 		nbFS = secondMax.getClaims().size();
 		
 		if(iterationCount == 0)
@@ -333,16 +336,43 @@ public class Allegate extends Voter {
 			}
 		}
 		
-		if ( !dataSet.getSourcesHash().containsKey(newSourceName))
-		{
+		//if ( !dataSet.getSourcesHash().containsKey(newSourceName))
+		//{
+			/*
 			SourceClaim newClaim = dataSet.addClaim(claimIdMax+1, uncleanedObjectId, targetObjectId, targetPropertyName, fakeValue, Globals.weight, "Now", newSourceName);
 			dataSet.addClaimToBucket(newClaim, secondMax);
 			claimsAdded = claimsAdded + 1;
 			fakeSourceCount++;
 			// Print the fake Claims introduced
 			System.out.println(String.valueOf(claimIdMax+1)+" "+targetObjectId+" "+secondMax.getClaims().get(0).getPropertyValueString()+" "+newSourceName);
-		}
-		return 1;
+			*/
+		
+			if(fakeSourceCount < sourcesToBeMimicked.size()){
+				String motivatingSource = sourcesToBeMimicked.get(fakeSourceCount);
+				int i = 1;
+				for(SourceClaim claim : dataSet.getSourcesHash().get(motivatingSource).getClaims()){
+					SourceClaim newClaim = dataSet.addClaim(claimIdMax+i, claim.getUncleanedObjectIdentifier(), claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(), claim.getWeight(), "Now", newSourceName);
+					dataSet.addClaimToBucket(newClaim, claim.getBucket());
+					System.out.println(String.valueOf(claimIdMax+i)+" "+claim.getUncleanedObjectIdentifier()+" "+claim.getPropertyValueString()+" "+newSourceName);
+					i++;
+				}
+				claimsAdded = claimsAdded + i - 1;
+				fakeSourceCount++;
+			}
+			else{
+				if(secondMax == null){
+					System.out.println("All Sources Mimicked - Claim Not Falsified");
+					return -1;
+				}
+				SourceClaim newClaim = dataSet.addClaim(claimIdMax+1, uncleanedObjectId, targetObjectId, targetPropertyName, fakeValue, Globals.weight, "Now", newSourceName);
+				dataSet.addClaimToBucket(newClaim, secondMax);
+				claimsAdded = claimsAdded + 1;
+				fakeSourceCount++;
+				// Print the fake Claims introduced
+				//System.out.println(String.valueOf(claimIdMax+1)+" "+targetObjectId+" "+secondMax.getClaims().get(0).getPropertyValueString()+" "+newSourceName);
+			}
+		//}
+		return claimsAdded;
 	}
 		
 	public void intializeWithResults(HashMap<Integer, ConfValueLabel> conf, HashMap<String, Double> trust){

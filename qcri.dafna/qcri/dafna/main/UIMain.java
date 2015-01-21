@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import qcri.dafna.allegation.Allegator;
 import qcri.dafna.combiner.Combiner;
 import qcri.dafna.dataModel.data.DataSet;
 import qcri.dafna.dataModel.data.Globals;
@@ -24,6 +25,7 @@ import qcri.dafna.voter.TwoEstimates;
 import qcri.dafna.voter.SimpleLCA;
 import qcri.dafna.voter.GuessLCA;
 import qcri.dafna.voter.TruthFinder;
+import qcri.dafna.voter.Voter;
 import qcri.dafna.voter.VoterParameters;
 import qcri.dafna.voter.dependence.SourceDependenceModel;
 import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
@@ -36,11 +38,13 @@ public class UIMain {
 
 		DataSet ds = createDataSet(args, outputPath);
 		VoterQualityMeasures qualityMeasures = launch(args, ds);
-		writeTrustworthiness(ds, outputPath);
-		writeConfidence(ds, outputPath);
-		
-		qualityMeasures.printMeasures();
-		System.out.println("Finished");
+		if(! args[args.length -1].equals("Allegate"))
+		{
+			writeTrustworthiness(ds, outputPath);
+			writeConfidence(ds, outputPath);		
+			qualityMeasures.printMeasures();
+			System.out.println("Finished");
+		}
 	}
 
 	private static DataSet createDataSet(String[] args, String outputPath) {
@@ -53,17 +57,18 @@ public class UIMain {
 			dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
 	}
 	
-	private static VoterQualityMeasures launch(String[] args, DataSet ds) {
+	private static VoterQualityMeasures launch(String[] args, DataSet ds) throws IOException {
 		VoterQualityMeasures q = null;
-		boolean convergence100 = false;
-		boolean profileMemory = false;
+		boolean convergence100 = false; // If you change it here please also change in Allegator.java (not paremetrised by this)
+		boolean profileMemory = false; // If you change it here please also change in Allegator.java
 		// for all voters
 		double cosineSimDiff = Double.parseDouble(args[4]);  // 0-1
 		double startingTrust = Double.parseDouble(args[5]);  // 0-1
 		double startingConf = Double.parseDouble(args[6]);  // 0-1 
 		double startingErrorFactor = Double.parseDouble(args[7]);  // 0-1
 		VoterParameters params = new VoterParameters(cosineSimDiff, startingTrust, startingConf, startingErrorFactor);
-
+		Voter algo;
+		
 		// specific params
 		String algo_name = args[0];
 		switch(algo_name){
@@ -71,21 +76,17 @@ public class UIMain {
 			double dampeningFactorCosine = Double.parseDouble(args[8]); // 0-1
 			startingConf = Double.parseDouble(args[9]);
 			params = new VoterParameters(cosineSimDiff, startingTrust, startingConf,startingErrorFactor);
-			Cosine algo1 = new Cosine(ds, params, dampeningFactorCosine);	
-			q = algo1.launchVoter(convergence100 , profileMemory);
-
+			algo = new Cosine(ds, params, dampeningFactorCosine);	
 			break;
 		case "2-Estimates":
 			double normalizationWeight = Double.parseDouble(args[8]);
-			TwoEstimates algo2 = new TwoEstimates(ds, params,normalizationWeight );
-			q = algo2.launchVoter(convergence100 , profileMemory);
+			algo = new TwoEstimates(ds, params,normalizationWeight );
 			break;
 		case "3-Estimates":
 			double ThreeNormalizationWeight = Double.parseDouble(args[8]);
 			startingErrorFactor = Double.parseDouble(args[9]);
 			params = new VoterParameters(cosineSimDiff, startingTrust, startingConf,startingErrorFactor);
-			ThreeEstimates algo3 = new ThreeEstimates(ds, params, ThreeNormalizationWeight);
-			q = algo3.launchVoter(convergence100 , profileMemory);
+			algo = new ThreeEstimates(ds, params, ThreeNormalizationWeight);
 			break;
 		case "Depen":
 		case "Accu":
@@ -99,30 +100,25 @@ public class UIMain {
 			boolean considerSourcesAccuracy = args[13].equals("true");
 			boolean considerDependency = args[14].equals("true");
 			boolean orderSrcByDependence = args[15].equals("true");
-			SourceDependenceModel algo4 = new SourceDependenceModel(ds, params, alfa, c, n, similarityConstant, considerSimilarity, considerSourcesAccuracy, considerDependency, orderSrcByDependence);
-			q = algo4.launchVoter(convergence100, profileMemory);
+			algo = new SourceDependenceModel(ds, params, alfa, c, n, similarityConstant, considerSimilarity, considerSourcesAccuracy, considerDependency, orderSrcByDependence);
 			break;
 		case "TruthFinder":
 			double similarityConstantTF = Double.parseDouble(args[8]); // 0-1
 			double dampeningFactorTF = Double.parseDouble(args[9]); // 0-1
-			TruthFinder algo5 = new TruthFinder(ds, params, similarityConstantTF, dampeningFactorTF);
-			q = algo5.launchVoter(convergence100, profileMemory);
+			algo = new TruthFinder(ds, params, similarityConstantTF, dampeningFactorTF);
 			break;
 		case "SimpleLCA":
 			double Simplebeta1LCA = Double.parseDouble(args[8]);
-			SimpleLCA algo6 = new SimpleLCA(ds, params, Simplebeta1LCA);
-			q = algo6.launchVoter(convergence100, profileMemory);
+			algo = new SimpleLCA(ds, params, Simplebeta1LCA);
 			break;
 		case "GuessLCA":
 			double beta1LCA = Double.parseDouble(args[8]);
-			GuessLCA algo7 = new GuessLCA(ds, params, beta1LCA);
-			q = algo7.launchVoter(convergence100, profileMemory);
+			algo = new GuessLCA(ds, params, beta1LCA);
 			break;
 		case "MLE":
 			double beta1MLE = Double.parseDouble(args[8]);
 			double rMLE = Double.parseDouble(args[9]);
-			MaximumLikelihoodEstimation algo8 = new MaximumLikelihoodEstimation(ds, params, beta1MLE, rMLE );
-			q = algo8.launchVoter(convergence100, profileMemory);
+			algo = new MaximumLikelihoodEstimation(ds, params, beta1MLE, rMLE );
 			break;
 		case "LTM":
 			double b1 = Double.parseDouble(args[8]);
@@ -134,8 +130,7 @@ public class UIMain {
 			int iterationCount = Integer.parseInt(args[14]);
 			int burnIn = Integer.parseInt(args[15]);
 			int sampleGap = Integer.parseInt(args[16]);
-			LatentTruthModel algo9 = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
-			q = algo9.launchVoter(convergence100, profileMemory);
+			algo = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
 			break;
 		case "Combiner":
 			int number_algorithms = Integer.parseInt(args[8]);
@@ -146,15 +141,52 @@ public class UIMain {
 				confidenceFilePaths[i] = args[i+9];
 				i++;
 			}
-			Combiner algo10 = new Combiner(ds, params, number_algorithms, confidenceFilePaths);
-			q = algo10.launchVoter(convergence100, profileMemory);
+			algo = new Combiner(ds, params, number_algorithms, confidenceFilePaths);
 			break;
 			
 		default:
 			throw new RuntimeException("Unknown algorithm specified '" + algo_name + "'");
 		}
 		
+		if (args[args.length -1].equals("Allegate")) {
+			String claimID = args[args.length - 4];
+			String confFilePath = args[args.length - 3];
+			String trustFilePath = args[args.length - 2];
+			Allegator allegator = new Allegator(ds, algo, claimID);
+			int fakeSourceCount = allegator.Allegate(confFilePath, trustFilePath);
+			if(fakeSourceCount != 0)
+				writeAllegation(ds, fakeSourceCount,args[3]);
+		}
+		else
+		{
+			q = algo.launchVoter(convergence100, profileMemory);
+		}
 		return q;
+	}
+	
+	public static void writeAllegation(DataSet ds, int fakeSourceCount, String outputPath)
+	throws IOException {
+		String allegationClaimsFile = outputPath + System.getProperty("file.separator") + "AllegationClaims.csv";
+		BufferedWriter allegationWriter;
+		allegationWriter = Files.newBufferedWriter(Paths.get(allegationClaimsFile), 
+				Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		CSVWriter csvWriter = new CSVWriter(allegationWriter, ',');
+
+		/*header*/
+		writeAllegationClaims(csvWriter, "ObjectID", "PropertyID", "PropertyValue", "SourceID", "TimeStamp");
+		for(int i = 0; i < fakeSourceCount; i++){
+			String SourceIdentifier = Globals.fakeSourceName+String.valueOf(i);
+			for(SourceClaim claim : ds.getSourcesHash().get(SourceIdentifier).getClaims())
+			{
+				writeAllegationClaims(csvWriter, claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(), claim.getSource().getSourceIdentifier(), claim.getTimeStamp());
+			}
+		}
+		allegationWriter.close();
+	}
+	
+	private static void writeAllegationClaims(CSVWriter writer, String objectID, String propertyID, String propertyValue, String sourceID, String timeStamp) {
+		String [] lineComponents = new String[]{objectID, propertyID, propertyValue, sourceID, timeStamp};
+		writer.writeNext(lineComponents);
 	}
 	
 	private static void writeConfidence(DataSet ds, String outputPath)
@@ -203,6 +235,5 @@ public class UIMain {
 		String [] lineComponents = new String[]{sourceId, trustworthiness};
 		writer.writeNext(lineComponents);
 	}
-
 
 }

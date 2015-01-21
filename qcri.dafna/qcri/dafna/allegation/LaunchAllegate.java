@@ -58,12 +58,16 @@ public class LaunchAllegate {
 		String confidenceFilePath = "/home/dalia/Desktop/Backups/results/4/Confidences.csv";
 		String trustWorthinessFilePath = "/home/dalia/Desktop/Backups/results/4/Trustworthiness.csv";
 
-		for(int i = 25000; i<26000; i+=1){
+		
+		for(int i =  26101; i<26102; i+=1){
 			ds = ExperimentDataSetConstructor.readDataSet(dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
 			String claimID = String.valueOf(i);
 			Allegate algo5 = new Allegate(ds, params, algoParams, claimID, confidenceFilePath, trustWorthinessFilePath);
 			q = algo5.launchVoter(convergence100, profileMemory);
 		}
+		
+		
+		
 		
 		String confidenceResultFile = outputPath + System.getProperty("file.separator") + "Confidences.csv";
 		BufferedWriter confidenceWriter;
