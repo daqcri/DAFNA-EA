@@ -58,7 +58,7 @@ public class LaunchExplaination {
 		for(int i = 24432; i<26436; i++){
 			ds = ExperimentDataSetConstructor.readDataSet(dataSetDirectory, toleranceFactor, groundTruthDir, outputPath, delim);
 			String claimID = String.valueOf(i);
-			MetricsGenerator algo5 = new MetricsGenerator(ds, params, claimID, confidenceFilePath, trustWorthinessFilePath, outputPath);
+			MetricsGenerator algo5 = new MetricsGenerator(ds, params, claimID, confidenceFilePath, trustWorthinessFilePath);
 			q = algo5.launchVoter(convergence100, profileMemory);
 		}
 		
