@@ -30,6 +30,7 @@ import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.Source;
 import qcri.dafna.dataModel.data.SourceClaim;
 import qcri.dafna.dataModel.data.ValueBucket;
+import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.ExperimentDataSetConstructor;
 import qcri.dafna.voter.Cosine;
@@ -220,7 +221,7 @@ public class UIMain {
 			int sampleGap = Integer.parseInt(args[16]);
 			algo = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
 			break;
-		case "Combiner":
+		case "Combine":
 			int number_algorithms = Integer.parseInt(args[8]);
 			String[] confidenceFilePaths = new String[number_algorithms];
 			int i = 0;
@@ -237,16 +238,13 @@ public class UIMain {
 		}
 		
 		if (args[args.length -1].equals("Allegate")) {
-			String originalRunID = args[args.length - 5];
 			String claimID = args[args.length - 4];
 			String confFilePath = args[args.length - 3];
 			String trustFilePath = args[args.length - 2];
 			Allegator allegator = new Allegator(ds, algo, claimID);
 			int fakeSourceCount = allegator.Allegate(confFilePath, trustFilePath);
-			if(fakeSourceCount != 0) {
-				String sourceSuffix = ".r" + originalRunID + ".c" + claimID;
-				writeAllegation(ds, fakeSourceCount, args[3], sourceSuffix);
-			}
+			if(fakeSourceCount != 0)
+				writeAllegation(ds, fakeSourceCount,args[3]);
 		}
 		else
 		{
@@ -292,9 +290,8 @@ public class UIMain {
 		String [] lineComponents = new String[]{claimID, cv, trust, minTrust, maxTrust, nbSS, nbC, totalSources, nbDI, cvGlobal, cvLocal, trustGlobal, trustLocal, truthLabel};
 		writer.writeNext(lineComponents);
 	}
-	
-	public static void writeAllegation(DataSet ds, int fakeSourceCount,
-			String outputPath, String sourceSuffix)
+			
+	public static void writeAllegation(DataSet ds, int fakeSourceCount, String outputPath)
 	throws IOException {
 		String allegationClaimsFile = outputPath + System.getProperty("file.separator") + "AllegationClaims.csv";
 		BufferedWriter allegationWriter;
@@ -308,10 +305,7 @@ public class UIMain {
 			String SourceIdentifier = Globals.fakeSourceName+String.valueOf(i);
 			for(SourceClaim claim : ds.getSourcesHash().get(SourceIdentifier).getClaims())
 			{
-				String fakeSourceName = claim.getSource().getSourceIdentifier() + sourceSuffix;
-				writeAllegationClaims(csvWriter, claim.getObjectIdentifier(), 
-						claim.getPropertyName(), claim.getPropertyValueString(),
-						fakeSourceName, claim.getTimeStamp());
+				writeAllegationClaims(csvWriter, claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(), claim.getSource().getSourceIdentifier(), claim.getTimeStamp());
 			}
 		}
 		allegationWriter.close();
