@@ -121,6 +121,7 @@ public class UIMain {
 			jboost.controller.Controller.main(arguments);
 			*/
 			
+			/*
 			BufferedReader reader = new BufferedReader(new FileReader("/home/dalia/Downloads/weka_input_train.arff"));
 			Instances data = new Instances(reader);
 			reader.close();
@@ -129,7 +130,8 @@ public class UIMain {
 			Classifier cls = new J48();
 			cls.buildClassifier(data);
 			
-			cls.toString();
+			System.out.println(cls.toString());
+			*/
 			
 			qualityMeasures.printMeasures();
 			System.out.println("Finished");
