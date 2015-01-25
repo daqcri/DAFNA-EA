@@ -1,13 +1,27 @@
 package qcri.dafna.main;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
+import weka.core.Instances;
+import weka.classifiers.Classifier;
+import weka.classifiers.trees.J48;
+import net.sf.javaml.classification.tree.RandomTree;
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.featureselection.scoring.RELIEF;
+import net.sf.javaml.tools.data.FileHandler;
 import au.com.bytecode.opencsv.CSVWriter;
 import qcri.dafna.allegation.Allegator;
 import qcri.dafna.combiner.Combiner;
@@ -30,10 +44,11 @@ import qcri.dafna.voter.Voter;
 import qcri.dafna.voter.VoterParameters;
 import qcri.dafna.voter.dependence.SourceDependenceModel;
 import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
+import qcri.dafna.explaination.*;
 
 public class UIMain {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
 		String outputPath = args[3];
 
@@ -42,7 +57,80 @@ public class UIMain {
 		if(! args[args.length -1].equals("Allegate"))
 		{
 			writeTrustworthiness(ds, outputPath);
-			writeConfidence(ds, outputPath);		
+			writeConfidence(ds, outputPath);
+			MetricsGenerator mg = new MetricsGenerator(ds);
+			List<Metrics> allMetrics= mg.generateMetrics(args[args.length - 2], args[args.length -1]);
+			writeMetrics(allMetrics, outputPath);
+			writeMetricsForFeatureRanking(allMetrics, outputPath);
+			
+			try 
+			{
+				Dataset data = FileHandler.loadDataset(new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv"),12, ",");
+				RELIEF reliefF = new RELIEF();
+				reliefF.build(data);
+				List<Double> scores = new ArrayList<Double>();
+				for (int i = 0; i < reliefF.noAttributes(); i++){
+					scores.add(reliefF.score(i));
+					//System.out.print(reliefF.score(i)+",");
+				}
+				//Ranking
+				/*
+				List<Double> scoresSorted = new ArrayList<Double>(scores);
+				Collections.sort(scoresSorted);
+				int[] rank = new int[scores.size()];
+				for(int k = 0; k < scores.size(); k++)
+					rank[k] = scoresSorted.size() - scoresSorted.indexOf(scores.get(k));
+				*/
+			}
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			/*
+			try 
+			{
+				Dataset data = FileHandler.loadDataset(new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv"),11, ",");
+				Random rg = new Random(9);
+				RandomTree rTree = new RandomTree(11, rg);
+				rTree.buildClassifier(data);
+				int correct = 0, wrong = 0;
+		        // Classify all instances and check with the correct class values
+		        for (Instance inst : data) {
+		            Object predictedClassValue = rTree.classify(inst);
+		            Object realClassValue = inst.classValue();
+		            if (predictedClassValue.equals(realClassValue))
+		                correct++;
+		            else
+		                wrong++;
+		        }
+		        System.out.println("Correct predictions  " + correct);
+		        System.out.println("Wrong predictions " + wrong);				
+			}
+			catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+					e.printStackTrace();
+			}
+			*/
+			
+			//JBoost
+			/*
+			String arguments[] = {"-S", "~/home/dalia/DAFNAData/formatted/Books/experimentResults/my/my", "-serialTreeOutput", "~/home/dalia/DAFNAData/formatted/Books/experimentResults/my/atree.serialized"};
+			jboost.controller.Controller.main(arguments);
+			*/
+			
+			BufferedReader reader = new BufferedReader(new FileReader("/home/dalia/Downloads/weka_input_train.arff"));
+			Instances data = new Instances(reader);
+			reader.close();
+			// setting class attribute
+			data.setClassIndex(data.numAttributes() - 1);
+			Classifier cls = new J48();
+			cls.buildClassifier(data);
+			
+			cls.toString();
+			
 			qualityMeasures.printMeasures();
 			System.out.println("Finished");
 		}
@@ -165,6 +253,44 @@ public class UIMain {
 		return q;
 	}
 	
+	
+	public static void writeMetricsForFeatureRanking(List<Metrics> metrics, String outputPath)
+	throws IOException {
+		String metricsFile = outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv";
+		BufferedWriter metricsWriter;
+		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',', CSVWriter.NO_QUOTE_CHARACTER);
+		for(Metrics metricsRow : metrics){
+			writeMetricsRowsForFeatureRanking(csvWriter, String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getNbDI()),String.valueOf(metricsRow.getTotalSources()), String.valueOf(metricsRow.getCvGlobal()), String.valueOf(metricsRow.getCvLocal()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
+		}
+		metricsWriter.close();
+	}
+			
+	private static void writeMetricsRowsForFeatureRanking(CSVWriter writer, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String totalSources, String nbDI, String cvLocal, String cvGlobal, String trustGlobal, String trustLocal, String truthLabel) {
+		String [] lineComponents = new String[]{cv, trust, minTrust, maxTrust, nbSS, nbC, totalSources, nbDI, cvLocal, cvGlobal, trustGlobal, trustLocal, truthLabel};
+		writer.writeNext(lineComponents);
+	}
+	
+	
+	public static void writeMetrics(List<Metrics> metrics, String outputPath)
+	throws IOException {
+		String metricsFile = outputPath + System.getProperty("file.separator") + "Metrics.csv";
+		BufferedWriter metricsWriter;
+		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',');
+		//*header*
+		writeMetricsRows(csvWriter, "claimID", "Cv", "Trust", "Trust of minimum TrustWorthySource", "Trust of maximum TrustWorthySource", "Supporting Sources", "Opposing Sources", "Total Sources", "Distict Values", "Global Confidence Comparison", "Local Confidence Comparison", "Global Trust Comparison", "Local Trust Comparison", "Truth Label");
+		for(Metrics metricsRow : metrics){
+			writeMetricsRows(csvWriter, metricsRow.getClaimID(), String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getTotalSources()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getCvGlobal()), String.valueOf(metricsRow.getCvLocal()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
+		}
+		metricsWriter.close();
+	}
+			
+	private static void writeMetricsRows(CSVWriter writer, String claimID, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String totalSources, String nbDI, String cvGlobal, String cvLocal, String trustGlobal, String trustLocal, String truthLabel) {
+		String [] lineComponents = new String[]{claimID, cv, trust, minTrust, maxTrust, nbSS, nbC, totalSources, nbDI, cvGlobal, cvLocal, trustGlobal, trustLocal, truthLabel};
+		writer.writeNext(lineComponents);
+	}
+			
 	public static void writeAllegation(DataSet ds, int fakeSourceCount, String outputPath)
 	throws IOException {
 		String allegationClaimsFile = outputPath + System.getProperty("file.separator") + "AllegationClaims.csv";
