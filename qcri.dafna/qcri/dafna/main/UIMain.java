@@ -238,13 +238,16 @@ public class UIMain {
 		}
 		
 		if (args[args.length -1].equals("Allegate")) {
+			String originalRunID = args[args.length - 5];
 			String claimID = args[args.length - 4];
 			String confFilePath = args[args.length - 3];
 			String trustFilePath = args[args.length - 2];
 			Allegator allegator = new Allegator(ds, algo, claimID);
 			int fakeSourceCount = allegator.Allegate(confFilePath, trustFilePath);
-			if(fakeSourceCount != 0)
-				writeAllegation(ds, fakeSourceCount,args[3]);
+			if(fakeSourceCount != 0) {
+				String sourceSuffix = ".r" + originalRunID + ".c" + claimID;
+				writeAllegation(ds, fakeSourceCount, args[3], sourceSuffix);
+			}
 		}
 		else
 		{
@@ -291,7 +294,7 @@ public class UIMain {
 		writer.writeNext(lineComponents);
 	}
 			
-	public static void writeAllegation(DataSet ds, int fakeSourceCount, String outputPath)
+	public static void writeAllegation(DataSet ds, int fakeSourceCount, String outputPath, String sourceSuffix)
 	throws IOException {
 		String allegationClaimsFile = outputPath + System.getProperty("file.separator") + "AllegationClaims.csv";
 		BufferedWriter allegationWriter;
@@ -305,7 +308,8 @@ public class UIMain {
 			String SourceIdentifier = Globals.fakeSourceName+String.valueOf(i);
 			for(SourceClaim claim : ds.getSourcesHash().get(SourceIdentifier).getClaims())
 			{
-				writeAllegationClaims(csvWriter, claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(), claim.getSource().getSourceIdentifier(), claim.getTimeStamp());
+				String fakeSourceName = claim.getSource().getSourceIdentifier() + sourceSuffix;
+				writeAllegationClaims(csvWriter, claim.getObjectIdentifier(), claim.getPropertyName(), claim.getPropertyValueString(),fakeSourceName, claim.getTimeStamp());
 			}
 		}
 		allegationWriter.close();
