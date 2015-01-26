@@ -239,7 +239,7 @@ public class UIMain {
 		String metricsFile = outputPath + System.getProperty("file.separator") + "MetricsWeka.arff";
 		BufferedWriter metricsWriter;
 		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		String specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
+		String specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
 				"@relation explanation",
 				"@attribute       Cv                 	numeric",
 				"@attribute       Ts                 	numeric",
@@ -248,6 +248,7 @@ public class UIMain {
 				"@attribute       NumberSuppSources  	numeric",
 				"@attribute       NumberOppSources   	numeric",
 				"@attribute		  NumberDistinctValue	numeric",
+				"@attribute       CvGlobal           	numeric",
 				"@attribute       TsGlobal           	numeric",
 				"@attribute       TsLocal            	numeric",
 				"@attribute       Label              	{TRUE, FALSE}",
@@ -255,13 +256,13 @@ public class UIMain {
 		metricsWriter.write(specifications);
 		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',', CSVWriter.NO_QUOTE_CHARACTER);
 		for(Metrics metricsRow : metrics){
-			writeMetricsRowsForWeka(csvWriter, String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
+			writeMetricsRowsForWeka(csvWriter, String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getCvGlobal()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
 		}
 		metricsWriter.close();
 	}
 	
-	private static void writeMetricsRowsForWeka(CSVWriter writer, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String nbDI, String trustGlobal, String trustLocal, String truthLabel) {
-		String [] lineComponents = new String[]{cv, trust, minTrust, maxTrust, nbSS, nbC, nbDI, trustGlobal, trustLocal, truthLabel};
+	private static void writeMetricsRowsForWeka(CSVWriter writer, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String nbDI, String cvglobal, String trustGlobal, String trustLocal, String truthLabel) {
+		String [] lineComponents = new String[]{cv, trust, minTrust, maxTrust, nbSS, nbC, nbDI, cvglobal, trustGlobal, trustLocal, truthLabel};
 		writer.writeNext(lineComponents);
 	}
 	
