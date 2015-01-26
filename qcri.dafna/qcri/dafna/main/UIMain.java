@@ -241,16 +241,16 @@ public class UIMain {
 		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		String specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
 				"@relation explanation",
-				"@attribute       Cv                 numeric",
-				"@attribute       Ts                 numeric",
-				"@attribute       minTs              numeric",
-				"@attribute       maxTs              numeric",
-				"@attribute       nbSS               numeric",
-				"@attribute       nbC                numeric",
-				"@attribute		  nbDistinct		 numeric",
-				"@attribute       TsGlobal           numeric",
-				"@attribute       TsLocal            numeric",
-				"@attribute       label              {TRUE, FALSE}",
+				"@attribute       Cv                 	numeric",
+				"@attribute       Ts                 	numeric",
+				"@attribute       minTs              	numeric",
+				"@attribute       maxTs              	numeric",
+				"@attribute       NumberSuppSources  	numeric",
+				"@attribute       NumberOppSources   	numeric",
+				"@attribute		  NumberDistinctValue	numeric",
+				"@attribute       TsGlobal           	numeric",
+				"@attribute       TsLocal            	numeric",
+				"@attribute       Label              	{TRUE, FALSE}",
 				"@data");
 		metricsWriter.write(specifications);
 		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',', CSVWriter.NO_QUOTE_CHARACTER);
