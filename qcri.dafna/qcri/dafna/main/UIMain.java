@@ -9,17 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import weka.core.Instances;
 import weka.classifiers.Classifier;
 import weka.classifiers.trees.J48;
-import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
 import net.sf.javaml.featureselection.scoring.RELIEF;
 import net.sf.javaml.tools.data.FileHandler;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -59,79 +55,16 @@ public class UIMain {
 			writeTrustworthiness(ds, outputPath);
 			writeConfidence(ds, outputPath);
 			MetricsGenerator mg = new MetricsGenerator(ds);
-			List<Metrics> allMetrics= mg.generateMetrics(args[args.length - 2], args[args.length -1]);
+			List<Metrics> allMetrics= mg.generateMetrics(outputPath + System.getProperty("file.separator") + "Confidences.csv", outputPath + System.getProperty("file.separator") + "Trustworthiness.csv");
 			writeMetrics(allMetrics, outputPath);
+			
+			// Write features as per JAVA-ML requirement, get the scores and delete the file.
 			writeMetricsForFeatureRanking(allMetrics, outputPath);
+			calculateFeatureScores(outputPath);
 			
-			try 
-			{
-				Dataset data = FileHandler.loadDataset(new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv"),12, ",");
-				RELIEF reliefF = new RELIEF();
-				reliefF.build(data);
-				List<Double> scores = new ArrayList<Double>();
-				for (int i = 0; i < reliefF.noAttributes(); i++){
-					scores.add(reliefF.score(i));
-					//System.out.print(reliefF.score(i)+",");
-				}
-				//Ranking
-				/*
-				List<Double> scoresSorted = new ArrayList<Double>(scores);
-				Collections.sort(scoresSorted);
-				int[] rank = new int[scores.size()];
-				for(int k = 0; k < scores.size(); k++)
-					rank[k] = scoresSorted.size() - scoresSorted.indexOf(scores.get(k));
-				*/
-			}
-			catch (IOException e) 
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			/*
-			try 
-			{
-				Dataset data = FileHandler.loadDataset(new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv"),11, ",");
-				Random rg = new Random(9);
-				RandomTree rTree = new RandomTree(11, rg);
-				rTree.buildClassifier(data);
-				int correct = 0, wrong = 0;
-		        // Classify all instances and check with the correct class values
-		        for (Instance inst : data) {
-		            Object predictedClassValue = rTree.classify(inst);
-		            Object realClassValue = inst.classValue();
-		            if (predictedClassValue.equals(realClassValue))
-		                correct++;
-		            else
-		                wrong++;
-		        }
-		        System.out.println("Correct predictions  " + correct);
-		        System.out.println("Wrong predictions " + wrong);				
-			}
-			catch (IOException e) 
-			{
-				// TODO Auto-generated catch block
-					e.printStackTrace();
-			}
-			*/
-			
-			//JBoost
-			/*
-			String arguments[] = {"-S", "~/home/dalia/DAFNAData/formatted/Books/experimentResults/my/my", "-serialTreeOutput", "~/home/dalia/DAFNAData/formatted/Books/experimentResults/my/atree.serialized"};
-			jboost.controller.Controller.main(arguments);
-			*/
-			
-			/*
-			BufferedReader reader = new BufferedReader(new FileReader("/home/dalia/Downloads/weka_input_train.arff"));
-			Instances data = new Instances(reader);
-			reader.close();
-			// setting class attribute
-			data.setClassIndex(data.numAttributes() - 1);
-			Classifier cls = new J48();
-			cls.buildClassifier(data);
-			
-			System.out.println(cls.toString());
-			*/
+			// Write features as per Weka format (.arff), get Decision Tree and delete the file.
+			writeMetricsForWeka(allMetrics, outputPath);
+			buildDecisionTreeJ48(outputPath);
 			
 			qualityMeasures.printMeasures();
 			System.out.println("Finished");
@@ -258,6 +191,79 @@ public class UIMain {
 		return q;
 	}
 	
+	private static void calculateFeatureScores(String outputPath){
+		try 
+		{
+			Dataset data = FileHandler.loadDataset(new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv"),12, ",");
+			RELIEF reliefF = new RELIEF();
+			reliefF.build(data);
+			List<Double> scores = new ArrayList<Double>();
+			for (int i = 0; i < reliefF.noAttributes(); i++){
+				scores.add(reliefF.score(i));
+			}
+			System.out.print("FeatureScores:");
+			for(double score : scores){
+				System.out.print("\t"+score);
+			}
+			System.out.print(";\n");
+		}
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv").delete();
+	}
+	
+	private static void buildDecisionTreeJ48(String outputPath){
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(outputPath + System.getProperty("file.separator") + "MetricsWeka.arff"));
+			Instances data = new Instances(reader);
+			reader.close();
+			// setting class attribute
+			data.setClassIndex(data.numAttributes() - 1);
+			Classifier cls = new J48();
+			cls.buildClassifier(data);
+			System.out.println(cls.toString());
+			new File(outputPath + System.getProperty("file.separator") + "MetricsWeka.arff").delete();
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void writeMetricsForWeka(List<Metrics> metrics, String outputPath)
+	throws IOException{
+		String metricsFile = outputPath + System.getProperty("file.separator") + "MetricsWeka.arff";
+		BufferedWriter metricsWriter;
+		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		String specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
+				"@relation explanation",
+				"@attribute       Cv                 numeric",
+				"@attribute       Ts                 numeric",
+				"@attribute       minTs              numeric",
+				"@attribute       maxTs              numeric",
+				"@attribute       nbSS               numeric",
+				"@attribute       nbC                numeric",
+				"@attribute		  nbDistinct		 numeric",
+				"@attribute       TsGlobal           numeric",
+				"@attribute       TsLocal            numeric",
+				"@attribute       label              {TRUE, FALSE}",
+				"@data");
+		metricsWriter.write(specifications);
+		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',', CSVWriter.NO_QUOTE_CHARACTER);
+		for(Metrics metricsRow : metrics){
+			writeMetricsRowsForWeka(csvWriter, String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
+		}
+		metricsWriter.close();
+	}
+	
+	private static void writeMetricsRowsForWeka(CSVWriter writer, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String nbDI, String trustGlobal, String trustLocal, String truthLabel) {
+		String [] lineComponents = new String[]{cv, trust, minTrust, maxTrust, nbSS, nbC, nbDI, trustGlobal, trustLocal, truthLabel};
+		writer.writeNext(lineComponents);
+	}
 	
 	public static void writeMetricsForFeatureRanking(List<Metrics> metrics, String outputPath)
 	throws IOException {
@@ -275,7 +281,6 @@ public class UIMain {
 		String [] lineComponents = new String[]{cv, trust, minTrust, maxTrust, nbSS, nbC, totalSources, nbDI, cvLocal, cvGlobal, trustGlobal, trustLocal, truthLabel};
 		writer.writeNext(lineComponents);
 	}
-	
 	
 	public static void writeMetrics(List<Metrics> metrics, String outputPath)
 	throws IOException {

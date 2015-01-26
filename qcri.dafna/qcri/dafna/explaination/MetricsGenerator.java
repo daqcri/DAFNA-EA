@@ -1,6 +1,7 @@
 package qcri.dafna.explaination;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,11 +30,8 @@ public class MetricsGenerator {
 		TrustWorthinessReader trustWorthinessReader = new TrustWorthinessReader();
 		
 		conf = confidenceReader.readConfidenceFile(confidenceFilePath, ',');
-		trust = trustWorthinessReader.readTrustFile(trustFilePath, ',');
+		trust = trustWorthinessReader.readTrustFile(trustFilePath, ',');		
 		
-		// Commenting Normalization Code - Assuming Files Supplied are already Normalised
-		
-		/*
 		// Normalization
 		
 		HashMap<Integer, Double> confValues = new HashMap<Integer, Double>();
@@ -76,7 +74,7 @@ public class MetricsGenerator {
 		
 		//Normalization end
 		
-		*/
+		
 		intializeWithResults(conf, trust);
 		
 		String targetDataItemKey ;
