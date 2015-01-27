@@ -72,6 +72,7 @@
 
   mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/ajt-1.20.jar -DgroupId=be.abeel -DartifactId=ajt -Dversion=1.20 -Dpackaging=jar -DlocalRepositoryPath=my-repo
 
+  mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/WekatextToXml.jar -DgroupId=org.inra.qualscape -DartifactId=wekatexttoxml -Dversion=0.0.1 -Dpackaging=jar -DlocalRepositoryPath=my-repo
  -->
  
   <dependencies>
@@ -125,6 +126,11 @@
 		<artifactId>ajt</artifactId>
 		<version>1.20</version>
 	</dependency>
-   	
+   	<dependency>
+		<groupId>org.inra.qualscape</groupId>
+		<artifactId>wekatexttoxml</artifactId>
+		<version>0.0.1</version>
+	</dependency>
+   	  
   </dependencies>
 </project>

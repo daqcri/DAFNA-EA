@@ -27,7 +27,6 @@ import qcri.dafna.dataModel.data.Globals;
 import qcri.dafna.dataModel.data.Source;
 import qcri.dafna.dataModel.data.SourceClaim;
 import qcri.dafna.dataModel.data.ValueBucket;
-import qcri.dafna.dataModel.dataFormatter.DataTypeMatcher;
 import qcri.dafna.dataModel.quality.voterResults.VoterQualityMeasures;
 import qcri.dafna.experiment.ExperimentDataSetConstructor;
 import qcri.dafna.voter.Cosine;
@@ -42,6 +41,8 @@ import qcri.dafna.voter.VoterParameters;
 import qcri.dafna.voter.dependence.SourceDependenceModel;
 import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
 import qcri.dafna.explaination.*;
+
+import org.inra.qualscape.wekatexttoxml.WekaTextfileToXMLTextfile;
 
 public class UIMain {
 
@@ -206,7 +207,7 @@ public class UIMain {
 			for(double score : scores){
 				System.out.print("\t"+score);
 			}
-			System.out.print(";\n");
+			System.out.println("");
 		}
 		catch (IOException e) 
 		{
@@ -216,26 +217,27 @@ public class UIMain {
 		new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv").delete();
 	}
 	
-	private static void buildDecisionTreeJ48(String outputPath){
+	private static void buildDecisionTreeJ48(String outputPath) throws Exception{
 		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(outputPath + System.getProperty("file.separator") + "MetricsWeka.arff"));
-			Instances data = new Instances(reader);
-			reader.close();
-			// setting class attribute
-			data.setClassIndex(data.numAttributes() - 1);
-			Classifier cls = new J48();
-			cls.buildClassifier(data);
-			PrintWriter printer = new PrintWriter(outputPath + System.getProperty("file.separator") +"DecisionTree.txt");
-			printer.write(cls.toString());
-			printer.close();
-			//System.out.println(cls.toString());
-			new File(outputPath + System.getProperty("file.separator") + "MetricsWeka.arff").delete();
-		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String arffPath = outputPath + System.getProperty("file.separator") + "MetricsWeka.arff";
+		String textTreePath = outputPath + System.getProperty("file.separator") +"DecisionTree.txt";
+		String xmlTreePath = outputPath + System.getProperty("file.separator") +"DecisionTree.xml";
+		reader = new BufferedReader(new FileReader(arffPath));
+		Instances data = new Instances(reader);
+		reader.close();
+		// setting class attribute
+		data.setClassIndex(data.numAttributes() - 1);
+		Classifier cls = new J48();
+		cls.buildClassifier(data);
+		PrintWriter printer = new PrintWriter(textTreePath);
+		// remove unwanted text from tree before saving so that xml conversion works
+		printer.write(cls.toString().replaceAll(".*(J48 pruned tree|-------|Number of Leaves|Size of the tree).*", ""));
+		printer.close();
+		new File(arffPath).delete();
+		File textTreeFile = new File(textTreePath);
+		File xmlTreeFile = new File(xmlTreePath);
+		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, true).writeXmlFromWekaText();		
+		textTreeFile.delete();
 	}
 	
 	public static void writeMetricsForWeka(List<Metrics> metrics, String outputPath)
@@ -294,7 +296,7 @@ public class UIMain {
 		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',');
 		//*header*
-		writeMetricsRows(csvWriter, "claimID", "Cv", "Trust", "Trust of minimum TrustWorthySource", "Trust of maximum TrustWorthySource", "Supporting Sources", "Opposing Sources", "Total Sources", "Distict Values", "Global Confidence Comparison", "Local Confidence Comparison", "Global Trust Comparison", "Local Trust Comparison", "Truth Label");
+		writeMetricsRows(csvWriter, "ClaimID", "Cv", "Ts", "minTs", "maxTs", "NumberSuppSources", "NumberOppSources", "TotalSources", "NumberDistinctValue", "CvGlobal", "LocalConfidenceComparison", "TsGlobal", "TsLocal", "Label");
 		for(Metrics metricsRow : metrics){
 			writeMetricsRows(csvWriter, metricsRow.getClaimID(), String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getTotalSources()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getCvGlobal()), String.valueOf(metricsRow.getCvLocal()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
 		}
