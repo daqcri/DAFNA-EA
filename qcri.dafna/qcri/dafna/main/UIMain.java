@@ -157,7 +157,7 @@ public class UIMain {
 			int sampleGap = Integer.parseInt(args[16]);
 			algo = new LatentTruthModel(ds, params, b1, b0, a00, a01,a10, a11, iterationCount, burnIn, sampleGap);
 			break;
-		case "Combine":
+		case "Combiner":
 			int number_algorithms = Integer.parseInt(args[8]);
 			String[] confidenceFilePaths = new String[number_algorithms];
 			int i = 0;
