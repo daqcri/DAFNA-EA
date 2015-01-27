@@ -69,6 +69,9 @@
   mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/independance-vldb2010-solomon-cleaner.jar -DgroupId=com.att.research -DartifactId=solomon.cleaner -Dversion=0.0.1 -Dpackaging=jar -DlocalRepositoryPath=my-repo
 
   mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/simmetrics_jar_v1_6_2_d07_02_07.jar -DgroupId=uk.ac.shef.wit -DartifactId=simmetrics -Dversion=1.6.2 -Dpackaging=jar -DlocalRepositoryPath=my-repo
+
+  mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=lib/ajt-1.20.jar -DgroupId=be.abeel -DartifactId=ajt -Dversion=1.20 -Dpackaging=jar -DlocalRepositoryPath=my-repo
+
  -->
  
   <dependencies>
@@ -116,6 +119,11 @@
 		<groupId>nz.ac.waikato.cms.weka</groupId>
 		<artifactId>weka-stable</artifactId>
 		<version>3.6.12</version>
+	</dependency>
+   	<dependency>
+		<groupId>be.abeel</groupId>
+		<artifactId>ajt</artifactId>
+		<version>1.20</version>
 	</dependency>
    	
   </dependencies>

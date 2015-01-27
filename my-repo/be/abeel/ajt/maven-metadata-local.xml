@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>be.abeel</groupId>
+  <artifactId>ajt</artifactId>
+  <versioning>
+    <release>1.20</release>
+    <versions>
+      <version>1.20</version>
+    </versions>
+    <lastUpdated>20150127073744</lastUpdated>
+  </versioning>
+</metadata>
