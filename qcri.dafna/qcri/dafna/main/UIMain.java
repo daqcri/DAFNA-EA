@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -225,7 +226,10 @@ public class UIMain {
 			data.setClassIndex(data.numAttributes() - 1);
 			Classifier cls = new J48();
 			cls.buildClassifier(data);
-			System.out.println(cls.toString());
+			PrintWriter printer = new PrintWriter(outputPath + System.getProperty("file.separator") +"DecisionTree.txt");
+			printer.write(cls.toString());
+			printer.close();
+			//System.out.println(cls.toString());
 			new File(outputPath + System.getProperty("file.separator") + "MetricsWeka.arff").delete();
 		}
 		catch (Exception e) {
