@@ -236,7 +236,7 @@ public class UIMain {
 		new File(arffPath).delete();
 		File textTreeFile = new File(textTreePath);
 		File xmlTreeFile = new File(xmlTreePath);
-		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, true).writeXmlFromWekaText();		
+		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, false).writeXmlFromWekaText();		
 		textTreeFile.delete();
 	}
 	
