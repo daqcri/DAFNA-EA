@@ -240,7 +240,7 @@ public class UIMain {
 		printer.close();
 		File textTreeFile = new File(textTreePath);
 		File xmlTreeFile = new File(xmlTreePath);
-		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, true).writeXmlFromWekaText();		
+		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, false).writeXmlFromWekaText();		
 		
 		// Check if only cvglobal is explanation, delete this XML and return false
 		BufferedReader br = new BufferedReader(new FileReader(xmlTreeFile));
