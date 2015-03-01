@@ -65,8 +65,13 @@ public class UIMain {
 			calculateFeatureScores(outputPath);
 			
 			// Write features as per Weka format (.arff), get Decision Tree and delete the file.
-			writeMetricsForWeka(allMetrics, outputPath);
-			buildDecisionTreeJ48(outputPath);
+			writeMetricsForWeka(allMetrics, outputPath, true);
+			if(buildDecisionTreeJ48(outputPath) == false)
+			{
+				// regenerate xml without including cvglobal this time
+				writeMetricsForWeka(allMetrics, outputPath, false);
+				buildDecisionTreeJ48(outputPath);
+			}
 			
 			qualityMeasures.printMeasures();
 			System.out.println("Finished");
@@ -217,7 +222,7 @@ public class UIMain {
 		new File(outputPath + System.getProperty("file.separator") + "MetricsTrainingData.csv").delete();
 	}
 	
-	private static void buildDecisionTreeJ48(String outputPath) throws Exception{
+	private static boolean buildDecisionTreeJ48(String outputPath) throws Exception{
 		BufferedReader reader;
 		String arffPath = outputPath + System.getProperty("file.separator") + "MetricsWeka.arff";
 		String textTreePath = outputPath + System.getProperty("file.separator") +"DecisionTree.txt";
@@ -233,21 +238,44 @@ public class UIMain {
 		// remove unwanted text from tree before saving so that xml conversion works
 		printer.write(cls.toString().replaceAll(".*(J48 pruned tree|-------|Number of Leaves|Size of the tree).*", ""));
 		printer.close();
-		new File(arffPath).delete();
 		File textTreeFile = new File(textTreePath);
 		File xmlTreeFile = new File(xmlTreePath);
-		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, false).writeXmlFromWekaText();		
+		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, true).writeXmlFromWekaText();		
+		
+		// Check if only cvglobal is explanation, delete this XML and return false
+		BufferedReader br = new BufferedReader(new FileReader(xmlTreeFile));
+		String line = br.readLine();
+		int countOfConditions = 0;
+		while(line != null && countOfConditions <= 3)
+		{
+			if(line.contains("Test attribute=\"CvGlobal\""))
+			{
+				countOfConditions++;
+			}
+			line = br.readLine();
+		}
+		br.close();
+		
 		textTreeFile.delete();
+		new File(arffPath).delete();
+		
+		if(countOfConditions == 2)
+		{
+			return false;
+		}
+		return true;
 	}
 	
-	public static void writeMetricsForWeka(List<Metrics> metrics, String outputPath)
+	public static void writeMetricsForWeka(List<Metrics> metrics, String outputPath, boolean includeCvGlobal)
 	throws IOException{
 		String metricsFile = outputPath + System.getProperty("file.separator") + "MetricsWeka.arff";
 		BufferedWriter metricsWriter;
 		metricsWriter = Files.newBufferedWriter(Paths.get(metricsFile), Globals.FILE_ENCODING, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		String specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
+		String specifications;
+		if(includeCvGlobal == true)
+		{
+			specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
 				"@relation explanation",
-				"@attribute       Cv                 	numeric",
 				"@attribute       Ts                 	numeric",
 				"@attribute       minTs              	numeric",
 				"@attribute       maxTs              	numeric",
@@ -259,16 +287,36 @@ public class UIMain {
 				"@attribute       TsLocal            	numeric",
 				"@attribute       Label              	{TRUE, FALSE}",
 				"@data");
+		}
+		else
+		{
+			specifications = String.format("%s\n\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n", 
+					"@relation explanation",
+					"@attribute       Ts                 	numeric",
+					"@attribute       minTs              	numeric",
+					"@attribute       maxTs              	numeric",
+					"@attribute       NumberSuppSources  	numeric",
+					"@attribute       NumberOppSources   	numeric",
+					"@attribute		  NumberDistinctValue	numeric",
+					"@attribute       TsGlobal           	numeric",
+					"@attribute       TsLocal            	numeric",
+					"@attribute       Label              	{TRUE, FALSE}",
+					"@data");
+		}
 		metricsWriter.write(specifications);
 		CSVWriter csvWriter = new CSVWriter(metricsWriter, ',', CSVWriter.NO_QUOTE_CHARACTER);
 		for(Metrics metricsRow : metrics){
-			writeMetricsRowsForWeka(csvWriter, String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getCvGlobal()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
+			writeMetricsRowsForWeka(csvWriter, includeCvGlobal, String.valueOf(metricsRow.getCv()), String.valueOf(metricsRow.getTrust()), String.valueOf(metricsRow.getMinTrust()), String.valueOf(metricsRow.getMaxTrust()), String.valueOf(metricsRow.getNbSS()), String.valueOf(metricsRow.getNbC()), String.valueOf(metricsRow.getNbDI()), String.valueOf(metricsRow.getCvGlobal()), String.valueOf(metricsRow.getTrustGlobal()), String.valueOf(metricsRow.getTrustLocal()), metricsRow.getTruthLabel());
 		}
 		metricsWriter.close();
 	}
 	
-	private static void writeMetricsRowsForWeka(CSVWriter writer, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String nbDI, String cvglobal, String trustGlobal, String trustLocal, String truthLabel) {
-		String [] lineComponents = new String[]{cv, trust, minTrust, maxTrust, nbSS, nbC, nbDI, cvglobal, trustGlobal, trustLocal, truthLabel};
+	private static void writeMetricsRowsForWeka(CSVWriter writer, boolean includeCvGlobal, String cv, String trust, String minTrust, String maxTrust, String nbSS, String nbC, String nbDI, String cvglobal, String trustGlobal, String trustLocal, String truthLabel) {
+		String [] lineComponents;
+		if(includeCvGlobal == true)
+			lineComponents = new String[]{trust, minTrust, maxTrust, nbSS, nbC, nbDI, cvglobal, trustGlobal, trustLocal, truthLabel};
+		else
+			lineComponents = new String[]{trust, minTrust, maxTrust, nbSS, nbC, nbDI, trustGlobal, trustLocal, truthLabel};
 		writer.writeNext(lineComponents);
 	}
 	
