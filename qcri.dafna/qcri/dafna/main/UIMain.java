@@ -263,7 +263,6 @@ public class UIMain {
 		
 		if(expr1.evaluate(doc).equals("2") && expr2.evaluate(doc).equals("2"))
 		{
-			System.out.println(expr1.evaluate(doc));
 			return false;
 		}
 		return true;
