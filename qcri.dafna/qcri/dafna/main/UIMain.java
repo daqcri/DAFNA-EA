@@ -13,6 +13,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
 import weka.core.Instances;
 import weka.classifiers.Classifier;
 import weka.classifiers.trees.J48;
@@ -43,6 +49,7 @@ import qcri.dafna.voter.latentTruthModel.LatentTruthModel;
 import qcri.dafna.explaination.*;
 
 import org.inra.qualscape.wekatexttoxml.WekaTextfileToXMLTextfile;
+import org.w3c.dom.Document;
 
 public class UIMain {
 
@@ -52,7 +59,7 @@ public class UIMain {
 
 		DataSet ds = createDataSet(args, outputPath);
 		VoterQualityMeasures qualityMeasures = launch(args, ds);
-		if(! args[args.length -1].equals("Allegate"))
+		if(! args[args.length -1].equals("Allegate") || args[0].equals("Combiner"))
 		{
 			writeTrustworthiness(ds, outputPath);
 			writeConfidence(ds, outputPath);
@@ -243,24 +250,20 @@ public class UIMain {
 		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, false).writeXmlFromWekaText();		
 		
 		// Check if only cvglobal is explanation, delete this XML and return false
-		BufferedReader br = new BufferedReader(new FileReader(xmlTreeFile));
-		String line = br.readLine();
-		int countOfConditions = 0;
-		while(line != null && countOfConditions <= 3)
-		{
-			if(line.contains("Test attribute=\"CvGlobal\""))
-			{
-				countOfConditions++;
-			}
-			line = br.readLine();
-		}
-		br.close();
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document doc = builder.parse(xmlTreeFile);
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		XPathExpression expr1 = xpath.compile("count(DecisionTree//Output)");
+		XPathExpression expr2 = xpath.compile("count(DecisionTree/Test[@attribute='CvGlobal'])");
 		
 		textTreeFile.delete();
 		new File(arffPath).delete();
 		
-		if(countOfConditions == 2)
+		if(expr1.evaluate(doc).equals("2") && expr2.evaluate(doc).equals("2"))
 		{
+			System.out.println(expr1.evaluate(doc));
 			return false;
 		}
 		return true;
