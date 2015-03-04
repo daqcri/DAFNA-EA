@@ -59,7 +59,7 @@ public class UIMain {
 
 		DataSet ds = createDataSet(args, outputPath);
 		VoterQualityMeasures qualityMeasures = launch(args, ds);
-		if(! args[args.length -1].equals("Allegate") || ! args[0].equals("Combiner"))
+		if(! args[args.length -1].equals("Allegate") && ! args[0].equals("Combiner"))
 		{
 			writeTrustworthiness(ds, outputPath);
 			writeConfidence(ds, outputPath);
