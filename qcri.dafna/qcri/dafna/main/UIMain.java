@@ -59,7 +59,10 @@ public class UIMain {
 
 		DataSet ds = createDataSet(args, outputPath);
 		VoterQualityMeasures qualityMeasures = launch(args, ds);
-		if(! args[args.length -1].equals("Allegate") && ! args[0].equals("Combiner"))
+		if (args[0].equals("Combiner")) {
+			writeConfidence(ds, outputPath);
+		}
+		else if(! args[args.length -1].equals("Allegate"))
 		{
 			writeTrustworthiness(ds, outputPath);
 			writeConfidence(ds, outputPath);
@@ -79,10 +82,9 @@ public class UIMain {
 				writeMetricsForWeka(allMetrics, outputPath, false);
 				buildDecisionTreeJ48(outputPath);
 			}
-			
-			qualityMeasures.printMeasures();
-			System.out.println("Finished");
 		}
+		qualityMeasures.printMeasures();
+		System.out.println("Finished");
 	}
 
 	private static DataSet createDataSet(String[] args, String outputPath) {
