@@ -83,7 +83,7 @@ public class UIMain {
 				buildDecisionTreeJ48(outputPath);
 			}
 		}
-		qualityMeasures.printMeasures();
+		if (qualityMeasures != null) qualityMeasures.printMeasures();
 		System.out.println("Finished");
 	}
 
