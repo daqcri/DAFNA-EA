@@ -19,6 +19,7 @@ public abstract class Voter {
 	protected boolean onlyMaxValueIsTrue;
 	
 	protected double startingTrust = 0.8;
+	protected VoterParameters params;
 	
 	public Voter(DataSet dataSet, VoterParameters params) {
 		this.dataSet = dataSet;
@@ -26,7 +27,7 @@ public abstract class Voter {
 
 		this.startingTrust = params.getStartingTrust();
 		ConvergenceTester.convergenceThreshold = params.getCosineSimDiffStoppingCriteria();
-		
+		this.params = params;
 		initParameters();
 	}
 	/**
@@ -40,6 +41,7 @@ public abstract class Voter {
 	 * @return
 	 */
 	public VoterQualityMeasures launchVoter(boolean convergence100, boolean profileMemory) {
+		this.dataSet.resetDataSet(params.getStartingTrust(), params.getStartingConfidence(), params.getStartingErrorFactor());
 		voterQuality = new NormalVoterQualityMeasures(dataSet);
 		Profiler profiler = null;
 		if (profileMemory) {
