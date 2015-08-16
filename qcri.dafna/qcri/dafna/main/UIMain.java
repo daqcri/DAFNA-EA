@@ -249,23 +249,26 @@ public class UIMain {
 		printer.close();
 		File textTreeFile = new File(textTreePath);
 		File xmlTreeFile = new File(xmlTreePath);
-		new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, false).writeXmlFromWekaText();		
-		
-		// Check if only cvglobal is explanation, delete this XML and return false
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(xmlTreeFile);
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
-		XPathExpression expr1 = xpath.compile("count(DecisionTree//Output)");
-		XPathExpression expr2 = xpath.compile("count(DecisionTree/Test[@attribute='CvGlobal'])");
-		
-		textTreeFile.delete();
-		new File(arffPath).delete();
-		
-		if(expr1.evaluate(doc).equals("2") && expr2.evaluate(doc).equals("2"))
-		{
-			return false;
+
+		try {
+			new WekaTextfileToXMLTextfile(textTreeFile, xmlTreeFile, true, false).writeXmlFromWekaText();
+			// Check if only cvglobal is explanation, delete this XML and return false
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(xmlTreeFile);
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr1 = xpath.compile("count(DecisionTree//Output)");
+			XPathExpression expr2 = xpath.compile("count(DecisionTree/Test[@attribute='CvGlobal'])");
+			
+			if(expr1.evaluate(doc).equals("2") && expr2.evaluate(doc).equals("2"))
+				return false;
+			
+		}catch(Exception e) {
+			// nothing to do
+		} finally {
+			textTreeFile.delete();
+			new File(arffPath).delete();			
 		}
 		return true;
 	}
