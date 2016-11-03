@@ -46,7 +46,7 @@ should be generated, respectively.
 
 `<ALGORITHM_PARAMS>` is a white-space separated values and are dependant on the algorithm selected.
 In all cases, general parameters come first followed by specific parameters.
-Details of parameters for each algorithms can be found [here](https://github.com/Qatar-Computing-Research-Institute/dafna-viz/blob/master/app/assets/javascripts/main/algorithms.js).
+Details of parameters for each algorithms can be found [here](https://github.com/daqcri/DAFNA-EA/blob/master/algorithms.js).
 
 There are 3 possible patterns for the `<ALGORITHM_PARAMS>`:
 
