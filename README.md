@@ -26,8 +26,7 @@ To cite DAFNA-EA in publications use:
 
 For LaTeX users:
 ``` @article{WaguihBertiEquille14,	
-author    = {Dalia Attia Waguih and	
-Laure Berti{-}Equille},
+author    = {Dalia Attia Waguih and	Laure Berti{-}Equille},
 title     = {Truth Discovery Algorithms: An Experimental Evaluation},
 journal   = {CoRR},
 volume    = {abs/1409.6428},
