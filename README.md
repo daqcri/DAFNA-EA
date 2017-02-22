@@ -1,7 +1,78 @@
 DAFNA-EA
 ========
 
-Build Instructions
+DAFNA-EA is a java library of truth discovery methods from the literature to evaluate the veracity of data claimed by multiple online sources.
+
+The methods that have been implemented for the [comparative study](http://arxiv.org/abs/1409.6428) are the following: 
+More detail can be found [here](http://da.qcri.org/dafna/#/dafna/exp_sections/home.html).
+
+- TruthFinder from X. Yin, J. Han and P. S. Yu. In IEEE Trans. Knowl. Data Eng., 20(6):796-808, 2008. 
+- Cosine, 2-Estimates and 3-Estimates from A. Galland, S. Abiteboul, A. Marian and P. Senellart In WSDM, PAGES 131-140, 2010.
+- SimpleLCA and GuessLCA 	from J. Pasternack and D. Roth In WWW, pages 1009-1020, 2013.
+- Depen, Accu, AccuSim and AccuNoDep from X. L. Dong, L. Berti-Equille and D. Srivastava In PVLDB, 2(1):550-561, 2009.
+- LTM from B. Zhao, B. I. P. Rubinstein, J. Gemmell and J. Han In PVLDB, 5(6):550-561, 2012.
+- and MLE from D. Wang, L. M. Kaplan, H. K. Le and T.F. Abdelzaher In ISPN, pages 233-244, 2012.
+
+Datasets
+------------------
+Real-world data sets are available [here](http://da.qcri.org/dafna/#/dafna/exp_sections/realworldDS/).
+
+A dataset generator for truth discovery scenario can be donwladed [here](http://da.qcri.org/dafna/exp_sections/realworldDS/synthetic/DAFNA-DataSetGenerator.jar) and description of the parameters are given [here](http://da.qcri.org/dafna/#/dafna/exp_sections/realworldDS/synthetic/syntheticDs.html) with a [full documentation](http://da.qcri.org/dafna/exp_sections/realworldDS/synthetic/generator_doc.pdf). 
+
+Citations
+------------------
+To cite DAFNA-EA in publications use:
+- Dalia Attia Waguih and Laure Berti-Equille: Truth Discovery Algorithms — An Experimental Evaluation. Technical Report QCRI, [arXiv 1409.6428](http://arxiv.org/abs/1409.6428), May 2014.
+
+For LaTeX users:
+- @article{WaguihBertiEquille14,
+	author    = {Dalia Attia Waguih and
+	Laure Berti{-}Equille},
+	title     = {Truth Discovery Algorithms: An Experimental Evaluation},
+	journal   = {CoRR},
+	volume    = {abs/1409.6428},
+	year      = {2014},
+	url       = {http://arxiv.org/abs/1409.6428}}
+
+To cite ensembling of truth discovery methods
+- Laure Berti-Equille: Data Veracity Estimation with Ensembling Truth discovery Methods. In Big Data (IEEE International Conference on Big Data), Santa Clara, CA USA, pages 2628-2636.
+
+For LaTeX users:
+- @inproceedings{Berti-Equille15,
+  author    = {Laure Berti{-}Equille},
+  title     = {Data veracity estimation with ensembling truth discovery methods},
+  booktitle = {2015 {IEEE} International Conference on Big Data, Big Data 2015, Santa Clara, CA, USA, October 29 - November 1, 2015},
+  pages     = {2628--2636},
+  year      = {2015}}
+  
+For a survey:
+- Laure Berti-Equille and Javier Borge-Holthoefer: Veracity of Big Data — From Truth Discovery Computation Algorithms to Models of Misinformation Dynamics. In Synthesis Lectures on Data Management, December 2015, Vol. 7, No. 3, Pages 1-155, Morgan & Claypool Publishers. [Available here](http://www.morganclaypool.com/doi/abs/10.2200/S00676ED1V01Y201509DTM042)
+
+For LaTeX users:
+- @book{DBLP:series/synthesis/2015Berti,
+  author    = {Laure Berti{-}Equille and Javier Borge{-}Holthoefer},
+  title     = {Veracity of Data: From Truth Discovery Computation Algorithms to Models of Misinformation Dynamics},
+  series    = {Synthesis Lectures on Data Management},
+  publisher = {Morgan {\&} Claypool Publishers},
+  year      = {2015}}
+  
+Tutorials
+------------------
+Two tutorials surveying truth discovery methods and the topic of data veracity are available [here](http://da.qcri.org/dafna/tutorial_cikm2015/index.html).
+-  Scaling Up Truth Discovery — From Probabilistic Inference to Misinformation Dynamics. In ICDE 2016. [abstract](http://da.qcri.org/dafna/home_sections/tutorial-ICDE16-CRV.pdf)
+-  Veracity of Big Data. In CIKM 2015 [slides](http://da.qcri.org/dafna/home_sections/tutorial-CIKM2015.pdf)
+
+API
+------------------
+We have releasee an API so that users can test the truth discovery methods on their own. Documentation of the API is [here](http://da.qcri.org/dafna/#/dafna/apidoc/gettingstarted.html)
+
+Demos
+------------------
+You can try the demos:
+- AllegatorTrack: [here](http://dafna.qcri.org/allegatortrack) as a guest or [here](http://dafna.qcri.org/users/sign_in) to sign in. AllegatorTrack is a scalable truth discovery system  based on DAFNA-EA to score the veracity of data from multiple structured sources.  
+- Vera: [here](http://vera-qcri.herokuapp.com/#/) VERA is a Web-based platform using DAFNA-EA and that supports the full pipeline of truth discovery from Web unstructured corpus and tweets, ranging from information extraction from raw texts and micro-texts and data fusion to truth discovery and visualization (WWW216)
+
+Build Instructions fro DAFNA-EA
 ------------------
 Make sure you have installed [Java 7](http://java.com) and [Maven](http://maven.apache.org) on your computer first.
 Before the first build you need to prepare some libraries in your local repository:
