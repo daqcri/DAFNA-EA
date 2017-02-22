@@ -25,36 +25,39 @@ To cite DAFNA-EA in publications use:
 - Dalia Attia Waguih and Laure Berti-Equille: Truth Discovery Algorithms — An Experimental Evaluation. Technical Report QCRI, [arXiv 1409.6428](http://arxiv.org/abs/1409.6428), May 2014.
 
 For LaTeX users:
-`@article{WaguihBertiEquille14,	
+``` @article{WaguihBertiEquille14,	
 author    = {Dalia Attia Waguih and	
 Laure Berti{-}Equille},
 title     = {Truth Discovery Algorithms: An Experimental Evaluation},
 journal   = {CoRR},
 volume    = {abs/1409.6428},
 year      = {2014},
-url       = {http://arxiv.org/abs/1409.6428}}`
+url       = {http://arxiv.org/abs/1409.6428}}
+```
 
 To cite ensembling of truth discovery methods
 - Laure Berti-Equille: Data Veracity Estimation with Ensembling Truth discovery Methods. In Big Data (IEEE International Conference on Big Data), Santa Clara, CA USA, pages 2628-2636.
 
 For LaTeX users:
-`@inproceedings{Berti-Equille15,
+```@inproceedings{Berti-Equille15,
 author    = {Laure Berti{-}Equille},
 title     = {Data veracity estimation with ensembling truth discovery methods},
 booktitle = {2015 {IEEE} International Conference on Big Data, Big Data 2015, Santa Clara, CA, USA, October 29 - November 1, 2015},
 pages     = {2628--2636},
-year      = {2015}}`
+year      = {2015}}
+```
   
 For a survey:
 - Laure Berti-Equille and Javier Borge-Holthoefer: Veracity of Big Data — From Truth Discovery Computation Algorithms to Models of Misinformation Dynamics. In Synthesis Lectures on Data Management, December 2015, Vol. 7, No. 3, Pages 1-155, Morgan & Claypool Publishers. [Available here](http://www.morganclaypool.com/doi/abs/10.2200/S00676ED1V01Y201509DTM042)
 
 For LaTeX users:
-`@book{DBLP:series/synthesis/2015Berti,
+```@book{DBLP:series/synthesis/2015Berti,
 author    = {Laure Berti{-}Equille and Javier Borge{-}Holthoefer},
 title     = {Veracity of Data: From Truth Discovery Computation Algorithms to Models of Misinformation Dynamics},
 series    = {Synthesis Lectures on Data Management},
 publisher = {Morgan {\&} Claypool Publishers},
-year      = {2015}}`
+year      = {2015}}
+```
   
 Tutorials
 ------------------
